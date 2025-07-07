@@ -54,8 +54,6 @@ public class HoSoJDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Họ Tên:");
 
-        jTextField1.setText("jTextField1");
-
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Địa Chỉ:");
 
@@ -67,14 +65,6 @@ public class HoSoJDialog extends javax.swing.JDialog {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Xác Nhận Mật Khẩu:");
-
-        jTextField2.setText("jTextField1");
-
-        jTextField3.setText("jTextField1");
-
-        jTextField4.setText("jTextField1");
-
-        jTextField5.setText("jTextField1");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel7.setText("Lịch Sử Mua Theo Ngày");
