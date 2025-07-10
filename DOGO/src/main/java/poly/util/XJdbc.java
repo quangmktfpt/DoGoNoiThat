@@ -26,7 +26,7 @@ public class XJdbc {
 
         var dburl = "jdbc:sqlserver://localhost;database=Storedogo2;encrypt=true;trustServerCertificate=true;";
 
-       // var dburl = "jdbc:sqlserver://localhost;database=furniture_store;encrypt=true;trustServerCertificate=true;";
+       
 
         var username = "sa";
         var password = "123456";
