@@ -75,14 +75,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton2.setBorderPainted(false);
         jButton2.setContentAreaFilled(false);
         jButton2.setFocusPainted(false);
-<<<<<<< HEAD
-=======
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
->>>>>>> dung
         jPanelX.add(jButton2);
 
         headerPanel.add(jPanelX, java.awt.BorderLayout.LINE_END);
@@ -152,6 +149,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton3);
 
         jButton11.setText("Cài đặt chung");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
         sidebarPanel.add(jButton11);
 
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
@@ -293,6 +295,10 @@ public class AdminJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
 
 
     /**
