@@ -224,7 +224,7 @@
                         <Column editable="false" title="Danh M&#x1ee5;c" type="java.lang.Object"/>
                         <Column editable="false" title="&#x110;&#x1a1;n gi&#xe1;" type="java.lang.Object"/>
                         <Column editable="false" title="Gi&#xe1; Nh&#x1ead;p" type="java.lang.Object"/>
-                        <Column editable="false" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
+                        <Column editable="false" title="T&#x1ed3;n Kho" type="java.lang.Object"/>
                         <Column editable="false" title="&#x1ea2;nh" type="java.lang.Object"/>
                         <Column editable="false" title="Ng&#xe0;y t&#x1ea1;o" type="java.lang.Object"/>
                         <Column editable="true" title="" type="java.lang.Boolean"/>

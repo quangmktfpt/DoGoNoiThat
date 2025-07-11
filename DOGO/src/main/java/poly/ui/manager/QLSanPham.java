@@ -97,7 +97,7 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
                 {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã sản phẩm", "Tên sản phẩm", "Danh Mục", "Đơn giá", "Giá Nhập", "Số lượng", "Ảnh", "Ngày tạo", ""
+                "Mã sản phẩm", "Tên sản phẩm", "Danh Mục", "Đơn giá", "Giá Nhập", "Tồn Kho", "Ảnh", "Ngày tạo", ""
             }
         ) {
             Class[] types = new Class [] {
