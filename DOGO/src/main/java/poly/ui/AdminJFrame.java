@@ -17,6 +17,7 @@ public class AdminJFrame extends javax.swing.JFrame {
      */
     public AdminJFrame() {
         initComponents();
+        this.setLocationRelativeTo(null);
         
     }
 

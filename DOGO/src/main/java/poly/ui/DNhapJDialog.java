@@ -5,12 +5,13 @@
 package poly.ui;
 
 import javax.swing.JOptionPane;
+import poly.controller.LogginController;
 
 /**
  *
  * @author Nghia
  */
-public class DNhapJDialog extends javax.swing.JDialog {
+public class DNhapJDialog extends javax.swing.JDialog implements LogginController{
 
     /**
      * Creates new form DNhapJDialog
@@ -18,6 +19,7 @@ public class DNhapJDialog extends javax.swing.JDialog {
     public DNhapJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.open();
     }
 
     /**
@@ -37,8 +39,8 @@ public class DNhapJDialog extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         txtUsername = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -82,7 +84,7 @@ public class DNhapJDialog extends javax.swing.JDialog {
         jSeparator2.setAlignmentY(6.0F);
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setText("Chưa có tài khoản ?");
+        jButton3.setText("Đăng Kí");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -103,14 +105,14 @@ public class DNhapJDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtPassword)
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -127,9 +129,9 @@ public class DNhapJDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -160,12 +162,16 @@ public class DNhapJDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    
+        login();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        // Mở dialog đăng ký tài khoản
+        this.setVisible(false); // Ẩn dialog đăng nhập hiện tại
+        DKyTaiKhoanJDialog dkDialog = new DKyTaiKhoanJDialog((java.awt.Frame) this.getParent(), true);
+        dkDialog.setLocationRelativeTo(this);
+        dkDialog.setVisible(true);
+        this.setVisible(true); // Hiện lại dialog đăng nhập sau khi đăng ký xong
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -219,7 +225,61 @@ public class DNhapJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void open() {
+        this.setLocationRelativeTo(null);
+    }
+
+    @Override
+    public void login() {
+        String username = txtUsername.getText().trim();
+        String password = txtPassword.getText().trim();
+
+        // 1. Validate
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 2. Kiểm tra tài khoản
+        poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
+        poly.entity.User user = userDAO.login(username, password);
+
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản bị khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 3. Kiểm tra quyền và active
+        if (user.getIsActive() == null || !user.getIsActive()) {
+            JOptionPane.showMessageDialog(this, "Tài khoản đã bị khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. Lưu thông tin user đăng nhập vào tiện ích toàn cục
+        poly.util.CurrentUserUtil.setCurrentUserId(user.getUserId());
+        poly.util.CurrentUserUtil.setCurrentUsername(user.getUsername());
+
+        // 5. Chuyển màn hình theo quyền
+        String roleMsg = user.getRole() != null && user.getRole() ? "Admin" : "Khách hàng";
+        JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + user.getUsername() + " (" + roleMsg + ")", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+        this.dispose();
+        if (user.getRole() != null && user.getRole()) {
+            // Admin
+            new poly.ui.AdminJFrame().setVisible(true);
+        } else {
+            // Khách hàng
+            new poly.ui.KhachJFrame().setVisible(true);
+        }
+    }
+
+    @Override
+    public void exit() {
+        LogginController.super.exit(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
 }

@@ -4,11 +4,13 @@
  */
 package poly.ui;
 
+import poly.controller.Dangkicontroller;
+
 /**
  *
  * @author Nghia
  */
-public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
+public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicontroller{
 
     /**
      * Creates new form DKyTaiKhoanJDialog
@@ -190,7 +192,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+this.dangki();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -259,4 +261,64 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void open() {
+  this.setLocationRelativeTo(null);    }
+
+    @Override
+    public void dangki() {
+        String fullName = jTextField1.getText().trim();
+        String username = jTextField2.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
+        String confirmPassword = new String(jPasswordField2.getPassword());
+        String email = jTextField3.getText().trim();
+        String phone = jTextField4.getText().trim();
+        String address = jTextField5.getText().trim();
+
+        // Validate
+        if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin bắt buộc!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Có thể kiểm tra thêm: username/email đã tồn tại, định dạng email, độ dài password...
+
+        // Tạo user entity
+        poly.entity.User user = new poly.entity.User();
+        user.setFullName(fullName);
+        user.setUsername(username);
+        user.setPasswordHash(password); // Nếu có hash thì hash ở đây
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setRole(false); // Mặc định là khách hàng
+        user.setIsActive(true);
+        user.setCreatedDate(java.time.LocalDateTime.now());
+
+        // Thêm vào database
+        try {
+            poly.dao.impl.UserDAOImpl userDAO = new poly.dao.impl.UserDAOImpl();
+            // Kiểm tra username/email đã tồn tại (nếu muốn)
+            if (userDAO.selectByUsername(username) != null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Có thể kiểm tra email trùng nếu muốn
+            userDAO.insert(user);
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            this.dispose(); // Đóng dialog sau khi đăng ký thành công
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+
+    @Override
+    public void exit() {
+        Dangkicontroller.super.exit(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
 }
