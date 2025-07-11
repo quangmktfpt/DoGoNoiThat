@@ -47,6 +47,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
         cardBrowse = new javax.swing.JPanel();
+        jButton12 = new javax.swing.JButton();
         cardCart = new javax.swing.JPanel();
         cardCheckout = new javax.swing.JPanel();
         cardTrack = new javax.swing.JPanel();
@@ -161,15 +162,29 @@ public class AdminJFrame extends javax.swing.JFrame {
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
+        jButton12.setText("Đổi mật khẩu");
+        jButton12.setMaximumSize(new java.awt.Dimension(200, 40));
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout cardBrowseLayout = new javax.swing.GroupLayout(cardBrowse);
         cardBrowse.setLayout(cardBrowseLayout);
         cardBrowseLayout.setHorizontalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardBrowseLayout.createSequentialGroup()
+                .addContainerGap(389, Short.MAX_VALUE)
+                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         cardBrowseLayout.setVerticalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
+            .addGroup(cardBrowseLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(420, Short.MAX_VALUE))
         );
 
         mainPanel.add(cardBrowse, "cardBrowse");
@@ -301,6 +316,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton11ActionPerformed
 
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        poly.ui.manager.Doimatkhaudialog dialog = new poly.ui.manager.Doimatkhaudialog(this, true);
+        dialog.getuser(); // Hiển thị username đang đăng nhập
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton12ActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -349,6 +371,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
