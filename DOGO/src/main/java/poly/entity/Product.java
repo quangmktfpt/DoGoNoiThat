@@ -16,19 +16,31 @@ public class Product {
     private String categoryId;
     private String productName;
     private BigDecimal unitPrice;
+    private BigDecimal gianhap;
+
+    public BigDecimal getGianhap() {
+        return gianhap;
+    }
+
+    public void setGianhap(BigDecimal gianhap) {
+        this.gianhap = gianhap;
+    }
     private Integer quantity;    // tồn kho hiện tại
     private String imagePath;
     private LocalDateTime createdDate;
 
-    public Product(String productId, String categoryId, String productName, BigDecimal unitPrice, Integer quantity, String imagePath, LocalDateTime createdDate) {
+    public Product(String productId, String categoryId, String productName, BigDecimal unitPrice, BigDecimal gianhap, Integer quantity, String imagePath, LocalDateTime createdDate) {
         this.productId = productId;
         this.categoryId = categoryId;
         this.productName = productName;
         this.unitPrice = unitPrice;
+        this.gianhap = gianhap;
         this.quantity = quantity;
         this.imagePath = imagePath;
         this.createdDate = createdDate;
     }
+
+ 
 
     public String getProductId() {
         return productId;

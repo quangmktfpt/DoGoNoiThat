@@ -20,6 +20,7 @@ public class User {
     private Boolean role;        // 1=Admin, 0=Customer
     private Boolean isActive;
     private LocalDateTime createdDate;
+    private String email;
 
     public Integer getUserId() {
         return userId;
@@ -93,16 +94,24 @@ public class User {
         this.createdDate = createdDate;
     }
 
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public User() {
     }
 
-    public User(Integer userId, String username, String passwordHash, String fullName, String phone, String address, Boolean role, Boolean isActive, LocalDateTime createdDate) {
+    public User(Integer userId, String username, String passwordHash, String fullName, String phone, String address, String email, Boolean role, Boolean isActive, LocalDateTime createdDate) {
         this.userId = userId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
+        this.email = email;
         this.role = role;
         this.isActive = isActive;
         this.createdDate = createdDate;

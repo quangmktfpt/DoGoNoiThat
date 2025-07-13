@@ -18,6 +18,7 @@ public class InventoryTransaction {
     private Integer quantityChange;
     private String referenceId;
     private String notes;
+    private Integer userId;
     // getters and setters
 
     public Integer getTransactionId() {
@@ -76,7 +77,10 @@ public class InventoryTransaction {
         this.notes = notes;
     }
 
-    public InventoryTransaction(Integer transactionId, String productId, LocalDateTime transactionDate, String transactionType, Integer quantityChange, String referenceId, String notes) {
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
+
+    public InventoryTransaction(Integer transactionId, String productId, LocalDateTime transactionDate, String transactionType, Integer quantityChange, String referenceId, String notes, Integer userId) {
         this.transactionId = transactionId;
         this.productId = productId;
         this.transactionDate = transactionDate;
@@ -84,6 +88,7 @@ public class InventoryTransaction {
         this.quantityChange = quantityChange;
         this.referenceId = referenceId;
         this.notes = notes;
+        this.userId = userId;
     }
 
     public InventoryTransaction() {

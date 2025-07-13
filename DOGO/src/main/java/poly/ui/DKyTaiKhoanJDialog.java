@@ -4,11 +4,13 @@
  */
 package poly.ui;
 
+import poly.controller.Dangkicontroller;
+
 /**
  *
  * @author Nghia
  */
-public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
+public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicontroller{
 
     /**
      * Creates new form DKyTaiKhoanJDialog
@@ -44,7 +46,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -85,15 +87,11 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 102, 153));
-        jButton3.setText("Quay lại trang đăng nhập");
-        jButton3.setBorderPainted(false);
-        jButton3.setContentAreaFilled(false);
-        jButton3.setFocusPainted(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton4.setText("Đăng Nhập");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -115,13 +113,6 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
                             .addComponent(jTextField3)
                             .addComponent(jTextField4)
                             .addComponent(jTextField5)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(120, 120, 120)
-                                .addComponent(jLabel2))
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,11 +129,19 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
                                     .addComponent(jPasswordField1)
                                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(120, 120, 120)
+                                .addComponent(jLabel2))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +181,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -190,12 +189,16 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+this.dangki();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        this.setVisible(false); // Ẩn dialog đăng ký
+        DNhapJDialog loginDialog = new DNhapJDialog((java.awt.Frame) this.getParent(), true);
+        loginDialog.setLocationRelativeTo(this);
+        loginDialog.setVisible(true);
+        this.dispose(); // Đóng dialog đăng ký sau khi mở đăng nhập
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -241,7 +244,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,4 +262,64 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void open() {
+  this.setLocationRelativeTo(null);    }
+
+    @Override
+    public void dangki() {
+        String fullName = jTextField1.getText().trim();
+        String username = jTextField2.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
+        String confirmPassword = new String(jPasswordField2.getPassword());
+        String email = jTextField3.getText().trim();
+        String phone = jTextField4.getText().trim();
+        String address = jTextField5.getText().trim();
+
+        // Validate
+        if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin bắt buộc!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Có thể kiểm tra thêm: username/email đã tồn tại, định dạng email, độ dài password...
+
+        // Tạo user entity
+        poly.entity.User user = new poly.entity.User();
+        user.setFullName(fullName);
+        user.setUsername(username);
+        user.setPasswordHash(password); // Nếu có hash thì hash ở đây
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setRole(false); // Mặc định là khách hàng
+        user.setIsActive(true);
+        user.setCreatedDate(java.time.LocalDateTime.now());
+
+        // Thêm vào database
+        try {
+            poly.dao.impl.UserDAOImpl userDAO = new poly.dao.impl.UserDAOImpl();
+            // Kiểm tra username/email đã tồn tại (nếu muốn)
+            if (userDAO.selectByUsername(username) != null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Có thể kiểm tra email trùng nếu muốn
+            userDAO.insert(user);
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            this.dispose(); // Đóng dialog sau khi đăng ký thành công
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+
+    @Override
+    public void exit() {
+        Dangkicontroller.super.exit(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
 }
