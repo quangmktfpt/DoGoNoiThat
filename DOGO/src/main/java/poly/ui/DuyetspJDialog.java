@@ -4,11 +4,22 @@
  */
 package poly.ui;
 
+import poly.controller.ProductController;
+import poly.entity.Product;
+import poly.entity.Category;
+import poly.dao.impl.ProductDAOImpl;
+import poly.dao.impl.CategoryDAOImpl;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import java.math.BigDecimal;
+
 /**
  *
  * @author Nghia
  */
-public class DuyetspJDialog extends javax.swing.JDialog {
+public class DuyetspJDialog extends javax.swing.JDialog implements ProductController {
 
     /**
      * Creates new form DuyetspJDialog
@@ -16,6 +27,11 @@ public class DuyetspJDialog extends javax.swing.JDialog {
     public DuyetspJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
     }
 
     /**
@@ -68,6 +84,11 @@ public class DuyetspJDialog extends javax.swing.JDialog {
         jLabel6.setText("Tìm Kiếm");
 
         btnTimKiem.setText("Tìm");
+        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiemActionPerformed(evt);
+            }
+        });
 
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -86,6 +107,11 @@ public class DuyetspJDialog extends javax.swing.JDialog {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSanPhamMouseClicked(evt);
             }
         });
         scrProducts.setViewportView(tblSanPham);
@@ -198,6 +224,11 @@ public class DuyetspJDialog extends javax.swing.JDialog {
         jLabel9.setText("Thông Tin Chi Tiết");
 
         btnThemVaoGio.setText("Thêm vào giỏ");
+        btnThemVaoGio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemVaoGioActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Kích Thước");
@@ -338,20 +369,47 @@ public class DuyetspJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMoveFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveFirstActionPerformed
-        
+        moveFirst();
     }//GEN-LAST:event_btnMoveFirstActionPerformed
 
     private void btnMovePreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovePreviousActionPerformed
-        
+        movePrevious();
     }//GEN-LAST:event_btnMovePreviousActionPerformed
 
     private void btnMoveNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveNextActionPerformed
-        
+        moveNext();
     }//GEN-LAST:event_btnMoveNextActionPerformed
 
     private void btnMoveLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveLastActionPerformed
-        
+        moveLast();
     }//GEN-LAST:event_btnMoveLastActionPerformed
+
+    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
+        searchProducts();
+    }//GEN-LAST:event_btnTimKiemActionPerformed
+
+    private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
+        edit();
+    }//GEN-LAST:event_tblSanPhamMouseClicked
+
+    private void btnThemVaoGioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoGioActionPerformed
+        if (currentRow >= 0 && productList != null && currentRow < productList.size()) {
+            Product selectedProduct = productList.get(currentRow);
+            JOptionPane.showMessageDialog(this, 
+                "Đã thêm sản phẩm '" + selectedProduct.getProductName() + "' vào giỏ hàng!", 
+                "Thông báo", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn một sản phẩm trước khi thêm vào giỏ hàng!", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnThemVaoGioActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        open();
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
@@ -430,4 +488,229 @@ public class DuyetspJDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txtTimKiemSanPham;
     private javax.swing.JTextField txtTonKho;
     // End of variables declaration//GEN-END:variables
+
+    // ========== PRODUCT CONTROLLER IMPLEMENTATION ==========
+    private ProductDAOImpl productDAO = new ProductDAOImpl();
+    private CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+    private int currentRow = -1;
+    private List<Product> productList;
+
+    @Override
+    public void open() {
+        fillToTable();
+        clear();
+        setEditable(true);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    @Override
+    public void setForm(Product entity) {
+        if (entity != null) {
+            txtTenSanPham.setText(entity.getProductName());
+            txtGiaSanPham.setText(entity.getUnitPrice().toString());
+            txtTonKho.setText(entity.getQuantity().toString());
+            
+            // Hiển thị ảnh sản phẩm
+            if (entity.getImagePath() != null && !entity.getImagePath().isEmpty()) {
+                ImageIcon icon = getProductImage(entity.getImagePath());
+                if (icon != null) {
+                    lblAnhSanPham.setIcon(icon);
+                    lblHinhAnh.setIcon(icon);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Product getForm() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+        return null;
+    }
+
+    @Override
+    public void fillToTable() {
+        DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
+        model.setRowCount(0);
+        
+        productList = productDAO.selectAll();
+        for (Product product : productList) {
+            model.addRow(new Object[]{
+                product.getProductName(),
+                getCategoryName(product.getCategoryId()),
+                product.getUnitPrice()
+            });
+        }
+        currentRow = -1;
+    }
+
+    @Override
+    public void edit() {
+        int row = tblSanPham.getSelectedRow();
+        if (row >= 0) {
+            Product product = productList.get(row);
+            setForm(product);
+            currentRow = row;
+        }
+    }
+
+    @Override
+    public void create() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void update() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void delete() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void clear() {
+        txtTenSanPham.setText("");
+        txtGiaSanPham.setText("");
+        txtTonKho.setText("");
+        txtKichThuoc.setText("");
+        txtGiaKichThuoc.setText("");
+        txtAreaMoTa.setText("");
+        lblAnhSanPham.setIcon(null);
+        lblHinhAnh.setIcon(null);
+        tblSanPham.clearSelection();
+        currentRow = -1;
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        txtTenSanPham.setEditable(editable);
+        txtGiaSanPham.setEditable(editable);
+        txtTonKho.setEditable(editable);
+        txtKichThuoc.setEditable(editable);
+        txtGiaKichThuoc.setEditable(editable);
+        txtAreaMoTa.setEditable(editable);
+    }
+
+    @Override
+    public void checkAll() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void uncheckAll() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void deleteCheckedItems() {
+        // Không cần implement cho màn hình duyệt sản phẩm
+    }
+
+    @Override
+    public void moveFirst() {
+        if (tblSanPham.getRowCount() > 0) {
+            tblSanPham.setRowSelectionInterval(0, 0);
+            moveTo(0);
+        }
+    }
+
+    @Override
+    public void movePrevious() {
+        int row = tblSanPham.getSelectedRow();
+        if (row > 0) {
+            tblSanPham.setRowSelectionInterval(row - 1, row - 1);
+            moveTo(row - 1);
+        }
+    }
+
+    @Override
+    public void moveNext() {
+        int row = tblSanPham.getSelectedRow();
+        if (row < tblSanPham.getRowCount() - 1 && row >= 0) {
+            tblSanPham.setRowSelectionInterval(row + 1, row + 1);
+            moveTo(row + 1);
+        }
+    }
+
+    @Override
+    public void moveLast() {
+        int last = tblSanPham.getRowCount() - 1;
+        if (last >= 0) {
+            tblSanPham.setRowSelectionInterval(last, last);
+            moveTo(last);
+        }
+    }
+
+    @Override
+    public void moveTo(int rowIndex) {
+        if (rowIndex >= 0 && rowIndex < tblSanPham.getRowCount() && productList != null) {
+            Product product = productList.get(rowIndex);
+            setForm(product);
+            currentRow = rowIndex;
+        }
+    }
+
+    @Override
+    public List<Category> loadAllCategories() {
+        return categoryDAO.selectAll();
+    }
+
+    @Override
+    public String uploadImage(String localImagePath) {
+        // Không cần implement cho màn hình duyệt sản phẩm
+        return null;
+    }
+
+    @Override
+    public ImageIcon getProductImage(String imagePath) {
+        return productDAO.getProductImage(imagePath);
+    }
+
+    @Override
+    public List<Product> searchByName(String name) {
+        return productDAO.searchByName(name);
+    }
+
+    @Override
+    public List<Product> searchByPriceRange(BigDecimal min, BigDecimal max) {
+        return productDAO.searchByPriceRange(min, max);
+    }
+
+    @Override
+    public List<Product> searchByCategory(String categoryId) {
+        return productDAO.searchByCategory(categoryId);
+    }
+
+    // Phương thức hỗ trợ
+    private String getCategoryName(String categoryId) {
+        List<Category> categories = loadAllCategories();
+        for (Category category : categories) {
+            if (category.getCategoryId().equals(categoryId)) {
+                return category.getCategoryName();
+            }
+        }
+        return "Không xác định";
+    }
+
+    // Phương thức tìm kiếm sản phẩm
+    private void searchProducts() {
+        String searchText = txtTimKiemSanPham.getText().trim();
+        if (searchText.isEmpty()) {
+            fillToTable();
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
+            model.setRowCount(0);
+            
+            List<Product> searchResults = searchByName(searchText);
+            for (Product product : searchResults) {
+                model.addRow(new Object[]{
+                    product.getProductName(),
+                    getCategoryName(product.getCategoryId()),
+                    product.getUnitPrice()
+                });
+            }
+        }
+    }
 }
