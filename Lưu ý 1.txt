@@ -15,4 +15,8 @@ UPDATE Products SET Description = N'Tủ 3 cửa, nhiều ngăn tiện dụng.',
 
 Cập nhật lại entity và DAO , impl... theo code của tôi
 
-Lưu ý : Lỗi có thể sẽ dính phải ở file QLSanPham
+Lưu ý : Lỗi có thể sẽ dính phải ở file QLSanPham , hãy sửa tạm thời ở getForm và thêm 2 dòng ở form :
+
+String description = jTextFieldDesc.getText().trim(); // hoặc jTextAreaDesc.getText().trim()
+String kichThuoc = jTextFieldKichThuoc.getText().trim();
+return new Product(id, catId, name, price, gianhap, quantity, imgPath, created, description, kichThuoc);

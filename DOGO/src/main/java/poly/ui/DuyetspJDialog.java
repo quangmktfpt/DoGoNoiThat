@@ -120,6 +120,11 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         cboLoaiSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnTimLoai.setText("Tìm Loại");
+        btnTimLoai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimLoaiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -350,17 +355,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
 
         jTabbedPane1.addTab("Chi tiết", jPanel2);
 
-        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 2 && tblSanPham.getSelectedRow() != -1) {
-                    // Chuyển sang tab chi tiết
-                    jTabbedPane1.setSelectedIndex(1);
-                    edit();
-                    setEditable(false); // Tắt quyền chỉnh sửa khi xem chi tiết
-                }
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -422,6 +416,28 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         open();
     }//GEN-LAST:event_formWindowOpened
+
+    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimLoaiActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            List<Category> categories = loadAllCategories();
+            String selectedCategoryId = categories.get(selectedIndex).getCategoryId();
+            List<Product> filteredProducts = searchByCategory(selectedCategoryId);
+
+            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
+            model.setRowCount(0);
+            for (Product product : filteredProducts) {
+                model.addRow(new Object[]{
+                    product.getProductName(),
+                    getCategoryName(product.getCategoryId()),
+                    product.getUnitPrice()
+                });
+            }
+            productList = filteredProducts;
+            currentRow = -1;
+        }
+    }//GEN-LAST:event_btnTimLoaiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -739,24 +755,4 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         }
     }
 
-    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {
-        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
-        if (selectedIndex >= 0) {
-            List<Category> categories = loadAllCategories();
-            String selectedCategoryId = categories.get(selectedIndex).getCategoryId();
-            List<Product> filteredProducts = searchByCategory(selectedCategoryId);
-
-            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-            model.setRowCount(0);
-            for (Product product : filteredProducts) {
-                model.addRow(new Object[]{
-                    product.getProductName(),
-                    getCategoryName(product.getCategoryId()),
-                    product.getUnitPrice()
-                });
-            }
-            productList = filteredProducts;
-            currentRow = -1;
-        }
-    }
 }

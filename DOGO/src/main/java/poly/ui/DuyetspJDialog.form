@@ -226,6 +226,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="T&#xec;m Lo&#x1ea1;i"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTimLoaiActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
