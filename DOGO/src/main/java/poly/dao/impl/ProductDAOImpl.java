@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class ProductDAOImpl implements ProductDAO {
-    private final String INSERT_SQL = "INSERT INTO Products (ProductID, CategoryID, ProductName, UnitPrice, Quantity, ImagePath, CreatedDate, ImportPrice) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE Products SET CategoryID=?, ProductName=?, UnitPrice=?, Quantity=?, ImagePath=?, CreatedDate=?, ImportPrice=? WHERE ProductID=?";
+    private final String INSERT_SQL = "INSERT INTO Products (ProductID, CategoryID, ProductName, UnitPrice, Quantity, ImagePath, CreatedDate, ImportPrice, Description, KichThuoc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE Products SET CategoryID=?, ProductName=?, UnitPrice=?, Quantity=?, ImagePath=?, CreatedDate=?, ImportPrice=?, Description=?, KichThuoc=? WHERE ProductID=?";
     private final String DELETE_SQL = "DELETE FROM Products WHERE ProductID=?";
     private final String SELECT_ALL_SQL = "SELECT * FROM Products";
     private final String SELECT_BY_ID_SQL = "SELECT * FROM Products WHERE ProductID=?";
@@ -33,7 +33,9 @@ public class ProductDAOImpl implements ProductDAO {
             entity.getQuantity(),
             entity.getImagePath(),
             entity.getCreatedDate(),
-            entity.getGianhap()
+            entity.getGianhap(),
+            entity.getDescription(),
+            entity.getKichThuoc()
         );
     }
 
@@ -47,6 +49,8 @@ public class ProductDAOImpl implements ProductDAO {
             entity.getImagePath(),
             entity.getCreatedDate(),
             entity.getGianhap(),
+            entity.getDescription(),
+            entity.getKichThuoc(),
             entity.getProductId()
         );
     }
@@ -82,6 +86,8 @@ public class ProductDAOImpl implements ProductDAO {
                 entity.setImagePath(rs.getString("ImagePath"));
                 entity.setCreatedDate(rs.getTimestamp("CreatedDate").toLocalDateTime());
                 entity.setGianhap(rs.getBigDecimal("ImportPrice"));
+                entity.setDescription(rs.getString("Description"));
+                entity.setKichThuoc(rs.getString("KichThuoc"));
                 list.add(entity);
             }
             rs.getStatement().getConnection().close();

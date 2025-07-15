@@ -28,8 +28,10 @@ public class Product {
     private Integer quantity;    // tồn kho hiện tại
     private String imagePath;
     private LocalDateTime createdDate;
+    private String description; // mô tả sản phẩm
+    private String kichThuoc;   // kích thước sản phẩm
 
-    public Product(String productId, String categoryId, String productName, BigDecimal unitPrice, BigDecimal gianhap, Integer quantity, String imagePath, LocalDateTime createdDate) {
+    public Product(String productId, String categoryId, String productName, BigDecimal unitPrice, BigDecimal gianhap, Integer quantity, String imagePath, LocalDateTime createdDate, String description, String kichThuoc) {
         this.productId = productId;
         this.categoryId = categoryId;
         this.productName = productName;
@@ -38,6 +40,8 @@ public class Product {
         this.quantity = quantity;
         this.imagePath = imagePath;
         this.createdDate = createdDate;
+        this.description = description;
+        this.kichThuoc = kichThuoc;
     }
 
  
@@ -96,6 +100,19 @@ public class Product {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getKichThuoc() {
+        return kichThuoc;
+    }
+    public void setKichThuoc(String kichThuoc) {
+        this.kichThuoc = kichThuoc;
     }
 
     public Product() {

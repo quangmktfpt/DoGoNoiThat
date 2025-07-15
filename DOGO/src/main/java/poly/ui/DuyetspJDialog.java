@@ -53,6 +53,8 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblAnhSanPham = new javax.swing.JLabel();
+        cboLoaiSanPham = new javax.swing.JComboBox<>();
+        btnTimLoai = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblHinhAnh = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -84,11 +86,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         jLabel6.setText("Tìm Kiếm");
 
         btnTimKiem.setText("Tìm");
-        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimKiemActionPerformed(evt);
-            }
-        });
 
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -109,11 +106,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                 return canEdit [columnIndex];
             }
         });
-        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblSanPhamMouseClicked(evt);
-            }
-        });
         scrProducts.setViewportView(tblSanPham);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -125,14 +117,14 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         lblAnhSanPham.setText("jLabel11");
         lblAnhSanPham.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        cboLoaiSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnTimLoai.setText("Tìm Loại");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(252, 252, 252)
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -141,15 +133,26 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(lblAnhSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(252, 252, 252)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnTimKiem))))
+                        .addComponent(btnTimKiem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnTimLoai)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,7 +163,9 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTimKiem)
                     .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTimLoai))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,11 +229,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         jLabel9.setText("Thông Tin Chi Tiết");
 
         btnThemVaoGio.setText("Thêm vào giỏ");
-        btnThemVaoGio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemVaoGioActionPerformed(evt);
-            }
-        });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Kích Thước");
@@ -290,7 +290,7 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtKichThuoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtGiaKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(32, Short.MAX_VALUE))))
+                        .addContainerGap(26, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,11 +350,23 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
 
         jTabbedPane1.addTab("Chi tiết", jPanel2);
 
+        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2 && tblSanPham.getSelectedRow() != -1) {
+                    // Chuyển sang tab chi tiết
+                    jTabbedPane1.setSelectedIndex(1);
+                    edit();
+                    setEditable(false); // Tắt quyền chỉnh sửa khi xem chi tiết
+                }
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
@@ -460,6 +472,8 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     private javax.swing.JButton btnMovePrevious;
     private javax.swing.JButton btnThemVaoGio;
     private javax.swing.JButton btnTimKiem;
+    private javax.swing.JButton btnTimLoai;
+    private javax.swing.JComboBox<String> cboLoaiSanPham;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel13;
@@ -499,7 +513,8 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     public void open() {
         fillToTable();
         clear();
-        setEditable(true);
+        setEditable(false); // Mặc định tắt quyền chỉnh sửa ở tab 2
+        loadCategoriesToComboBox();
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -509,8 +524,10 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         if (entity != null) {
             txtTenSanPham.setText(entity.getProductName());
             txtGiaSanPham.setText(entity.getUnitPrice().toString());
+            txtGiaKichThuoc.setText(entity.getUnitPrice().toString()); // Giá kích thước thực chất là giá bán
             txtTonKho.setText(entity.getQuantity().toString());
-            
+            txtAreaMoTa.setText(entity.getDescription().toString()); // Không có trường mô tả trong entity
+            txtKichThuoc.setText(entity.getKichThuoc().toString()); // Nếu có trường kích thước thì lấy, nếu không thì để trống
             // Hiển thị ảnh sản phẩm
             if (entity.getImagePath() != null && !entity.getImagePath().isEmpty()) {
                 ImageIcon icon = getProductImage(entity.getImagePath());
@@ -711,6 +728,35 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                     product.getUnitPrice()
                 });
             }
+        }
+    }
+
+    private void loadCategoriesToComboBox() {
+        cboLoaiSanPham.removeAllItems();
+        List<Category> categories = loadAllCategories();
+        for (Category c : categories) {
+            cboLoaiSanPham.addItem(c.getCategoryName());
+        }
+    }
+
+    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            List<Category> categories = loadAllCategories();
+            String selectedCategoryId = categories.get(selectedIndex).getCategoryId();
+            List<Product> filteredProducts = searchByCategory(selectedCategoryId);
+
+            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
+            model.setRowCount(0);
+            for (Product product : filteredProducts) {
+                model.addRow(new Object[]{
+                    product.getProductName(),
+                    getCategoryName(product.getCategoryId()),
+                    product.getUnitPrice()
+                });
+            }
+            productList = filteredProducts;
+            currentRow = -1;
         }
     }
 }
