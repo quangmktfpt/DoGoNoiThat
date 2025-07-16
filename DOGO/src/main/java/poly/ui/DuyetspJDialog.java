@@ -86,6 +86,11 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         jLabel6.setText("Tìm Kiếm");
 
         btnTimKiem.setText("Tìm");
+        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiemActionPerformed(evt);
+            }
+        });
 
         tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -104,6 +109,11 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSanPhamMouseClicked(evt);
             }
         });
         scrProducts.setViewportView(tblSanPham);
@@ -396,6 +406,9 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
         edit();
+        if (evt.getClickCount() == 2) {
+            jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab chi tiết
+        }
     }//GEN-LAST:event_tblSanPhamMouseClicked
 
     private void btnThemVaoGioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoGioActionPerformed
