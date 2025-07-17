@@ -278,13 +278,17 @@ public class AdminJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình quản lý sản phẩm
+        poly.ui.manager.QLSanPham qlsp = new poly.ui.manager.QLSanPham(this, true);
+        qlsp.setLocationRelativeTo(this);
+        qlsp.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình quản lý kho
+        poly.ui.manager.QLKhoJDialog qlkho = new poly.ui.manager.QLKhoJDialog(this, true);
+        qlkho.setLocationRelativeTo(this);
+        qlkho.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
