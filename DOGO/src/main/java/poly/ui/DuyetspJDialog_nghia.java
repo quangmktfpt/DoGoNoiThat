@@ -41,7 +41,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         tblSanPham.getTableHeader().setForeground(java.awt.Color.WHITE);
         // 4. Thêm icon cho nút (chỉ dùng icon có sẵn trong thư mục icon)
         // btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/search.png")));
-        btnThemVaoGio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/add.png")));
+//        btnThemVaoGio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/add.png")));
         // btnMoveFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/first.png")));
         //btnMovePrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/back.png")));
         //btnMoveNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/next.png")));
