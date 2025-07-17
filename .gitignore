@@ -1,0 +1,31 @@
+# Bỏ thư mục Maven build
+/target/
+
+# Thư mục NetBeans cá nhân (không cần track)
+/nbproject/private/
+/build/
+/dist/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+# File hệ điều hành
+.DS_Store
+Thumbs.db
+
+# File IDE (IntelliJ, VSCode)
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# File tạm và log
+*.log
+*.bak
+*.tmp
+
+# File biên dịch
+*.class
+*.jar
+*.war
+*.ear
