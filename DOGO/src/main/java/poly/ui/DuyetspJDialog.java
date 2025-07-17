@@ -27,6 +27,30 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     public DuyetspJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // 1. Đổi màu nền panel (phối màu mới)
+        jPanel1.setBackground(new java.awt.Color(227, 242, 253)); // Xanh nhạt pastel
+        jPanel2.setBackground(new java.awt.Color(240, 244, 195)); // Xám xanh nhạt
+        // 2. Đổi màu tiêu đề
+        jLabel1.setForeground(new java.awt.Color(25, 118, 210)); // Xanh dương đậm
+        jLabel9.setForeground(new java.awt.Color(56, 142, 60));  // Xanh lá đậm
+        // 3. Đổi màu header bảng
+        tblSanPham.getTableHeader().setBackground(new java.awt.Color(25, 118, 210));
+        tblSanPham.getTableHeader().setForeground(java.awt.Color.WHITE);
+        // 4. Thêm icon cho nút (chỉ dùng icon có sẵn trong thư mục icon)
+        // btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/search.png")));
+        btnThemVaoGio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/add.png")));
+        // btnMoveFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/first.png")));
+        //btnMovePrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/back.png")));
+        //btnMoveNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/next.png")));
+        // btnMoveLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/last.png")));
+        // 5. Thêm hiệu ứng hover cho nút
+        addHoverEffect(btnTimKiem, new java.awt.Color(41, 128, 185));
+        addHoverEffect(btnThemVaoGio, new java.awt.Color(39, 174, 96));
+        addHoverEffect(btnMoveFirst, new java.awt.Color(127, 140, 141));
+        addHoverEffect(btnMovePrevious, new java.awt.Color(127, 140, 141));
+        addHoverEffect(btnMoveNext, new java.awt.Color(127, 140, 141));
+        addHoverEffect(btnMoveLast, new java.awt.Color(127, 140, 141));
+        addHoverEffect(btnTimLoai, new java.awt.Color(241, 196, 15));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -244,6 +268,11 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         jLabel9.setText("Thông Tin Chi Tiết");
 
         btnThemVaoGio.setText("Thêm vào giỏ");
+        btnThemVaoGio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemVaoGioActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Kích Thước");
@@ -768,4 +797,18 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         }
     }
 
+    // Thêm phương thức hỗ trợ hiệu ứng hover cho nút
+    private void addHoverEffect(javax.swing.JButton button, java.awt.Color hoverColor) {
+        java.awt.Color original = button.getBackground();
+        button.setContentAreaFilled(true);
+        button.setOpaque(true);
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(original);
+            }
+        });
+    }
 }

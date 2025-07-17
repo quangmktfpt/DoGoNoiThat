@@ -485,6 +485,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Th&#xea;m v&#xe0;o gi&#x1ecf;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThemVaoGioActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
