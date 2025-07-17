@@ -4,11 +4,22 @@
  */
 package poly.ui;
 
+import poly.dao.impl.GioHangDAOImpl;
+import poly.dao.impl.ProductDAOImpl;
+import poly.entity.CartItem;
+import poly.entity.Product;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Nghia
  */
 public class GioHangJDialog extends javax.swing.JDialog {
+    private final GioHangDAOImpl gioHangDAO = new GioHangDAOImpl();
+    private final ProductDAOImpl productDAO = new ProductDAOImpl();
+    private int userId = 2; // Demo: userId cố định, thực tế lấy từ session đăng nhập
 
     /**
      * Creates new form GioHangJDialog
@@ -16,6 +27,83 @@ public class GioHangJDialog extends javax.swing.JDialog {
     public GioHangJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        fillTable();
+        addEventHandlers();
+    }
+
+    private void addEventHandlers() {
+        jButton1.addActionListener(e -> capNhatSoLuong());
+        jButton2.addActionListener(e -> xoaKhoiGio());
+        jButton3.addActionListener(e -> tamTinhTongTien());
+    }
+
+    private void capNhatSoLuong() {
+        int row = jTable1.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để cập nhật số lượng!");
+            return;
+        }
+        String productId = jTable1.getValueAt(row, 0).toString();
+        String soLuongStr = JOptionPane.showInputDialog(this, "Nhập số lượng mới:", jTable1.getValueAt(row, 3));
+        if (soLuongStr == null) return;
+        try {
+            int soLuongMoi = Integer.parseInt(soLuongStr);
+            if (soLuongMoi <= 0) throw new NumberFormatException();
+            gioHangDAO.updateCartItem(userId, productId, soLuongMoi);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên dương!");
+        }
+        fillTable();
+    }
+
+    private void xoaKhoiGio() {
+        int row = jTable1.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để xoá!");
+            return;
+        }
+        String productId = jTable1.getValueAt(row, 0).toString();
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            gioHangDAO.deleteCartItem(userId, productId);
+        }
+        fillTable();
+    }
+
+    private void tamTinhTongTien() {
+        double tong = 0;
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            Object thanhTienObj = jTable1.getValueAt(i, 4);
+            if (thanhTienObj != null) {
+                try {
+                    tong += new java.math.BigDecimal(thanhTienObj.toString()).doubleValue();
+                } catch (Exception ex) {
+                    // ignore
+                }
+            }
+        }
+        JOptionPane.showMessageDialog(this, "Tổng tiền tạm tính: " + String.format("%,.0f", tong) + " VND");
+        fillTable();
+    }
+
+    private void fillTable() {
+        String[] columns = {"Mã SP", "Tên SP", "Đơn giá", "Số lượng", "Thành tiền"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        List<CartItem> cartItems = gioHangDAO.getCartItemsByUserId(userId);
+        for (CartItem item : cartItems) {
+            Product p = productDAO.selectById(item.getProductId());
+            if (p != null) {
+                Object[] row = {
+                    p.getProductId(),
+                    p.getProductName(),
+                    p.getUnitPrice(),
+                    item.getQuantity(),
+                    p.getUnitPrice().multiply(java.math.BigDecimal.valueOf(item.getQuantity()))
+                };
+                model.addRow(row);
+            }
+        }
+        jTable1.setModel(model);
     }
 
     /**

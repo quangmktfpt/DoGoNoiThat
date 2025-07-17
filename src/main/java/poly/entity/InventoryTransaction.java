@@ -18,6 +18,9 @@ public class InventoryTransaction {
     private Integer quantityChange;
     private String referenceId;
     private String notes;
+
+    private Integer userId;
+
     // getters and setters
 
     public Integer getTransactionId() {
@@ -76,7 +79,14 @@ public class InventoryTransaction {
         this.notes = notes;
     }
 
+<<<<<<< HEAD
     public InventoryTransaction(Integer transactionId, String productId, LocalDateTime transactionDate, String transactionType, Integer quantityChange, String referenceId, String notes) {
+=======
+    public Integer getUserId() { return userId; }
+    public void setUserId(Integer userId) { this.userId = userId; }
+
+    public InventoryTransaction(Integer transactionId, String productId, LocalDateTime transactionDate, String transactionType, Integer quantityChange, String referenceId, String notes, Integer userId) {
+>>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         this.transactionId = transactionId;
         this.productId = productId;
         this.transactionDate = transactionDate;
@@ -84,6 +94,10 @@ public class InventoryTransaction {
         this.quantityChange = quantityChange;
         this.referenceId = referenceId;
         this.notes = notes;
+<<<<<<< HEAD
+=======
+        this.userId = userId;
+>>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     }
 
     public InventoryTransaction() {

@@ -23,9 +23,19 @@ public class XJdbc {
      */
     public static Connection openConnection() {
         var driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+<<<<<<< HEAD
         var dburl = "jdbc:sqlserver://localhost;database=furniture_store;encrypt=true;trustServerCertificate=true;";
         var username = "sa";
         var password = "123456";
+=======
+
+        var dburl = "jdbc:sqlserver://localhost;database=Storedogo2;encrypt=true;trustServerCertificate=true;";
+
+       
+
+        var username = "sa";
+        var password = "123";
+>>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         try {
             if (!XJdbc.isReady()) {
                 Class.forName(driver);

@@ -4,11 +4,22 @@
  */
 package poly.ui;
 
+
+
+import poly.controller.SupportRequestController;
+import poly.entity.SupportRequest;
+import poly.util.XDialog;
+import java.sql.Timestamp;
+
+
 /**
  *
  * @author Nghia
  */
 public class HoTroJDialog extends javax.swing.JDialog {
+
+    private SupportRequestController controller = new SupportRequestController();
+
 
     /**
      * Creates new form HoTroJDialog
@@ -16,6 +27,32 @@ public class HoTroJDialog extends javax.swing.JDialog {
     public HoTroJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+
+        setLocationRelativeTo(null);
+        jButton1.addActionListener(e -> guiYeuCau());
+    }
+
+    private void guiYeuCau() {
+        String subject = jTextField1.getText().trim();
+        String content = jTextArea1.getText().trim();
+        if (subject.isEmpty() || content.isEmpty()) {
+            XDialog.alert("Vui lòng nhập đầy đủ chủ đề và nội dung!");
+            return;
+        }
+        SupportRequest req = new SupportRequest();
+        req.setSubject(subject);
+        req.setContent(content);
+        req.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+        req.setStatus("Chờ xử lý");
+        try {
+            controller.sendRequest(req);
+            XDialog.alert("Gửi yêu cầu hỗ trợ thành công!");
+            jTextField1.setText("");
+            jTextArea1.setText("");
+        } catch (Exception ex) {
+            XDialog.alert("Gửi yêu cầu thất bại: " + ex.getMessage());
+        }
+
     }
 
     /**
