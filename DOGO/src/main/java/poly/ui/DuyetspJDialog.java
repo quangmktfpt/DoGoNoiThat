@@ -4,22 +4,11 @@
  */
 package poly.ui;
 
-import poly.controller.ProductController;
-import poly.entity.Product;
-import poly.entity.Category;
-import poly.dao.impl.ProductDAOImpl;
-import poly.dao.impl.CategoryDAOImpl;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
-import java.math.BigDecimal;
-
 /**
  *
  * @author Nghia
  */
-public class DuyetspJDialog extends javax.swing.JDialog implements ProductController {
+public class DuyetspJDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form DuyetspJDialog
@@ -27,35 +16,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     public DuyetspJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        // 1. Đổi màu nền panel (phối màu mới)
-        jPanel1.setBackground(new java.awt.Color(227, 242, 253)); // Xanh nhạt pastel
-        jPanel2.setBackground(new java.awt.Color(240, 244, 195)); // Xám xanh nhạt
-        // 2. Đổi màu tiêu đề
-        jLabel1.setForeground(new java.awt.Color(25, 118, 210)); // Xanh dương đậm
-        jLabel9.setForeground(new java.awt.Color(56, 142, 60));  // Xanh lá đậm
-        // 3. Đổi màu header bảng
-        tblSanPham.getTableHeader().setBackground(new java.awt.Color(25, 118, 210));
-        tblSanPham.getTableHeader().setForeground(java.awt.Color.WHITE);
-        // 4. Thêm icon cho nút (chỉ dùng icon có sẵn trong thư mục icon)
-        // btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/search.png")));
-        btnThemVaoGio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/add.png")));
-        // btnMoveFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/first.png")));
-        //btnMovePrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/back.png")));
-        //btnMoveNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/next.png")));
-        // btnMoveLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/last.png")));
-        // 5. Thêm hiệu ứng hover cho nút
-        addHoverEffect(btnTimKiem, new java.awt.Color(41, 128, 185));
-        addHoverEffect(btnThemVaoGio, new java.awt.Color(39, 174, 96));
-        addHoverEffect(btnMoveFirst, new java.awt.Color(127, 140, 141));
-        addHoverEffect(btnMovePrevious, new java.awt.Color(127, 140, 141));
-        addHoverEffect(btnMoveNext, new java.awt.Color(127, 140, 141));
-        addHoverEffect(btnMoveLast, new java.awt.Color(127, 140, 141));
-        addHoverEffect(btnTimLoai, new java.awt.Color(241, 196, 15));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
     }
 
     /**
@@ -69,18 +29,14 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        txtTimKiemSanPham = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        btnTimKiem = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         scrProducts = new javax.swing.JScrollPane();
-        tblSanPham = new javax.swing.JTable();
+        tblProducts = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        lblAnhSanPham = new javax.swing.JLabel();
-        cboLoaiSanPham = new javax.swing.JComboBox<>();
-        btnTimLoai = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        lblHinhAnh = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -91,107 +47,70 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         btnMoveNext = new javax.swing.JButton();
         btnMoveLast = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtAreaMoTa = new javax.swing.JTextArea();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        btnThemVaoGio = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        txtTenSanPham = new javax.swing.JTextField();
-        txtGiaSanPham = new javax.swing.JTextField();
-        txtKichThuoc = new javax.swing.JTextField();
-        txtGiaKichThuoc = new javax.swing.JTextField();
-        txtTonKho = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        txtTimKiemSanPham.setPreferredSize(new java.awt.Dimension(300, 25));
+        jTextField1.setPreferredSize(new java.awt.Dimension(300, 25));
 
         jLabel6.setText("Tìm Kiếm");
 
-        btnTimKiem.setText("Tìm");
-        btnTimKiem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimKiemActionPerformed(evt);
-            }
-        });
+        jButton3.setText("Tìm");
 
-        tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
+        tblProducts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Tên SP", "Loại SP", "Giá"
+                "Ảnh", "Tên SP", "Giá", "Mua"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblSanPhamMouseClicked(evt);
-            }
-        });
-        scrProducts.setViewportView(tblSanPham);
+        scrProducts.setViewportView(tblProducts);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Tổng Quan Sản Phẩm");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Ảnh Sản Phẩm");
-
-        lblAnhSanPham.setText("jLabel11");
-        lblAnhSanPham.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        cboLoaiSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        btnTimLoai.setText("Tìm Loại");
-        btnTimLoai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimLoaiActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(lblAnhSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(252, 252, 252)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 169, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnTimKiem)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTimLoai)))
-                .addContainerGap())
+                        .addComponent(jButton3)
+                        .addGap(138, 138, 138))
+                    .addComponent(scrProducts)))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(252, 252, 252)
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,24 +119,17 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTimKiem)
-                    .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimLoai))
+                    .addComponent(jButton3)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(31, 31, 31)
-                        .addComponent(lblAnhSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Tổng quan", jPanel1);
 
-        lblHinhAnh.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Tên Sản Phẩm");
@@ -256,32 +168,37 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
             }
         });
 
-        txtAreaMoTa.setEditable(false);
-        txtAreaMoTa.setColumns(30);
-        txtAreaMoTa.setLineWrap(true);
-        txtAreaMoTa.setRows(5);
-        txtAreaMoTa.setText("\n");
-        txtAreaMoTa.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(txtAreaMoTa);
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(30);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
+        jTextArea1.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(jTextArea1);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel9.setText("Thông Tin Chi Tiết");
 
-        btnThemVaoGio.setText("Thêm vào giỏ");
-        btnThemVaoGio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemVaoGioActionPerformed(evt);
-            }
-        });
+        jButton1.setText("Thêm vào giỏ");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Kích Thước");
+
+        jLabel11.setText("jLabel11");
+
+        jLabel12.setText("jLabel12");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Giá");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Tồn Kho");
+
+        jLabel15.setText("jLabel15");
+
+        jLabel16.setText("jLabel16");
+
+        jLabel17.setText("jLabel17");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -294,24 +211,20 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                         .addComponent(jLabel9)
                         .addGap(259, 259, 259))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnThemVaoGio)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(258, 258, 258))))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txtTonKho)
-                        .addGap(30, 30, 30)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnMoveFirst, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnMovePrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -322,19 +235,25 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                         .addGap(32, 32, 32))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtTenSanPham)
-                                        .addComponent(txtGiaSanPham, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtKichThuoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtGiaKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(26, Short.MAX_VALUE))))
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(5, 5, 5)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(60, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,13 +270,13 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                                 .addGap(20, 20, 20)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3)
-                                    .addComponent(txtTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jLabel11))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtGiaSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(82, 82, 82)
@@ -366,8 +285,8 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                                     .addComponent(btnMovePrevious)
                                     .addComponent(btnMoveNext)
                                     .addComponent(btnMoveLast))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnThemVaoGio)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                                .addComponent(jButton1)
                                 .addGap(22, 22, 22))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
@@ -376,19 +295,19 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
                                 .addGap(101, 101, 101)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel10)
-                                    .addComponent(txtKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel15))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel13)
-                                    .addComponent(txtGiaKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel16))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel14)
-                                    .addComponent(txtTonKho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel17))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
@@ -399,7 +318,6 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
@@ -414,72 +332,20 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMoveFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveFirstActionPerformed
-        moveFirst();
+        
     }//GEN-LAST:event_btnMoveFirstActionPerformed
 
     private void btnMovePreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovePreviousActionPerformed
-        movePrevious();
+        
     }//GEN-LAST:event_btnMovePreviousActionPerformed
 
     private void btnMoveNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveNextActionPerformed
-        moveNext();
+        
     }//GEN-LAST:event_btnMoveNextActionPerformed
 
     private void btnMoveLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveLastActionPerformed
-        moveLast();
+        
     }//GEN-LAST:event_btnMoveLastActionPerformed
-
-    private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
-        searchProducts();
-    }//GEN-LAST:event_btnTimKiemActionPerformed
-
-    private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
-        edit();
-        if (evt.getClickCount() == 2) {
-            jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab chi tiết
-        }
-    }//GEN-LAST:event_tblSanPhamMouseClicked
-
-    private void btnThemVaoGioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoGioActionPerformed
-        if (currentRow >= 0 && productList != null && currentRow < productList.size()) {
-            Product selectedProduct = productList.get(currentRow);
-            JOptionPane.showMessageDialog(this, 
-                "Đã thêm sản phẩm '" + selectedProduct.getProductName() + "' vào giỏ hàng!", 
-                "Thông báo", 
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Vui lòng chọn một sản phẩm trước khi thêm vào giỏ hàng!", 
-                "Thông báo", 
-                JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnThemVaoGioActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        open();
-    }//GEN-LAST:event_formWindowOpened
-
-    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimLoaiActionPerformed
-        // TODO add your handling code here:
-        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
-        if (selectedIndex >= 0) {
-            List<Category> categories = loadAllCategories();
-            String selectedCategoryId = categories.get(selectedIndex).getCategoryId();
-            List<Product> filteredProducts = searchByCategory(selectedCategoryId);
-
-            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-            model.setRowCount(0);
-            for (Product product : filteredProducts) {
-                model.addRow(new Object[]{
-                    product.getProductName(),
-                    getCategoryName(product.getCategoryId()),
-                    product.getUnitPrice()
-                });
-            }
-            productList = filteredProducts;
-            currentRow = -1;
-        }
-    }//GEN-LAST:event_btnTimLoaiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -528,14 +394,17 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     private javax.swing.JButton btnMoveLast;
     private javax.swing.JButton btnMoveNext;
     private javax.swing.JButton btnMovePrevious;
-    private javax.swing.JButton btnThemVaoGio;
-    private javax.swing.JButton btnTimKiem;
-    private javax.swing.JButton btnTimLoai;
-    private javax.swing.JComboBox<String> cboLoaiSanPham;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -548,267 +417,9 @@ public class DuyetspJDialog extends javax.swing.JDialog implements ProductContro
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JLabel lblAnhSanPham;
-    private javax.swing.JLabel lblHinhAnh;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JScrollPane scrProducts;
-    private javax.swing.JTable tblSanPham;
-    private javax.swing.JTextArea txtAreaMoTa;
-    private javax.swing.JTextField txtGiaKichThuoc;
-    private javax.swing.JTextField txtGiaSanPham;
-    private javax.swing.JTextField txtKichThuoc;
-    private javax.swing.JTextField txtTenSanPham;
-    private javax.swing.JTextField txtTimKiemSanPham;
-    private javax.swing.JTextField txtTonKho;
+    private javax.swing.JTable tblProducts;
     // End of variables declaration//GEN-END:variables
-
-    // ========== PRODUCT CONTROLLER IMPLEMENTATION ==========
-    private ProductDAOImpl productDAO = new ProductDAOImpl();
-    private CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
-    private int currentRow = -1;
-    private List<Product> productList;
-
-    @Override
-    public void open() {
-        fillToTable();
-        clear();
-        setEditable(false); // Mặc định tắt quyền chỉnh sửa ở tab 2
-        loadCategoriesToComboBox();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    @Override
-    public void setForm(Product entity) {
-        if (entity != null) {
-            txtTenSanPham.setText(entity.getProductName());
-            txtGiaSanPham.setText(entity.getUnitPrice().toString());
-            txtGiaKichThuoc.setText(entity.getUnitPrice().toString()); // Giá kích thước thực chất là giá bán
-            txtTonKho.setText(entity.getQuantity().toString());
-            txtAreaMoTa.setText(entity.getDescription().toString()); // Không có trường mô tả trong entity
-            txtKichThuoc.setText(entity.getKichThuoc().toString()); // Nếu có trường kích thước thì lấy, nếu không thì để trống
-            // Hiển thị ảnh sản phẩm
-            if (entity.getImagePath() != null && !entity.getImagePath().isEmpty()) {
-                ImageIcon icon = getProductImage(entity.getImagePath());
-                if (icon != null) {
-                    lblAnhSanPham.setIcon(icon);
-                    lblHinhAnh.setIcon(icon);
-                }
-            }
-        }
-    }
-
-    @Override
-    public Product getForm() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-        return null;
-    }
-
-    @Override
-    public void fillToTable() {
-        DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-        model.setRowCount(0);
-        
-        productList = productDAO.selectAll();
-        for (Product product : productList) {
-            model.addRow(new Object[]{
-                product.getProductName(),
-                getCategoryName(product.getCategoryId()),
-                product.getUnitPrice()
-            });
-        }
-        currentRow = -1;
-    }
-
-    @Override
-    public void edit() {
-        int row = tblSanPham.getSelectedRow();
-        if (row >= 0) {
-            Product product = productList.get(row);
-            setForm(product);
-            currentRow = row;
-        }
-    }
-
-    @Override
-    public void create() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void update() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void delete() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void clear() {
-        txtTenSanPham.setText("");
-        txtGiaSanPham.setText("");
-        txtTonKho.setText("");
-        txtKichThuoc.setText("");
-        txtGiaKichThuoc.setText("");
-        txtAreaMoTa.setText("");
-        lblAnhSanPham.setIcon(null);
-        lblHinhAnh.setIcon(null);
-        tblSanPham.clearSelection();
-        currentRow = -1;
-    }
-
-    @Override
-    public void setEditable(boolean editable) {
-        txtTenSanPham.setEditable(editable);
-        txtGiaSanPham.setEditable(editable);
-        txtTonKho.setEditable(editable);
-        txtKichThuoc.setEditable(editable);
-        txtGiaKichThuoc.setEditable(editable);
-        txtAreaMoTa.setEditable(editable);
-    }
-
-    @Override
-    public void checkAll() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void uncheckAll() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void deleteCheckedItems() {
-        // Không cần implement cho màn hình duyệt sản phẩm
-    }
-
-    @Override
-    public void moveFirst() {
-        if (tblSanPham.getRowCount() > 0) {
-            tblSanPham.setRowSelectionInterval(0, 0);
-            moveTo(0);
-        }
-    }
-
-    @Override
-    public void movePrevious() {
-        int row = tblSanPham.getSelectedRow();
-        if (row > 0) {
-            tblSanPham.setRowSelectionInterval(row - 1, row - 1);
-            moveTo(row - 1);
-        }
-    }
-
-    @Override
-    public void moveNext() {
-        int row = tblSanPham.getSelectedRow();
-        if (row < tblSanPham.getRowCount() - 1 && row >= 0) {
-            tblSanPham.setRowSelectionInterval(row + 1, row + 1);
-            moveTo(row + 1);
-        }
-    }
-
-    @Override
-    public void moveLast() {
-        int last = tblSanPham.getRowCount() - 1;
-        if (last >= 0) {
-            tblSanPham.setRowSelectionInterval(last, last);
-            moveTo(last);
-        }
-    }
-
-    @Override
-    public void moveTo(int rowIndex) {
-        if (rowIndex >= 0 && rowIndex < tblSanPham.getRowCount() && productList != null) {
-            Product product = productList.get(rowIndex);
-            setForm(product);
-            currentRow = rowIndex;
-        }
-    }
-
-    @Override
-    public List<Category> loadAllCategories() {
-        return categoryDAO.selectAll();
-    }
-
-    @Override
-    public String uploadImage(String localImagePath) {
-        // Không cần implement cho màn hình duyệt sản phẩm
-        return null;
-    }
-
-    @Override
-    public ImageIcon getProductImage(String imagePath) {
-        return productDAO.getProductImage(imagePath);
-    }
-
-    @Override
-    public List<Product> searchByName(String name) {
-        return productDAO.searchByName(name);
-    }
-
-    @Override
-    public List<Product> searchByPriceRange(BigDecimal min, BigDecimal max) {
-        return productDAO.searchByPriceRange(min, max);
-    }
-
-    @Override
-    public List<Product> searchByCategory(String categoryId) {
-        return productDAO.searchByCategory(categoryId);
-    }
-
-    // Phương thức hỗ trợ
-    private String getCategoryName(String categoryId) {
-        List<Category> categories = loadAllCategories();
-        for (Category category : categories) {
-            if (category.getCategoryId().equals(categoryId)) {
-                return category.getCategoryName();
-            }
-        }
-        return "Không xác định";
-    }
-
-    // Phương thức tìm kiếm sản phẩm
-    private void searchProducts() {
-        String searchText = txtTimKiemSanPham.getText().trim();
-        if (searchText.isEmpty()) {
-            fillToTable();
-        } else {
-            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-            model.setRowCount(0);
-            
-            List<Product> searchResults = searchByName(searchText);
-            for (Product product : searchResults) {
-                model.addRow(new Object[]{
-                    product.getProductName(),
-                    getCategoryName(product.getCategoryId()),
-                    product.getUnitPrice()
-                });
-            }
-        }
-    }
-
-    private void loadCategoriesToComboBox() {
-        cboLoaiSanPham.removeAllItems();
-        List<Category> categories = loadAllCategories();
-        for (Category c : categories) {
-            cboLoaiSanPham.addItem(c.getCategoryName());
-        }
-    }
-
-    // Thêm phương thức hỗ trợ hiệu ứng hover cho nút
-    private void addHoverEffect(javax.swing.JButton button, java.awt.Color hoverColor) {
-        java.awt.Color original = button.getBackground();
-        button.setContentAreaFilled(true);
-        button.setOpaque(true);
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(hoverColor);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(original);
-            }
-        });
-    }
 }

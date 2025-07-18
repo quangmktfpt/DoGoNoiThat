@@ -81,8 +81,6 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
         lblProductImage2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jTextField8 = new javax.swing.JTextField();
-        jTextFieldDesc = new javax.swing.JTextField();
-        jTextFieldKichThuoc = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -334,10 +332,6 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
 
         jLabel12.setText("Tồn Kho");
 
-        jTextFieldDesc.setText("Mô tả");
-
-        jTextFieldKichThuoc.setText("Kích thước");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -393,12 +387,6 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(314, 314, 314)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextFieldDesc)
-                    .addComponent(jTextFieldKichThuoc, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -439,11 +427,7 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addComponent(jTextFieldDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextFieldKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Chỉnh sửa", jPanel2);
@@ -726,26 +710,23 @@ clear();        // TODO add your handling code here:
         lblProductImage2.setIcon(null);
     }
 
-@Override
-public Product getForm() {
-    String id = jTextField2.getText().trim();
-    String name = jTextField3.getText().trim();
-    String catId = categoryDAO.selectAll().get(jComboBox1.getSelectedIndex()).getCategoryId();
-    BigDecimal price = new BigDecimal(jTextField4.getText().trim());
-    BigDecimal gianhap = new BigDecimal(jTextField5.getText().trim());
-    int quantity = 0;
-    try {
-        quantity = Integer.parseInt(jTextField8.getText().trim());
-    } catch (NumberFormatException e) {
-        quantity = 0;
+    @Override
+    public Product getForm() {
+        String id = jTextField2.getText().trim();
+        String name = jTextField3.getText().trim();
+        String catId = categoryDAO.selectAll().get(jComboBox1.getSelectedIndex()).getCategoryId();
+        BigDecimal price = new BigDecimal(jTextField4.getText().trim());
+        BigDecimal gianhap = new BigDecimal(jTextField5.getText().trim());
+        int quantity = 0;
+        try {
+            quantity = Integer.parseInt(jTextField8.getText().trim());
+        } catch (NumberFormatException e) {
+            quantity = 0;
+        }
+        String imgPath = currentImagePath;
+        java.time.LocalDateTime created = java.time.LocalDateTime.now();
+        return new Product(id, catId, name, price, gianhap, quantity, imgPath, created);
     }
-    String imgPath = currentImagePath;
-    java.time.LocalDateTime created = java.time.LocalDateTime.now();
-    String description = jTextFieldDesc.getText().trim(); // hoặc jTextAreaDesc.getText().trim()
-    String kichThuoc = jTextFieldKichThuoc.getText().trim();
-
-    return new Product(id, catId, name, price, gianhap, quantity, imgPath, created, description, kichThuoc);
-}
 
     @Override
     public void setForm(Product p) {
@@ -944,8 +925,6 @@ public Product getForm() {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextFieldDesc;
-    private javax.swing.JTextField jTextFieldKichThuoc;
     private javax.swing.JLabel lblProductImage;
     private javax.swing.JLabel lblProductImage2;
     // End of variables declaration//GEN-END:variables

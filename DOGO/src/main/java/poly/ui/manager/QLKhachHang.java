@@ -4,11 +4,32 @@
  */
 package poly.ui.manager;
 
+import java.math.BigDecimal;
+import java.util.List;
+import poly.controller.KhachhangController;
+import poly.entity.Order;
+import poly.entity.User;
+import poly.dao.UserDAO;
+import poly.dao.CustomerOrderHistoryDAO;
+import poly.dao.impl.UserDAOImpl;
+import poly.dao.impl.CustomerOrderHistoryDAOImpl;
+import poly.util.PasswordUtil;
+import poly.util.XDialog;
+import poly.util.XDate;
+import java.time.LocalDateTime;
+import java.util.regex.Pattern;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Duy
  */
-public class QLKhachHang extends javax.swing.JDialog {
+public class QLKhachHang extends javax.swing.JDialog implements KhachhangController{
+
+    private UserDAO userDAO = new UserDAOImpl();
+    private CustomerOrderHistoryDAO orderHistoryDAO = new CustomerOrderHistoryDAOImpl();
+    private List<User> customerList;
+    private int currentRow = -1;
 
     /**
      * Creates new form QLKhachHang
@@ -16,6 +37,13 @@ public class QLKhachHang extends javax.swing.JDialog {
     public QLKhachHang(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        addButtonListeners();
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
     }
 
     /**
@@ -61,7 +89,6 @@ public class QLKhachHang extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -78,8 +105,16 @@ public class QLKhachHang extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel24 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton11 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Quản lí khách hàng");
@@ -96,7 +131,20 @@ public class QLKhachHang extends javax.swing.JDialog {
             new String [] {
                 "Mã", "Tên đăng nhập", "Full Name", "Số điện thoại", "Email", "Địa chỉ", "Trạng Thái ", "Ngày Tạo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -124,6 +172,11 @@ public class QLKhachHang extends javax.swing.JDialog {
         jLabel12.setText("Email :");
 
         jButton9.setText("Tìm");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel14.setText("Tổng Giá Trị Đơn Hàng");
@@ -253,25 +306,27 @@ public class QLKhachHang extends javax.swing.JDialog {
                 .addGap(35, 35, 35)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton7)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel19))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton6)
+                        .addComponent(jLabel16)
+                        .addComponent(jLabel17)
+                        .addComponent(jLabel18)
+                        .addComponent(jLabel19)))
                 .addGap(8, 8, 8)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton10)
-                    .addComponent(jLabel20)
-                    .addComponent(jLabel21)
-                    .addComponent(jLabel22)
-                    .addComponent(jLabel23))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton8)
+                        .addComponent(jLabel20)
+                        .addComponent(jLabel21)
+                        .addComponent(jLabel22)
+                        .addComponent(jLabel23)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
@@ -283,15 +338,28 @@ public class QLKhachHang extends javax.swing.JDialog {
 
         jLabel10.setText("Địa chỉ");
 
-        jButton2.setText("Thêm");
-
         jButton3.setText("Cập nhật");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Xóa");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Mã khách:");
 
         jButton5.setText("Nhập mới");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("Số điện thoại:");
 
@@ -307,14 +375,23 @@ public class QLKhachHang extends javax.swing.JDialog {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt Động", "Không Hoạt Động" }));
 
+        jLabel24.setText("Username");
+
+        jButton11.setText("Thêm");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(251, 251, 251)
-                .addComponent(jButton2)
-                .addGap(18, 18, 18)
+                .addGap(222, 222, 222)
+                .addComponent(jButton11)
+                .addGap(38, 38, 38)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton4)
@@ -324,12 +401,7 @@ public class QLKhachHang extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(31, 31, 31)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel6)
@@ -356,7 +428,19 @@ public class QLKhachHang extends javax.swing.JDialog {
                                 .addComponent(jTextField6)))
                         .addGap(41, 41, 41)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50))))
+                        .addGap(50, 50, 50))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jTextField1)
+                                .addGap(524, 524, 524))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,17 +464,21 @@ public class QLKhachHang extends javax.swing.JDialog {
                     .addComponent(jLabel13)
                     .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addGap(23, 23, 23)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(539, Short.MAX_VALUE))
+                    .addComponent(jButton5)
+                    .addComponent(jButton11))
+                .addContainerGap(536, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Chỉnh sửa", jPanel2);
@@ -419,6 +507,34 @@ public class QLKhachHang extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+this.open();        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        bang(evt);        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+create() ;       // TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+ update();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+delete();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+clear();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+
+
+
 
     /**
      * @param args the command line arguments
@@ -465,7 +581,7 @@ public class QLKhachHang extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -490,6 +606,7 @@ public class QLKhachHang extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -504,6 +621,7 @@ public class QLKhachHang extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
@@ -515,4 +633,570 @@ public class QLKhachHang extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public List<User> loadCustomers() {
+        customerList = userDAO.selectAll();
+        return customerList;
+    }
+
+    @Override
+    public List<User> loadActiveCustomers() {
+        // Tạm thời load tất cả, có thể cập nhật sau
+        return userDAO.selectAll();
+    }
+
+    @Override
+    public List<User> searchCustomers(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return loadCustomers();
+        }
+        // Tạm thời load tất cả và filter, có thể cập nhật sau
+        List<User> allUsers = userDAO.selectAll();
+        return allUsers.stream()
+                .filter(user -> (user.getFullName() != null && user.getFullName().toLowerCase().contains(keyword.toLowerCase())) ||
+                               (user.getEmail() != null && user.getEmail().toLowerCase().contains(keyword.toLowerCase())) ||
+                               (user.getPhone() != null && user.getPhone().toLowerCase().contains(keyword.toLowerCase())))
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Tìm kiếm khách hàng theo nhiều tiêu chí
+     */
+    private List<User> searchCustomersAdvanced(String tenKhachHang, String soDienThoai, String username, String email) {
+        List<User> allUsers = userDAO.selectAll();
+        
+        return allUsers.stream()
+                .filter(user -> {
+                    boolean match = true;
+                    
+                    // Tìm theo tên khách hàng
+                    if (!tenKhachHang.isEmpty()) {
+                        match = match && (user.getFullName() != null && 
+                                user.getFullName().toLowerCase().contains(tenKhachHang.toLowerCase()));
+                    }
+                    
+                    // Tìm theo số điện thoại
+                    if (!soDienThoai.isEmpty()) {
+                        match = match && (user.getPhone() != null && 
+                                user.getPhone().contains(soDienThoai));
+                    }
+                    
+                    // Tìm theo username
+                    if (!username.isEmpty()) {
+                        match = match && (user.getUsername() != null && 
+                                user.getUsername().toLowerCase().contains(username.toLowerCase()));
+                    }
+                    
+                    // Tìm theo email
+                    if (!email.isEmpty()) {
+                        match = match && (user.getEmail() != null && 
+                                user.getEmail().toLowerCase().contains(email.toLowerCase()));
+                    }
+                    
+                    return match;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public boolean checkUsernameExists(String username) {
+        List<User> allUsers = userDAO.selectAll();
+        return allUsers.stream().anyMatch(user -> user.getUsername() != null && user.getUsername().equals(username));
+    }
+
+    @Override
+    public boolean checkEmailExists(String email) {
+        List<User> allUsers = userDAO.selectAll();
+        return allUsers.stream().anyMatch(user -> user.getEmail() != null && user.getEmail().equals(email));
+    }
+
+    @Override
+    public void updateCustomerStatus(Integer userId, Boolean isActive) {
+        try {
+            User user = userDAO.selectById(userId);
+            if (user != null) {
+                user.setIsActive(isActive);
+                userDAO.update(user);
+                loadCustomers();
+                fillToTable();
+            }
+        } catch (Exception e) {
+            XDialog.alert("Lỗi khi cập nhật trạng thái: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void resetCustomerPassword(Integer userId, String newPassword) {
+        try {
+            User user = userDAO.selectById(userId);
+            if (user != null) {
+                String hashedPassword = hashPassword(newPassword);
+                user.setPasswordHash(hashedPassword);
+                userDAO.update(user);
+            }
+        } catch (Exception e) {
+            XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Order> getCustomerOrderHistory(Integer userId) {
+        return orderHistoryDAO.getCustomerOrderHistory(userId);
+    }
+
+    @Override
+    public BigDecimal getCustomerTotalOrderValue(Integer userId) {
+        return orderHistoryDAO.getCustomerTotalOrderValue(userId);
+    }
+
+    @Override
+    public int getCustomerOrderCount(Integer userId) {
+        return orderHistoryDAO.getCustomerOrderCount(userId);
+    }
+
+    @Override
+    public int getCustomerCountByStatus(Boolean isActive) {
+        List<User> allUsers = userDAO.selectAll();
+        return (int) allUsers.stream()
+                .filter(user -> user.getIsActive() != null && user.getIsActive().equals(isActive))
+                .count();
+    }
+
+    @Override
+    public String validateCustomerInfo(User user) {
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            return "Username không được để trống!";
+        }
+        
+        if (user.getUsername().length() < 3) {
+            return "Username phải có ít nhất 3 ký tự!";
+        }
+        
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            return "Email không được để trống!";
+        }
+        
+        // Validate email format
+        String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
+        if (!Pattern.matches(emailPattern, user.getEmail())) {
+            return "Email không đúng định dạng!";
+        }
+        
+        if (user.getPasswordHash() == null || user.getPasswordHash().trim().isEmpty()) {
+            return "Mật khẩu không được để trống!";
+        }
+        
+        if (user.getPasswordHash().length() < 6) {
+            return "Mật khẩu phải có ít nhất 6 ký tự!";
+        }
+        
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            return "Họ tên không được để trống!";
+        }
+        
+        if (user.getPhone() != null && !user.getPhone().trim().isEmpty()) {
+            // Validate phone format (Vietnamese phone number)
+            String phonePattern = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
+            if (!Pattern.matches(phonePattern, user.getPhone())) {
+                return "Số điện thoại không đúng định dạng!";
+            }
+        }
+        
+        return null; // No validation errors
+    }
+
+    @Override
+    public String hashPassword(String password) {
+        return PasswordUtil.hashPassword(password);
+    }
+
+    @Override
+    public void open() {
+        loadCustomers();
+        fillToTable();
+    }
+    
+
+    
+    private void bang(java.awt.event.MouseEvent evt) {
+        int row = jTable1.getSelectedRow();
+        if (row >= 0 && customerList != null && row < customerList.size()) {
+            currentRow = row;
+            User selectedUser = customerList.get(row);
+            
+            if (evt.getClickCount() == 1) {
+                // Click đơn: Hiển thị hóa đơn mua hàng
+                loadCustomerOrderHistory(selectedUser.getUserId());
+                loadCustomerTotalOrderValue(selectedUser.getUserId());
+            } else if (evt.getClickCount() == 2) {
+                // Click đúp: Chuyển sang tab chỉnh sửa
+                setForm(selectedUser);
+                jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab "Chỉnh sửa"
+            }
+        }
+    }
+    
+    private void loadCustomerOrderHistory(Integer userId) {
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.setRowCount(0);
+        
+        List<Order> orderHistory = getCustomerOrderHistory(userId);
+        if (orderHistory != null && !orderHistory.isEmpty()) {
+            int stt = 1;
+            for (Order order : orderHistory) {
+                model.addRow(new Object[]{
+                    stt++,
+                    order.getOrderId(),
+                    order.getOrderDate() != null ? order.getOrderDate().toString() : "",
+                    order.getTotalAmount(),
+                    order.getOrderStatus()
+                });
+            }
+        }
+    }
+    
+    private void loadCustomerTotalOrderValue(Integer userId) {
+        BigDecimal totalValue = getCustomerTotalOrderValue(userId);
+        jLabel15.setText(totalValue.toString());
+    }
+
+    @Override
+    public void setForm(User entity) {
+        if (entity != null) {
+            jTextField2.setText(entity.getUserId() != null ? entity.getUserId().toString() : "");
+            jTextField4.setText(entity.getFullName() != null ? entity.getFullName() : "");
+            jTextField1.setText(entity.getUsername() != null ? entity.getUsername() : "");
+            jTextField3.setText(entity.getEmail() != null ? entity.getEmail() : "");
+            jTextField6.setText(entity.getPhone() != null ? entity.getPhone() : "");
+            jTextField5.setText(entity.getAddress() != null ? entity.getAddress() : "");
+            jTextField11.setText(""); // Không hiển thị mật khẩu
+            jComboBox1.setSelectedItem(entity.getIsActive() != null && entity.getIsActive() ? "Hoạt Động" : "Không Hoạt Động");
+        }
+    }
+
+    @Override
+    public User getForm() {
+        User user = new User();
+        try {
+            // Lấy dữ liệu từ form
+            String userIdText = jTextField2.getText().trim();
+            if (!userIdText.isEmpty()) {
+                user.setUserId(Integer.parseInt(userIdText));
+            }
+            
+            user.setFullName(jTextField4.getText().trim());
+            user.setUsername(jTextField1.getText().trim());
+            user.setEmail(jTextField3.getText().trim());
+            user.setPhone(jTextField6.getText().trim());
+            user.setAddress(jTextField5.getText().trim());
+            user.setPasswordHash(jTextField11.getText().trim());
+            
+            // Xử lý trạng thái
+            String status = (String) jComboBox1.getSelectedItem();
+            user.setIsActive("Hoạt Động".equals(status));
+            
+            user.setRole(false); // Khách hàng
+        } catch (Exception e) {
+            XDialog.alert("Lỗi khi lấy dữ liệu form: " + e.getMessage());
+            return null;
+        }
+        return user;
+    }
+
+    @Override
+    public void fillToTable() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        if (customerList != null) {
+            for (User user : customerList) {
+                model.addRow(new Object[]{
+                    user.getUserId(),
+                    user.getUsername(),
+                    user.getFullName(),
+                    user.getPhone(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getIsActive() != null && user.getIsActive() ? "Hoạt động" : "Vô hiệu",
+                    user.getCreatedDate() != null ? user.getCreatedDate().toString() : ""
+                });
+            }
+        }
+    }
+
+    @Override
+    public void edit() {
+        if (currentRow >= 0 && currentRow < customerList.size()) {
+            User selectedCustomer = customerList.get(currentRow);
+            setForm(selectedCustomer);
+            setEditable(false);
+        } else {
+            XDialog.alert("Vui lòng chọn một khách hàng để chỉnh sửa!");
+        }
+    }
+
+    @Override
+    public void create() {
+        User user = getForm();
+        if (user == null) {
+            XDialog.alert("Vui lòng nhập đầy đủ thông tin khách hàng!");
+            return;
+        }
+        
+        String validationError = validateCustomerInfo(user);
+        if (validationError != null) {
+            XDialog.alert(validationError);
+            return;
+        }
+        
+        // Kiểm tra username và email trùng lặp
+        if (checkUsernameExists(user.getUsername())) {
+            XDialog.alert("Username đã tồn tại! Vui lòng sử dụng username khác.");
+            return;
+        }
+        
+        if (checkEmailExists(user.getEmail())) {
+            XDialog.alert("Email đã tồn tại! Vui lòng sử dụng email khác.");
+            return;
+        }
+        
+        try {
+            // Set các giá trị mặc định cho khách hàng mới
+            user.setRole(false); // 0 = Customer
+            user.setIsActive(true);
+            user.setCreatedDate(LocalDateTime.now());
+            user.setPasswordHash(hashPassword(user.getPasswordHash()));
+            
+            userDAO.insert(user);
+            loadCustomers();
+            fillToTable();
+            clear();
+        } catch (Exception e) {
+            XDialog.alert("Lỗi khi thêm khách hàng: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void update() {
+        User user = getForm();
+        if (user == null || user.getUserId() == null) {
+            XDialog.alert("Vui lòng chọn khách hàng cần cập nhật!");
+            return;
+        }
+        
+        String validationError = validateCustomerInfo(user);
+        if (validationError != null) {
+            XDialog.alert(validationError);
+            return;
+        }
+        
+        try {
+            // Kiểm tra username và email trùng lặp (trừ user hiện tại)
+            User existingUser = userDAO.selectById(user.getUserId());
+            if (existingUser == null) {
+                XDialog.alert("Không tìm thấy khách hàng!");
+                return;
+            }
+            
+            if (!existingUser.getUsername().equals(user.getUsername()) && checkUsernameExists(user.getUsername())) {
+                XDialog.alert("Username đã tồn tại! Vui lòng sử dụng username khác.");
+                return;
+            }
+            
+            if (!existingUser.getEmail().equals(user.getEmail()) && checkEmailExists(user.getEmail())) {
+                XDialog.alert("Email đã tồn tại! Vui lòng sử dụng email khác.");
+                return;
+            }
+            
+            // Nếu mật khẩu thay đổi thì hash lại
+            if (!existingUser.getPasswordHash().equals(user.getPasswordHash())) {
+                user.setPasswordHash(hashPassword(user.getPasswordHash()));
+            }
+            
+            userDAO.update(user);
+            loadCustomers();
+            fillToTable();
+        } catch (Exception e) {
+            XDialog.alert("Lỗi khi cập nhật khách hàng: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete() {
+        if (currentRow >= 0 && currentRow < customerList.size()) {
+            User selectedCustomer = customerList.get(currentRow);
+            
+            if (XDialog.confirm("Bạn có chắc chắn muốn xóa khách hàng '" + selectedCustomer.getFullName() + "'?")) {
+                try {
+                    userDAO.delete(selectedCustomer.getUserId());
+                    loadCustomers();
+                    fillToTable();
+                    clear();
+                } catch (Exception e) {
+                    XDialog.alert("Lỗi khi xóa khách hàng: " + e.getMessage());
+                }
+            }
+        } else {
+            XDialog.alert("Vui lòng chọn một khách hàng để xóa!");
+        }
+    }
+
+    @Override
+    public void clear() {
+        // Xóa trắng form
+        jTextField2.setText("");
+        jTextField4.setText("");
+        jTextField1.setText("");
+        jTextField3.setText("");
+        jTextField6.setText("");
+        jTextField5.setText("");
+        jTextField11.setText("");
+        jComboBox1.setSelectedItem("Hoạt Động");
+        setEditable(true);
+        currentRow = -1;
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        // Set trạng thái editable cho các component
+        jTextField2.setEnabled(editable);
+        jTextField4.setEnabled(editable);
+        jTextField1.setEnabled(editable);
+        jTextField3.setEnabled(editable);
+        jTextField6.setEnabled(editable);
+        jTextField5.setEnabled(editable);
+        jTextField11.setEnabled(editable);
+        jComboBox1.setEnabled(editable);
+    }
+
+    @Override
+    public void checkAll() {
+//
+    }
+
+    @Override
+    public void uncheckAll() {
+//
+    }
+
+    @Override
+    public void deleteCheckedItems() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void moveFirst() {
+//
+    }
+
+    @Override
+    public void movePrevious() {
+//
+    }
+
+    @Override
+    public void moveNext() {
+//
+    }
+
+    @Override
+    public void moveLast() {
+//
+    }
+
+    @Override
+    public void moveTo(int rowIndex) {
+        if (rowIndex >= 0 && rowIndex < customerList.size()) {
+            currentRow = rowIndex;
+            setForm(customerList.get(rowIndex));
+        }
+    }
+    
+    // Event handlers for buttons
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Đặt lại mật khẩu
+        if (currentRow >= 0 && currentRow < customerList.size()) {
+            User selectedCustomer = customerList.get(currentRow);
+            String newPassword = jTextField11.getText().trim();
+            
+            if (newPassword.isEmpty()) {
+                XDialog.alert("Vui lòng nhập mật khẩu mới!");
+                return;
+            }
+            
+            try {
+                resetCustomerPassword(selectedCustomer.getUserId(), newPassword);
+                jTextField11.setText("");
+            } catch (Exception e) {
+                XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
+            }
+        } else {
+            XDialog.alert("Vui lòng chọn một khách hàng để đặt lại mật khẩu!");
+        }
+    }
+    
+
+    
+
+    
+ 
+    
+
+    
+    private void timkiem(java.awt.event.ActionEvent evt) {
+        // Lấy thông tin tìm kiếm từ các trường
+        String tenKhachHang = jTextField7.getText().trim();
+        String soDienThoai = jTextField8.getText().trim();
+        String username = jTextField9.getText().trim();
+        String email = jTextField10.getText().trim();
+        
+        // Kiểm tra xem có ít nhất một trường được nhập không
+        if (tenKhachHang.isEmpty() && soDienThoai.isEmpty() && username.isEmpty() && email.isEmpty()) {
+            // Nếu không có trường nào được nhập, load tất cả khách hàng
+            customerList = loadCustomers();
+            fillToTable();
+            return;
+        }
+        
+        // Tìm kiếm theo các tiêu chí
+        List<User> searchResults = searchCustomersAdvanced(tenKhachHang, soDienThoai, username, email);
+        
+        if (searchResults.isEmpty()) {
+            // Tạo thông báo tùy theo trường hợp
+            StringBuilder message = new StringBuilder("Không tìm thấy khách hàng");
+            if (!soDienThoai.isEmpty() && !username.isEmpty()) {
+                message.append(" có số điện thoại '").append(soDienThoai).append("' và username '").append(username).append("'");
+            } else if (!soDienThoai.isEmpty()) {
+                message.append(" có số điện thoại '").append(soDienThoai).append("'");
+            } else if (!username.isEmpty()) {
+                message.append(" có username '").append(username).append("'");
+            } else if (!tenKhachHang.isEmpty()) {
+                message.append(" có tên '").append(tenKhachHang).append("'");
+            } else if (!email.isEmpty()) {
+                message.append(" có email '").append(email).append("'");
+            }
+            message.append("!");
+            
+            XDialog.alert(message.toString());
+            return;
+        }
+        
+        // Hiển thị kết quả tìm kiếm
+        customerList = searchResults;
+        fillToTable();
+    }
+    
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {
+        timkiem(evt);
+    }
+    
+    // Thêm event listeners cho các nút
+    private void addButtonListeners() {
+        jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
+      //  jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
+        jButton3.addActionListener(evt -> jButton3ActionPerformed(evt));
+        jButton4.addActionListener(evt -> jButton4ActionPerformed(evt));
+        jButton5.addActionListener(evt -> jButton5ActionPerformed(evt));
+    }
 }

@@ -33,6 +33,9 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanelX = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         sidebarPanel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -41,7 +44,14 @@ public class KhachJFrame extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        mainPanel = new javax.swing.JPanel();
+        cardBrowse = new javax.swing.JPanel();
+        cardCart = new javax.swing.JPanel();
+        cardCheckout = new javax.swing.JPanel();
+        cardTrack = new javax.swing.JPanel();
+        cardProfile = new javax.swing.JPanel();
+        cardReview = new javax.swing.JPanel();
+        cardSupport = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,6 +60,24 @@ public class KhachJFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("FURNITURE STORE");
         headerPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
+
+        jPanelX.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        jButton1.setForeground(new java.awt.Color(0, 102, 153));
+        jButton1.setText("Đăng ký");
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
+        jPanelX.add(jButton1);
+
+        jButton2.setForeground(new java.awt.Color(0, 102, 204));
+        jButton2.setText("Đăng nhập");
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setFocusPainted(false);
+        jPanelX.add(jButton2);
+
+        headerPanel.add(jPanelX, java.awt.BorderLayout.LINE_END);
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -114,8 +142,100 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
-        jLabel2.setText("Ảnh cửa hàng");
-        getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
+        mainPanel.setLayout(new java.awt.CardLayout());
+
+        javax.swing.GroupLayout cardBrowseLayout = new javax.swing.GroupLayout(cardBrowse);
+        cardBrowse.setLayout(cardBrowseLayout);
+        cardBrowseLayout.setHorizontalGroup(
+            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardBrowseLayout.setVerticalGroup(
+            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardBrowse, "cardBrowse");
+
+        javax.swing.GroupLayout cardCartLayout = new javax.swing.GroupLayout(cardCart);
+        cardCart.setLayout(cardCartLayout);
+        cardCartLayout.setHorizontalGroup(
+            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardCartLayout.setVerticalGroup(
+            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardCart, "cardCart");
+
+        javax.swing.GroupLayout cardCheckoutLayout = new javax.swing.GroupLayout(cardCheckout);
+        cardCheckout.setLayout(cardCheckoutLayout);
+        cardCheckoutLayout.setHorizontalGroup(
+            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardCheckoutLayout.setVerticalGroup(
+            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardCheckout, "cardCheckout");
+
+        javax.swing.GroupLayout cardTrackLayout = new javax.swing.GroupLayout(cardTrack);
+        cardTrack.setLayout(cardTrackLayout);
+        cardTrackLayout.setHorizontalGroup(
+            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardTrackLayout.setVerticalGroup(
+            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardTrack, "cardTrack");
+
+        javax.swing.GroupLayout cardProfileLayout = new javax.swing.GroupLayout(cardProfile);
+        cardProfile.setLayout(cardProfileLayout);
+        cardProfileLayout.setHorizontalGroup(
+            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardProfileLayout.setVerticalGroup(
+            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardProfile, "cardProfile");
+
+        javax.swing.GroupLayout cardReviewLayout = new javax.swing.GroupLayout(cardReview);
+        cardReview.setLayout(cardReviewLayout);
+        cardReviewLayout.setHorizontalGroup(
+            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardReviewLayout.setVerticalGroup(
+            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardReview, "cardReview");
+
+        javax.swing.GroupLayout cardSupportLayout = new javax.swing.GroupLayout(cardSupport);
+        cardSupport.setLayout(cardSupportLayout);
+        cardSupportLayout.setHorizontalGroup(
+            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 635, Short.MAX_VALUE)
+        );
+        cardSupportLayout.setVerticalGroup(
+            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 504, Short.MAX_VALUE)
+        );
+
+        mainPanel.add(cardSupport, "cardSupport");
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -136,9 +256,8 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // Mở dialog theo dõi đơn hàng
-        TDDonHangJDialog dialog = new TDDonHangJDialog(this, true);
-        dialog.setVisible(true);
+        // TODO add your handling code here:
+       
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -192,8 +311,17 @@ public class KhachJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel cardBrowse;
+    private javax.swing.JPanel cardCart;
+    private javax.swing.JPanel cardCheckout;
+    private javax.swing.JPanel cardProfile;
+    private javax.swing.JPanel cardReview;
+    private javax.swing.JPanel cardSupport;
+    private javax.swing.JPanel cardTrack;
     private javax.swing.JPanel headerPanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -201,7 +329,8 @@ public class KhachJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanelX;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }

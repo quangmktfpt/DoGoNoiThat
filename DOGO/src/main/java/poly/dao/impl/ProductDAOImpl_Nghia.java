@@ -15,16 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import poly.dao.ProductDAO_Nghia;
+import poly.entity.Product_Nghia;
 
-public class ProductDAOImpl implements ProductDAO {
-    private final String INSERT_SQL = "INSERT INTO Products (ProductID, CategoryID, ProductName, UnitPrice, Quantity, ImagePath, CreatedDate, ImportPrice) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE Products SET CategoryID=?, ProductName=?, UnitPrice=?, Quantity=?, ImagePath=?, CreatedDate=?, ImportPrice=? WHERE ProductID=?";
+public class ProductDAOImpl_Nghia implements ProductDAO_Nghia {
+    private final String INSERT_SQL = "INSERT INTO Products (ProductID, CategoryID, ProductName, UnitPrice, Quantity, ImagePath, CreatedDate, ImportPrice, Description, KichThuoc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE Products SET CategoryID=?, ProductName=?, UnitPrice=?, Quantity=?, ImagePath=?, CreatedDate=?, ImportPrice=?, Description=?, KichThuoc=? WHERE ProductID=?";
     private final String DELETE_SQL = "DELETE FROM Products WHERE ProductID=?";
     private final String SELECT_ALL_SQL = "SELECT * FROM Products";
     private final String SELECT_BY_ID_SQL = "SELECT * FROM Products WHERE ProductID=?";
 
     @Override
-    public void insert(Product entity) {
+    public void insert(Product_Nghia entity) {
         XJdbc.executeUpdate(INSERT_SQL,
             entity.getProductId(),
             entity.getCategoryId(),
@@ -33,12 +35,14 @@ public class ProductDAOImpl implements ProductDAO {
             entity.getQuantity(),
             entity.getImagePath(),
             entity.getCreatedDate(),
-            entity.getGianhap()
+            entity.getGianhap(),
+            entity.getDescription(),
+            entity.getKichThuoc()
         );
     }
 
     @Override
-    public void update(Product entity) {
+    public void update(Product_Nghia entity) {
         XJdbc.executeUpdate(UPDATE_SQL,
             entity.getCategoryId(),
             entity.getProductName(),
@@ -47,6 +51,8 @@ public class ProductDAOImpl implements ProductDAO {
             entity.getImagePath(),
             entity.getCreatedDate(),
             entity.getGianhap(),
+            entity.getDescription(),
+            entity.getKichThuoc(),
             entity.getProductId()
         );
     }
@@ -57,23 +63,23 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> selectAll() {
+    public List<Product_Nghia> selectAll() {
         return selectBySql(SELECT_ALL_SQL);
     }
 
     @Override
-    public Product selectById(String id) {
-        List<Product> list = selectBySql(SELECT_BY_ID_SQL, id);
+    public Product_Nghia selectById(String id) {
+        List<Product_Nghia> list = selectBySql(SELECT_BY_ID_SQL, id);
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public List<Product> selectBySql(String sql, Object... args) {
-        List<Product> list = new ArrayList<>();
+    public List<Product_Nghia> selectBySql(String sql, Object... args) {
+        List<Product_Nghia> list = new ArrayList<>();
         try {
             ResultSet rs = XJdbc.executeQuery(sql, args);
             while (rs.next()) {
-                Product entity = new Product();
+                Product_Nghia entity = new Product_Nghia();
                 entity.setProductId(rs.getString("ProductID"));
                 entity.setCategoryId(rs.getString("CategoryID"));
                 entity.setProductName(rs.getString("ProductName"));
@@ -82,6 +88,8 @@ public class ProductDAOImpl implements ProductDAO {
                 entity.setImagePath(rs.getString("ImagePath"));
                 entity.setCreatedDate(rs.getTimestamp("CreatedDate").toLocalDateTime());
                 entity.setGianhap(rs.getBigDecimal("ImportPrice"));
+                entity.setDescription(rs.getString("Description"));
+                entity.setKichThuoc(rs.getString("KichThuoc"));
                 list.add(entity);
             }
             rs.getStatement().getConnection().close();
@@ -112,21 +120,21 @@ public class ProductDAOImpl implements ProductDAO {
 
     // Tìm kiếm theo tên sản phẩm
     @Override
-    public List<Product> searchByName(String name) {
+    public List<Product_Nghia> searchByName(String name) {
         String sql = "SELECT * FROM Products WHERE ProductName LIKE ?";
         return selectBySql(sql, "%" + name + "%");
     }
 
     // Tìm kiếm theo khoảng giá
     @Override
-    public List<Product> searchByPriceRange(java.math.BigDecimal min, java.math.BigDecimal max) {
+    public List<Product_Nghia> searchByPriceRange(java.math.BigDecimal min, java.math.BigDecimal max) {
         String sql = "SELECT * FROM Products WHERE UnitPrice BETWEEN ? AND ?";
         return selectBySql(sql, min, max);
     }
 
     // Tìm kiếm theo danh mục
     @Override
-    public List<Product> searchByCategory(String categoryId) {
+    public List<Product_Nghia> searchByCategory(String categoryId) {
         String sql = "SELECT * FROM Products WHERE CategoryID = ?";
         return selectBySql(sql, categoryId);
     }
