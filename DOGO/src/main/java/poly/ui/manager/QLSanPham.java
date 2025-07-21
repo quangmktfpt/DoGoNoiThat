@@ -544,7 +544,8 @@ clear();        // TODO add your handling code here:
             List<Product> list = productDAO.searchByName(name);
             fillToTable(list);
         });
-        jButton10.addActionListener(e -> {
+        // Thêm sự kiện cho combobox danh mục
+        jComboBox2.addActionListener(e -> {
             int idx = jComboBox2.getSelectedIndex();
             if (idx < 0) return;
             String categoryId = categoryDAO.selectAll().get(idx).getCategoryId();

@@ -4,7 +4,7 @@
  */
 package poly.ui;
 
-import java.awt.CardLayout;
+import poly.ui.manager.Doimatkhaudialog;
 
 /**
  *
@@ -33,9 +33,6 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanelX = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         sidebarPanel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -60,24 +57,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("FURNITURE STORE");
         headerPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
-
-        jPanelX.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        jButton1.setForeground(new java.awt.Color(0, 102, 153));
-        jButton1.setText("Đăng ký");
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setFocusPainted(false);
-        jPanelX.add(jButton1);
-
-        jButton2.setForeground(new java.awt.Color(0, 102, 204));
-        jButton2.setText("Đăng nhập");
-        jButton2.setBorderPainted(false);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setFocusPainted(false);
-        jPanelX.add(jButton2);
-
-        headerPanel.add(jPanelX, java.awt.BorderLayout.LINE_END);
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -152,7 +131,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardBrowseLayout.setVerticalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardBrowse, "cardBrowse");
@@ -165,7 +144,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardCartLayout.setVerticalGroup(
             cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardCart, "cardCart");
@@ -178,7 +157,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardCheckoutLayout.setVerticalGroup(
             cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardCheckout, "cardCheckout");
@@ -191,7 +170,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardTrackLayout.setVerticalGroup(
             cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardTrack, "cardTrack");
@@ -204,7 +183,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardProfileLayout.setVerticalGroup(
             cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardProfile, "cardProfile");
@@ -217,7 +196,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardReviewLayout.setVerticalGroup(
             cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardReview, "cardReview");
@@ -230,7 +209,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         );
         cardSupportLayout.setVerticalGroup(
             cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 504, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
 
         mainPanel.add(cardSupport, "cardSupport");
@@ -241,13 +220,17 @@ public class KhachJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-       
+        // Mở màn hình duyệt sản phẩm
+        poly.ui.DuyetspJDialog_nghia duyetsp = new poly.ui.DuyetspJDialog_nghia(this, true);
+        duyetsp.setLocationRelativeTo(this);
+        duyetsp.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình giỏ hàng
+        poly.ui.GioHangJDialog giohang = new poly.ui.GioHangJDialog(this, true);
+        giohang.setLocationRelativeTo(this);
+        giohang.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -256,8 +239,10 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-       
+        // Mở màn hình theo dõi đơn hàng
+        poly.ui.TDDonHangJDialog_nghia tddon = new poly.ui.TDDonHangJDialog_nghia(this, true);
+        tddon.setLocationRelativeTo(this);
+        tddon.setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -274,6 +259,10 @@ public class KhachJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
+      
+    }
 
     /**
      * @param args the command line arguments
@@ -319,9 +308,7 @@ public class KhachJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel cardSupport;
     private javax.swing.JPanel cardTrack;
     private javax.swing.JPanel headerPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -329,7 +316,6 @@ public class KhachJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanelX;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables

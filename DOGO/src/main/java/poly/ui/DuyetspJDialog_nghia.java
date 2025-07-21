@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import poly.controller.ProductController_nghia;
 import poly.dao.impl.ProductDAOImpl_Nghia;
 import poly.entity.Product_Nghia;
+import java.awt.Image;
 
 /**
  *
@@ -107,6 +108,11 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         txtTonKho = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         txtTimKiemSanPham.setPreferredSize(new java.awt.Dimension(300, 25));
 
@@ -584,19 +590,35 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     @Override
     public void setForm(Product_Nghia entity) {
         if (entity != null) {
-            txtTenSanPham.setText(entity.getProductName());
-            txtGiaSanPham.setText(entity.getUnitPrice().toString());
-            txtGiaKichThuoc.setText(entity.getUnitPrice().toString()); // Giá kích thước thực chất là giá bán
-            txtTonKho.setText(entity.getQuantity().toString());
-            txtAreaMoTa.setText(entity.getDescription().toString()); // Không có trường mô tả trong entity
-            txtKichThuoc.setText(entity.getKichThuoc().toString()); // Nếu có trường kích thước thì lấy, nếu không thì để trống
+            txtTenSanPham.setText(entity.getProductName() != null ? entity.getProductName() : "");
+            txtGiaSanPham.setText(entity.getUnitPrice() != null ? entity.getUnitPrice().toString() : "");
+            txtGiaKichThuoc.setText(entity.getUnitPrice() != null ? entity.getUnitPrice().toString() : "");
+            txtTonKho.setText(entity.getQuantity() != null ? entity.getQuantity().toString() : "");
+            txtAreaMoTa.setText(entity.getDescription() != null ? entity.getDescription().toString() : "");
+            txtKichThuoc.setText(entity.getKichThuoc() != null ? entity.getKichThuoc().toString() : "");
+            
             // Hiển thị ảnh sản phẩm
             if (entity.getImagePath() != null && !entity.getImagePath().isEmpty()) {
                 ImageIcon icon = getProductImage(entity.getImagePath());
                 if (icon != null) {
-                    lblAnhSanPham.setIcon(icon);
-                    lblHinhAnh.setIcon(icon);
+                    // Scale the image to fit the JLabel dimensions
+                    Image image = icon.getImage();
+                    int labelWidth = lblAnhSanPham.getWidth();
+                    int labelHeight = lblAnhSanPham.getHeight();
+                    if (labelWidth > 0 && labelHeight > 0) {
+                        Image scaledImage = image.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+                        lblAnhSanPham.setIcon(new ImageIcon(scaledImage));
+                        lblHinhAnh.setIcon(new ImageIcon(scaledImage));
+                    } else {
+                        // Default dimensions if label size is not available
+                        Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                        lblAnhSanPham.setIcon(new ImageIcon(scaledImage));
+                        lblHinhAnh.setIcon(new ImageIcon(scaledImage));
+                    }
                 }
+            } else {
+                lblAnhSanPham.setIcon(null);
+                lblHinhAnh.setIcon(null);
             }
         }
     }

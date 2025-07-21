@@ -114,7 +114,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> searchByName(String name) {
         String sql = "SELECT * FROM Products WHERE ProductName LIKE ?";
-        return selectBySql(sql, "%" + name + "%");
+        return this.selectBySql(sql, "%" + name + "%");
     }
 
     // Tìm kiếm theo khoảng giá
