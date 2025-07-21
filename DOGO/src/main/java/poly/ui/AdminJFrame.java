@@ -160,16 +160,16 @@ public class AdminJFrame extends javax.swing.JFrame {
         cardBrowseLayout.setHorizontalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardBrowseLayout.createSequentialGroup()
-                .addContainerGap(389, Short.MAX_VALUE)
+                .addContainerGap(329, Short.MAX_VALUE)
                 .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(67, 67, 67))
         );
         cardBrowseLayout.setVerticalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardBrowseLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(90, 90, 90)
                 .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(421, Short.MAX_VALUE))
+                .addContainerGap(337, Short.MAX_VALUE))
         );
 
         mainPanel.add(cardBrowse, "cardBrowse");
