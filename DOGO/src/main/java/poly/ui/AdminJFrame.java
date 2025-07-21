@@ -44,15 +44,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
-        mainPanel = new javax.swing.JPanel();
-        cardBrowse = new javax.swing.JPanel();
         jButton12 = new javax.swing.JButton();
-        cardCart = new javax.swing.JPanel();
-        cardCheckout = new javax.swing.JPanel();
-        cardTrack = new javax.swing.JPanel();
-        cardProfile = new javax.swing.JPanel();
-        cardReview = new javax.swing.JPanel();
-        cardSupport = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,7 +56,7 @@ public class AdminJFrame extends javax.swing.JFrame {
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
-        sidebarPanel.setLayout(new java.awt.GridLayout(10, 1, 0, 5));
+        sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
 
         jButton4.setText("Phân Quyền");
         jButton4.setMaximumSize(new java.awt.Dimension(200, 40));
@@ -143,10 +135,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton13);
 
-        getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
-
-        mainPanel.setLayout(new java.awt.CardLayout());
-
         jButton12.setText("Đổi mật khẩu");
         jButton12.setMaximumSize(new java.awt.Dimension(200, 40));
         jButton12.addActionListener(new java.awt.event.ActionListener() {
@@ -154,105 +142,9 @@ public class AdminJFrame extends javax.swing.JFrame {
                 jButton12ActionPerformed(evt);
             }
         });
+        sidebarPanel.add(jButton12);
 
-        javax.swing.GroupLayout cardBrowseLayout = new javax.swing.GroupLayout(cardBrowse);
-        cardBrowse.setLayout(cardBrowseLayout);
-        cardBrowseLayout.setHorizontalGroup(
-            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardBrowseLayout.createSequentialGroup()
-                .addContainerGap(389, Short.MAX_VALUE)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        cardBrowseLayout.setVerticalGroup(
-            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardBrowseLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(421, Short.MAX_VALUE))
-        );
-
-        mainPanel.add(cardBrowse, "cardBrowse");
-
-        javax.swing.GroupLayout cardCartLayout = new javax.swing.GroupLayout(cardCart);
-        cardCart.setLayout(cardCartLayout);
-        cardCartLayout.setHorizontalGroup(
-            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardCartLayout.setVerticalGroup(
-            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardCart, "cardCart");
-
-        javax.swing.GroupLayout cardCheckoutLayout = new javax.swing.GroupLayout(cardCheckout);
-        cardCheckout.setLayout(cardCheckoutLayout);
-        cardCheckoutLayout.setHorizontalGroup(
-            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardCheckoutLayout.setVerticalGroup(
-            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardCheckout, "cardCheckout");
-
-        javax.swing.GroupLayout cardTrackLayout = new javax.swing.GroupLayout(cardTrack);
-        cardTrack.setLayout(cardTrackLayout);
-        cardTrackLayout.setHorizontalGroup(
-            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardTrackLayout.setVerticalGroup(
-            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardTrack, "cardTrack");
-
-        javax.swing.GroupLayout cardProfileLayout = new javax.swing.GroupLayout(cardProfile);
-        cardProfile.setLayout(cardProfileLayout);
-        cardProfileLayout.setHorizontalGroup(
-            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardProfileLayout.setVerticalGroup(
-            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardProfile, "cardProfile");
-
-        javax.swing.GroupLayout cardReviewLayout = new javax.swing.GroupLayout(cardReview);
-        cardReview.setLayout(cardReviewLayout);
-        cardReviewLayout.setHorizontalGroup(
-            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardReviewLayout.setVerticalGroup(
-            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardReview, "cardReview");
-
-        javax.swing.GroupLayout cardSupportLayout = new javax.swing.GroupLayout(cardSupport);
-        cardSupport.setLayout(cardSupportLayout);
-        cardSupportLayout.setHorizontalGroup(
-            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardSupportLayout.setVerticalGroup(
-            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardSupport, "cardSupport");
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -316,16 +208,16 @@ public class AdminJFrame extends javax.swing.JFrame {
         qlncc.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        // Mở màn hình quản lý danh mục sản phẩm
-       Doimatkhaudialog dialog = new Doimatkhaudialog(this, true);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-    }//GEN-LAST:event_jButton12ActionPerformed
-
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        // Mở màn hình quản lý danh mục sản phẩm
+        Doimatkhaudialog dialog = new Doimatkhaudialog(this, true);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton12ActionPerformed
 
 
     /**
@@ -364,13 +256,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel cardBrowse;
-    private javax.swing.JPanel cardCart;
-    private javax.swing.JPanel cardCheckout;
-    private javax.swing.JPanel cardProfile;
-    private javax.swing.JPanel cardReview;
-    private javax.swing.JPanel cardSupport;
-    private javax.swing.JPanel cardTrack;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -384,7 +269,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }
