@@ -6,6 +6,9 @@ package poly.ui;
 
 import java.awt.CardLayout;
 import poly.ui.manager.Doimatkhaudialog;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -19,7 +22,18 @@ public class AdminJFrame extends javax.swing.JFrame {
     public AdminJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+        // Thêm hiệu ứng hover cho màu chữ các nút
+        addHoverTextEffect(jButton4);
+        addHoverTextEffect(jButton5);
+        addHoverTextEffect(jButton6);
+        addHoverTextEffect(jButton7);
+        addHoverTextEffect(jButton8);
+        addHoverTextEffect(jButton9);
+        addHoverTextEffect(jButton10);
+        addHoverTextEffect(jButton3);
+        addHoverTextEffect(jButton11);
+        addHoverTextEffect(jButton12);
+        addHoverTextEffect(jButton13);
     }
 
     /**
@@ -44,29 +58,33 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
-        mainPanel = new javax.swing.JPanel();
-        cardBrowse = new javax.swing.JPanel();
         jButton12 = new javax.swing.JButton();
-        cardCart = new javax.swing.JPanel();
-        cardCheckout = new javax.swing.JPanel();
-        cardTrack = new javax.swing.JPanel();
-        cardProfile = new javax.swing.JPanel();
-        cardReview = new javax.swing.JPanel();
-        cardSupport = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        headerPanel.setBackground(new java.awt.Color(204, 204, 255));
         headerPanel.setLayout(new java.awt.BorderLayout());
 
+        jLabel1.setBackground(new java.awt.Color(204, 204, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 0, 51));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("FURNITURE STORE");
         headerPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
-        sidebarPanel.setLayout(new java.awt.GridLayout(10, 1, 0, 5));
+        sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
+        sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
 
+        jButton4.setBackground(new java.awt.Color(204, 204, 255));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setText("Phân Quyền");
+        jButton4.setBorder(null);
+        jButton4.setBorderPainted(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setFocusPainted(false);
         jButton4.setMaximumSize(new java.awt.Dimension(200, 40));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -75,7 +93,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton4);
 
+        jButton5.setBackground(new java.awt.Color(204, 204, 255));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setText("Quản Lý Sản Phẩm");
+        jButton5.setBorder(null);
+        jButton5.setBorderPainted(false);
+        jButton5.setContentAreaFilled(false);
+        jButton5.setFocusPainted(false);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -83,7 +107,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton5);
 
+        jButton6.setBackground(new java.awt.Color(204, 204, 255));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setText("Quản Lý Kho");
+        jButton6.setBorder(null);
+        jButton6.setBorderPainted(false);
+        jButton6.setContentAreaFilled(false);
+        jButton6.setFocusPainted(false);
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -91,7 +121,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton6);
 
+        jButton7.setBackground(new java.awt.Color(204, 204, 255));
+        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton7.setText("Quản Lý Đơn Hàng");
+        jButton7.setBorder(null);
+        jButton7.setBorderPainted(false);
+        jButton7.setContentAreaFilled(false);
+        jButton7.setFocusPainted(false);
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -99,7 +135,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton7);
 
-        jButton8.setText("Quản Lý Khách Hàng");
+        jButton8.setBackground(new java.awt.Color(204, 204, 255));
+        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton8.setText("QL Khách Hàng");
+        jButton8.setBorder(null);
+        jButton8.setBorderPainted(false);
+        jButton8.setContentAreaFilled(false);
+        jButton8.setFocusPainted(false);
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
@@ -107,7 +149,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton8);
 
+        jButton9.setBackground(new java.awt.Color(204, 204, 255));
+        jButton9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton9.setText("Quản Lý Danh Mục");
+        jButton9.setBorder(null);
+        jButton9.setBorderPainted(false);
+        jButton9.setContentAreaFilled(false);
+        jButton9.setFocusPainted(false);
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
@@ -115,7 +163,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton9);
 
+        jButton10.setBackground(new java.awt.Color(204, 204, 255));
+        jButton10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton10.setText("Báo cáo & Thống kê");
+        jButton10.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton10.setBorderPainted(false);
+        jButton10.setContentAreaFilled(false);
+        jButton10.setFocusPainted(false);
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton10ActionPerformed(evt);
@@ -123,10 +177,22 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton10);
 
-        jButton3.setText("Quản lý Nhà cung cấp");
+        jButton3.setBackground(new java.awt.Color(204, 204, 255));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setText("QL Nhà cung cấp");
+        jButton3.setBorder(null);
+        jButton3.setBorderPainted(false);
+        jButton3.setContentAreaFilled(false);
+        jButton3.setFocusPainted(false);
         sidebarPanel.add(jButton3);
 
+        jButton11.setBackground(new java.awt.Color(204, 204, 255));
+        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton11.setText("Cài đặt chung");
+        jButton11.setBorder(null);
+        jButton11.setBorderPainted(false);
+        jButton11.setContentAreaFilled(false);
+        jButton11.setFocusPainted(false);
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
@@ -134,7 +200,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton11);
 
-        jButton13.setText("Quản Lý Mã Giảm Giá");
+        jButton13.setBackground(new java.awt.Color(204, 204, 255));
+        jButton13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton13.setText("QL Mã Giảm Giá");
+        jButton13.setBorder(null);
+        jButton13.setBorderPainted(false);
+        jButton13.setContentAreaFilled(false);
+        jButton13.setFocusPainted(false);
         jButton13.setMaximumSize(new java.awt.Dimension(200, 40));
         jButton13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,116 +215,25 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton13);
 
-        getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
-
-        mainPanel.setLayout(new java.awt.CardLayout());
-
+        jButton12.setBackground(new java.awt.Color(204, 204, 255));
+        jButton12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton12.setText("Đổi mật khẩu");
+        jButton12.setBorder(null);
+        jButton12.setBorderPainted(false);
+        jButton12.setContentAreaFilled(false);
+        jButton12.setFocusPainted(false);
         jButton12.setMaximumSize(new java.awt.Dimension(200, 40));
         jButton12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton12ActionPerformed(evt);
             }
         });
+        sidebarPanel.add(jButton12);
 
-        javax.swing.GroupLayout cardBrowseLayout = new javax.swing.GroupLayout(cardBrowse);
-        cardBrowse.setLayout(cardBrowseLayout);
-        cardBrowseLayout.setHorizontalGroup(
-            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardBrowseLayout.createSequentialGroup()
-                .addContainerGap(329, Short.MAX_VALUE)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
-        );
-        cardBrowseLayout.setVerticalGroup(
-            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardBrowseLayout.createSequentialGroup()
-                .addGap(90, 90, 90)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(337, Short.MAX_VALUE))
-        );
+        getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
-        mainPanel.add(cardBrowse, "cardBrowse");
-
-        javax.swing.GroupLayout cardCartLayout = new javax.swing.GroupLayout(cardCart);
-        cardCart.setLayout(cardCartLayout);
-        cardCartLayout.setHorizontalGroup(
-            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardCartLayout.setVerticalGroup(
-            cardCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardCart, "cardCart");
-
-        javax.swing.GroupLayout cardCheckoutLayout = new javax.swing.GroupLayout(cardCheckout);
-        cardCheckout.setLayout(cardCheckoutLayout);
-        cardCheckoutLayout.setHorizontalGroup(
-            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardCheckoutLayout.setVerticalGroup(
-            cardCheckoutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardCheckout, "cardCheckout");
-
-        javax.swing.GroupLayout cardTrackLayout = new javax.swing.GroupLayout(cardTrack);
-        cardTrack.setLayout(cardTrackLayout);
-        cardTrackLayout.setHorizontalGroup(
-            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardTrackLayout.setVerticalGroup(
-            cardTrackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardTrack, "cardTrack");
-
-        javax.swing.GroupLayout cardProfileLayout = new javax.swing.GroupLayout(cardProfile);
-        cardProfile.setLayout(cardProfileLayout);
-        cardProfileLayout.setHorizontalGroup(
-            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardProfileLayout.setVerticalGroup(
-            cardProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardProfile, "cardProfile");
-
-        javax.swing.GroupLayout cardReviewLayout = new javax.swing.GroupLayout(cardReview);
-        cardReview.setLayout(cardReviewLayout);
-        cardReviewLayout.setHorizontalGroup(
-            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardReviewLayout.setVerticalGroup(
-            cardReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardReview, "cardReview");
-
-        javax.swing.GroupLayout cardSupportLayout = new javax.swing.GroupLayout(cardSupport);
-        cardSupport.setLayout(cardSupportLayout);
-        cardSupportLayout.setHorizontalGroup(
-            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardSupportLayout.setVerticalGroup(
-            cardSupportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 475, Short.MAX_VALUE)
-        );
-
-        mainPanel.add(cardSupport, "cardSupport");
-
-        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
+        getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -327,6 +308,21 @@ public class AdminJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    // Hiệu ứng hover cho màu chữ JButton
+    private void addHoverTextEffect(javax.swing.JButton button) {
+        Color originalFg = button.getForeground();
+        Color hoverFg = new Color(220, 20, 60); // Đỏ tươi (Crimson)
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setForeground(hoverFg);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setForeground(originalFg);
+            }
+        });
+    }
 
     /**
      * @param args the command line arguments
@@ -364,13 +360,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel cardBrowse;
-    private javax.swing.JPanel cardCart;
-    private javax.swing.JPanel cardCheckout;
-    private javax.swing.JPanel cardProfile;
-    private javax.swing.JPanel cardReview;
-    private javax.swing.JPanel cardSupport;
-    private javax.swing.JPanel cardTrack;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -384,7 +373,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel mainPanel;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }
