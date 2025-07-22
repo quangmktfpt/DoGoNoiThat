@@ -11,13 +11,16 @@ import poly.dao.impl.ProductDAOImpl;
 import poly.dao.impl.CategoryDAOImpl;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.math.BigDecimal;
 import poly.controller.ProductController_nghia;
 import poly.dao.impl.ProductDAOImpl_Nghia;
 import poly.entity.Product_Nghia;
 import java.awt.Image;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.Component;
+import poly.util.WrapLayout;
 
 /**
  *
@@ -31,6 +34,8 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     public DuyetspJDialog_nghia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        productGridPanel.setLayout(new WrapLayout(java.awt.FlowLayout.LEFT, 10, 10));
+        productScrollPane.getVerticalScrollBar().setUnitIncrement(32); // Tăng tốc độ cuộn dọc
         // 1. Đổi màu nền panel (phối màu mới)
         jPanel1.setBackground(new java.awt.Color(227, 242, 253)); // Xanh nhạt pastel
         jPanel2.setBackground(new java.awt.Color(240, 244, 195)); // Xám xanh nhạt
@@ -38,8 +43,6 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         jLabel1.setForeground(new java.awt.Color(25, 118, 210)); // Xanh dương đậm
         jLabel9.setForeground(new java.awt.Color(56, 142, 60));  // Xanh lá đậm
         // 3. Đổi màu header bảng
-        tblSanPham.getTableHeader().setBackground(new java.awt.Color(25, 118, 210));
-        tblSanPham.getTableHeader().setForeground(java.awt.Color.WHITE);
         // 4. Thêm icon cho nút (chỉ dùng icon có sẵn trong thư mục icon)
         // btnTimKiem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/search.png")));
 //        btnThemVaoGio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/add.png")));
@@ -76,13 +79,16 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         txtTimKiemSanPham = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         btnTimKiem = new javax.swing.JButton();
-        scrProducts = new javax.swing.JScrollPane();
-        tblSanPham = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        lblAnhSanPham = new javax.swing.JLabel();
         cboLoaiSanPham = new javax.swing.JComboBox<>();
         btnTimLoai = new javax.swing.JButton();
+        productScrollPane = new javax.swing.JScrollPane();
+        productGridPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtGiaTu = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtGiaDen = new javax.swing.JTextField();
+        btnTimGia = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblHinhAnh = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -125,40 +131,8 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
             }
         });
 
-        tblSanPham.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Tên SP", "Loại SP", "Giá"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblSanPhamMouseClicked(evt);
-            }
-        });
-        scrProducts.setViewportView(tblSanPham);
-
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Tổng Quan Sản Phẩm");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Ảnh Sản Phẩm");
-
-        lblAnhSanPham.setText("jLabel11");
-        lblAnhSanPham.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         cboLoaiSanPham.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -169,59 +143,74 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
             }
         });
 
+        productScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        productScrollPane.setViewportView(productGridPanel);
+
+        jLabel2.setText("Từ");
+
+        jLabel11.setText("Đến");
+
+        btnTimGia.setText("Tìm Giá");
+        btnTimGia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimGiaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(lblAnhSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(252, 252, 252)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnTimKiem)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTimLoai)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(325, 325, 325))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTimKiem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnTimLoai)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtGiaTu, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTimGia)
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTimKiem)
                     .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimLoai))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(31, 31, 31)
-                        .addComponent(lblAnhSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(7, Short.MAX_VALUE))
+                    .addComponent(btnTimLoai)
+                    .addComponent(jLabel2)
+                    .addComponent(txtGiaTu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTimGia))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Tổng quan", jPanel1);
@@ -343,7 +332,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtKichThuoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtGiaKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(26, Short.MAX_VALUE))))
+                        .addContainerGap(200, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -423,44 +412,70 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMoveFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveFirstActionPerformed
-        moveFirst();
+        if (currentTypeList != null && !currentTypeList.isEmpty()) {
+            currentTypeIndex = 0;
+            setForm(currentTypeList.get(currentTypeIndex));
+        }
     }//GEN-LAST:event_btnMoveFirstActionPerformed
 
     private void btnMovePreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMovePreviousActionPerformed
-        movePrevious();
+        if (currentTypeList != null && currentTypeIndex > 0) {
+            currentTypeIndex--;
+            setForm(currentTypeList.get(currentTypeIndex));
+        }
     }//GEN-LAST:event_btnMovePreviousActionPerformed
 
     private void btnMoveNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveNextActionPerformed
-        moveNext();
+        if (currentTypeList != null && currentTypeIndex < currentTypeList.size() - 1) {
+            currentTypeIndex++;
+            setForm(currentTypeList.get(currentTypeIndex));
+        }
     }//GEN-LAST:event_btnMoveNextActionPerformed
 
     private void btnMoveLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveLastActionPerformed
-        moveLast();
+        if (currentTypeList != null && !currentTypeList.isEmpty()) {
+            currentTypeIndex = currentTypeList.size() - 1;
+            setForm(currentTypeList.get(currentTypeIndex));
+        }
     }//GEN-LAST:event_btnMoveLastActionPerformed
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         searchProducts();
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
-    private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
-        edit();
-        if (evt.getClickCount() == 2) {
-            jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab chi tiết
-        }
-    }//GEN-LAST:event_tblSanPhamMouseClicked
-
     private void btnThemVaoGioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemVaoGioActionPerformed
-        if (currentRow >= 0 && productList != null && currentRow < productList.size()) {
-            Product_Nghia selectedProduct = productList.get(currentRow);
-            JOptionPane.showMessageDialog(this, 
-                "Đã thêm sản phẩm '" + selectedProduct.getProductName() + "' vào giỏ hàng!", 
-                "Thông báo", 
-                JOptionPane.INFORMATION_MESSAGE);
+        if (currentTypeIndex >= 0 && currentTypeList != null && currentTypeIndex < currentTypeList.size()) {
+            Product_Nghia selectedProduct = currentTypeList.get(currentTypeIndex);
+            String input = javax.swing.JOptionPane.showInputDialog(this, "Nhập số lượng muốn thêm vào giỏ:", "Số lượng", javax.swing.JOptionPane.QUESTION_MESSAGE);
+            if (input == null) return; // Bấm Cancel
+            input = input.trim();
+            if (input.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                int soLuong = Integer.parseInt(input);
+                int tonKho = selectedProduct.getQuantity() != null ? selectedProduct.getQuantity() : 0;
+                if (soLuong <= 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (soLuong > tonKho) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Số lượng vượt quá tồn kho sẵn có! (Tồn kho: " + tonKho + ")", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Đã thêm " + soLuong + " sản phẩm '" + selectedProduct.getProductName() + "' vào giỏ hàng!", 
+                    "Thông báo", 
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            JOptionPane.showMessageDialog(this, 
+            javax.swing.JOptionPane.showMessageDialog(this, 
                 "Vui lòng chọn một sản phẩm trước khi thêm vào giỏ hàng!", 
                 "Thông báo", 
-                JOptionPane.WARNING_MESSAGE);
+                javax.swing.JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnThemVaoGioActionPerformed
 
@@ -468,27 +483,43 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         open();
     }//GEN-LAST:event_formWindowOpened
 
-    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimLoaiActionPerformed
+    private void btnTimGiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimGiaActionPerformed
         // TODO add your handling code here:
-        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
-        if (selectedIndex >= 0) {
-            List<Category> categories = loadAllCategories();
-            String selectedCategoryId = categories.get(selectedIndex).getCategoryId();
-            List<Product_Nghia> filteredProducts = searchByCategory(selectedCategoryId);
-
-            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-            model.setRowCount(0);
-            for (Product_Nghia product : filteredProducts) {
-                model.addRow(new Object[]{
-                    product.getProductName(),
-                    getCategoryName(product.getCategoryId()),
-                    product.getUnitPrice()
-                });
+        String giaTuStr = txtGiaTu.getText().trim();
+        String giaDenStr = txtGiaDen.getText().trim();
+        if (giaTuStr.isEmpty() && giaDenStr.isEmpty()) {
+            renderProductGrid(productDAO.selectAll());
+            return;
+        }
+        try {
+            java.math.BigDecimal giaTu = giaTuStr.isEmpty() ? java.math.BigDecimal.ZERO : new java.math.BigDecimal(giaTuStr);
+            java.math.BigDecimal giaDen = giaDenStr.isEmpty() ? new java.math.BigDecimal("999999999") : new java.math.BigDecimal(giaDenStr);
+            if (giaTu.compareTo(giaDen) > 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Giá từ phải nhỏ hơn hoặc bằng giá đến!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            productList = filteredProducts;
+            List<Product_Nghia> result = searchByPriceRange(giaTu, giaDen);
+            renderProductGrid(result);
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho giá!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnTimGiaActionPerformed
+
+    private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedIndex = cboLoaiSanPham.getSelectedIndex();
+        if (selectedIndex == 0) { // Nếu chọn Tất cả
+            renderProductGrid(productDAO.selectAll());
+            currentRow = -1;
+            return;
+        }
+        if (selectedIndex > 0) {
+            List<Category> categories = loadAllCategories();
+            String selectedCategoryId = categories.get(selectedIndex - 1).getCategoryId();
+            List<Product_Nghia> filteredProducts = searchByCategory(selectedCategoryId);
+            renderProductGrid(filteredProducts);
             currentRow = -1;
         }
-    }//GEN-LAST:event_btnTimLoaiActionPerformed
+    }                                          
 
     /**
      * @param args the command line arguments
@@ -539,11 +570,13 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private javax.swing.JButton btnMoveNext;
     private javax.swing.JButton btnMovePrevious;
     private javax.swing.JButton btnThemVaoGio;
+    private javax.swing.JButton btnTimGia;
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnTimLoai;
     private javax.swing.JComboBox<String> cboLoaiSanPham;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
@@ -558,13 +591,14 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JLabel lblAnhSanPham;
     private javax.swing.JLabel lblHinhAnh;
-    private javax.swing.JScrollPane scrProducts;
-    private javax.swing.JTable tblSanPham;
+    private javax.swing.JPanel productGridPanel;
+    private javax.swing.JScrollPane productScrollPane;
     private javax.swing.JTextArea txtAreaMoTa;
+    private javax.swing.JTextField txtGiaDen;
     private javax.swing.JTextField txtGiaKichThuoc;
     private javax.swing.JTextField txtGiaSanPham;
+    private javax.swing.JTextField txtGiaTu;
     private javax.swing.JTextField txtKichThuoc;
     private javax.swing.JTextField txtTenSanPham;
     private javax.swing.JTextField txtTimKiemSanPham;
@@ -576,10 +610,12 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
     private int currentRow = -1;
     private List<Product_Nghia> productList;
+    private List<Product_Nghia> currentTypeList = new java.util.ArrayList<>();
+    private int currentTypeIndex = -1;
 
     @Override
     public void open() {
-        fillToTable();
+        renderProductGrid(productDAO.selectAll());
         clear();
         setEditable(false); // Mặc định tắt quyền chỉnh sửa ở tab 2
         loadCategoriesToComboBox();
@@ -603,21 +639,18 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                 if (icon != null) {
                     // Scale the image to fit the JLabel dimensions
                     Image image = icon.getImage();
-                    int labelWidth = lblAnhSanPham.getWidth();
-                    int labelHeight = lblAnhSanPham.getHeight();
+                    int labelWidth = lblHinhAnh.getWidth();
+                    int labelHeight = lblHinhAnh.getHeight();
                     if (labelWidth > 0 && labelHeight > 0) {
                         Image scaledImage = image.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
-                        lblAnhSanPham.setIcon(new ImageIcon(scaledImage));
                         lblHinhAnh.setIcon(new ImageIcon(scaledImage));
                     } else {
                         // Default dimensions if label size is not available
                         Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-                        lblAnhSanPham.setIcon(new ImageIcon(scaledImage));
                         lblHinhAnh.setIcon(new ImageIcon(scaledImage));
                     }
                 }
             } else {
-                lblAnhSanPham.setIcon(null);
                 lblHinhAnh.setIcon(null);
             }
         }
@@ -631,28 +664,12 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
 
     @Override
     public void fillToTable() {
-        DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-        model.setRowCount(0);
-        
-        productList = productDAO.selectAll();
-        for (Product_Nghia product : productList) {
-            model.addRow(new Object[]{
-                product.getProductName(),
-                getCategoryName(product.getCategoryId()),
-                product.getUnitPrice()
-            });
-        }
-        currentRow = -1;
+        // Không có bảng, không cần fillToTable
     }
 
     @Override
     public void edit() {
-        int row = tblSanPham.getSelectedRow();
-        if (row >= 0) {
-            Product_Nghia product = productList.get(row);
-            setForm(product);
-            currentRow = row;
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
@@ -678,9 +695,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         txtKichThuoc.setText("");
         txtGiaKichThuoc.setText("");
         txtAreaMoTa.setText("");
-        lblAnhSanPham.setIcon(null);
         lblHinhAnh.setIcon(null);
-        tblSanPham.clearSelection();
         currentRow = -1;
     }
 
@@ -711,46 +726,27 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
 
     @Override
     public void moveFirst() {
-        if (tblSanPham.getRowCount() > 0) {
-            tblSanPham.setRowSelectionInterval(0, 0);
-            moveTo(0);
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
     public void movePrevious() {
-        int row = tblSanPham.getSelectedRow();
-        if (row > 0) {
-            tblSanPham.setRowSelectionInterval(row - 1, row - 1);
-            moveTo(row - 1);
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
     public void moveNext() {
-        int row = tblSanPham.getSelectedRow();
-        if (row < tblSanPham.getRowCount() - 1 && row >= 0) {
-            tblSanPham.setRowSelectionInterval(row + 1, row + 1);
-            moveTo(row + 1);
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
     public void moveLast() {
-        int last = tblSanPham.getRowCount() - 1;
-        if (last >= 0) {
-            tblSanPham.setRowSelectionInterval(last, last);
-            moveTo(last);
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
     public void moveTo(int rowIndex) {
-        if (rowIndex >= 0 && rowIndex < tblSanPham.getRowCount() && productList != null) {
-            Product_Nghia product = productList.get(rowIndex);
-            setForm(product);
-            currentRow = rowIndex;
-        }
+        // Không có bảng, không có chức năng này
     }
 
     @Override
@@ -799,28 +795,104 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private void searchProducts() {
         String searchText = txtTimKiemSanPham.getText().trim();
         if (searchText.isEmpty()) {
-            fillToTable();
+            renderProductGrid(productDAO.selectAll());
         } else {
-            DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
-            model.setRowCount(0);
-            
             List<Product_Nghia> searchResults = searchByName(searchText);
-            for (Product_Nghia product : searchResults) {
-                model.addRow(new Object[]{
-                    product.getProductName(),
-                    getCategoryName(product.getCategoryId()),
-                    product.getUnitPrice()
-                });
-            }
+            renderProductGrid(searchResults);
         }
     }
 
     private void loadCategoriesToComboBox() {
         cboLoaiSanPham.removeAllItems();
+        cboLoaiSanPham.addItem("Tất cả"); // Thêm mục Tất cả
         List<Category> categories = loadAllCategories();
         for (Category c : categories) {
             cboLoaiSanPham.addItem(c.getCategoryName());
         }
+    }
+
+    private void renderProductGrid(List<Product_Nghia> products) {
+        productGridPanel.removeAll();
+        for (Product_Nghia product : products) {
+            JPanel card = createProductCard(product);
+            productGridPanel.add(card);
+        }
+        productGridPanel.revalidate();
+        productGridPanel.repaint();
+    }
+
+    private JPanel createProductCard(Product_Nghia product) {
+        JPanel card = new JPanel();
+        card.setPreferredSize(new java.awt.Dimension(200, 240));
+        card.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.LIGHT_GRAY, 1));
+        card.setLayout(new javax.swing.BoxLayout(card, javax.swing.BoxLayout.Y_AXIS));
+        card.setBackground(java.awt.Color.WHITE);
+
+        // Ảnh sản phẩm (căn giữa, bo góc nhẹ)
+        ImageIcon icon = getProductImage(product.getImagePath());
+        JLabel imgLabel = new JLabel();
+        imgLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        if (icon != null) {
+            Image img = icon.getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH);
+            imgLabel.setIcon(new ImageIcon(img));
+            imgLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        }
+        card.add(javax.swing.Box.createVerticalStrut(8));
+        card.add(imgLabel);
+
+        // Panel trung gian để căn giữa tên và giá
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new javax.swing.BoxLayout(infoPanel, javax.swing.BoxLayout.Y_AXIS));
+        infoPanel.setOpaque(false);
+        infoPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+
+        // Tên sản phẩm (cỡ nhỏ hơn, căn giữa)
+        JLabel nameLabel = new JLabel("<html><div style='text-align:center; color:#1a237e; font-weight:bold; font-size:12px;'>" + product.getProductName() + "</div></html>");
+        nameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        infoPanel.add(nameLabel);
+
+        // Giá sản phẩm (cỡ nhỏ hơn, căn giữa)
+        JLabel priceLabel = new JLabel("<html><div style='text-align:center;'><b style='color:#d32f2f; font-size:13px;'>" + product.getUnitPrice() + " $</b></div></html>");
+        priceLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        infoPanel.add(priceLabel);
+
+        card.add(javax.swing.Box.createVerticalStrut(6));
+        card.add(infoPanel);
+
+        card.add(javax.swing.Box.createVerticalGlue());
+
+        // Sự kiện click: hiệu ứng khi click 1 lần, double-click mới chuyển tab
+        card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 1) {
+                    // Bỏ hiệu ứng ở các card khác
+                    for (Component comp : productGridPanel.getComponents()) {
+                        if (comp instanceof JPanel) {
+                            ((JPanel) comp).setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.LIGHT_GRAY, 1));
+                        }
+                    }
+                    // Đổi border card này
+                    card.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(25, 118, 210), 2));
+                } else if (evt.getClickCount() == 2) {
+                    setForm(product);
+                    // Lấy danh sách cùng loại
+                    String typeId = product.getCategoryId();
+                    currentTypeList = searchByCategory(typeId);
+                    // Tìm index của sản phẩm đang chọn trong danh sách này
+                    currentTypeIndex = -1;
+                    for (int i = 0; i < currentTypeList.size(); i++) {
+                        if (currentTypeList.get(i).getProductId().equals(product.getProductId())) {
+                            currentTypeIndex = i;
+                            break;
+                        }
+                    }
+                    jTabbedPane1.setSelectedIndex(1);
+                }
+            }
+        });
+
+        return card;
     }
 
     // Thêm phương thức hỗ trợ hiệu ứng hover cho nút
@@ -837,4 +909,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
             }
         });
     }
+
+    // Thêm sự kiện cho btnTimGia
+    
 }
