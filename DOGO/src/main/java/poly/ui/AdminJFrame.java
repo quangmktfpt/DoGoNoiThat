@@ -79,7 +79,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton4.setText("Phân Quyền");
         jButton4.setBorder(null);
         jButton4.setBorderPainted(false);
@@ -94,7 +94,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton4);
 
         jButton5.setBackground(new java.awt.Color(204, 204, 255));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton5.setText("Quản Lý Sản Phẩm");
         jButton5.setBorder(null);
         jButton5.setBorderPainted(false);
@@ -108,7 +108,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton5);
 
         jButton6.setBackground(new java.awt.Color(204, 204, 255));
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton6.setText("Quản Lý Kho");
         jButton6.setBorder(null);
         jButton6.setBorderPainted(false);
@@ -122,7 +122,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton6);
 
         jButton7.setBackground(new java.awt.Color(204, 204, 255));
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton7.setText("Quản Lý Đơn Hàng");
         jButton7.setBorder(null);
         jButton7.setBorderPainted(false);
@@ -136,7 +136,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton7);
 
         jButton8.setBackground(new java.awt.Color(204, 204, 255));
-        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton8.setText("QL Khách Hàng");
         jButton8.setBorder(null);
         jButton8.setBorderPainted(false);
@@ -150,7 +150,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton8);
 
         jButton9.setBackground(new java.awt.Color(204, 204, 255));
-        jButton9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton9.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton9.setText("Quản Lý Danh Mục");
         jButton9.setBorder(null);
         jButton9.setBorderPainted(false);
@@ -164,7 +164,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton9);
 
         jButton10.setBackground(new java.awt.Color(204, 204, 255));
-        jButton10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton10.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton10.setText("Báo cáo & Thống kê");
         jButton10.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jButton10.setBorderPainted(false);
@@ -178,7 +178,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton10);
 
         jButton3.setBackground(new java.awt.Color(204, 204, 255));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton3.setText("QL Nhà cung cấp");
         jButton3.setBorder(null);
         jButton3.setBorderPainted(false);
@@ -187,7 +187,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton3);
 
         jButton11.setBackground(new java.awt.Color(204, 204, 255));
-        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton11.setText("Cài đặt chung");
         jButton11.setBorder(null);
         jButton11.setBorderPainted(false);
@@ -201,7 +201,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton11);
 
         jButton13.setBackground(new java.awt.Color(204, 204, 255));
-        jButton13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton13.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton13.setText("QL Mã Giảm Giá");
         jButton13.setBorder(null);
         jButton13.setBorderPainted(false);
@@ -216,7 +216,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton13);
 
         jButton12.setBackground(new java.awt.Color(204, 204, 255));
-        jButton12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton12.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton12.setText("Đổi mật khẩu");
         jButton12.setBorder(null);
         jButton12.setBorderPainted(false);
