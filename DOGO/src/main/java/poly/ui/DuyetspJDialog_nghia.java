@@ -840,24 +840,17 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         card.add(javax.swing.Box.createVerticalStrut(8));
         card.add(imgLabel);
 
-        // Panel trung gian để căn giữa tên và giá
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new javax.swing.BoxLayout(infoPanel, javax.swing.BoxLayout.Y_AXIS));
-        infoPanel.setOpaque(false);
-        infoPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-
-        // Tên sản phẩm (cỡ nhỏ hơn, căn giữa)
-        JLabel nameLabel = new JLabel("<html><div style='text-align:center; color:#1a237e; font-weight:bold; font-size:12px;'>" + product.getProductName() + "</div></html>");
+        // Tên sản phẩm (bôi đậm, căn giữa, màu xanh đậm)
+        JLabel nameLabel = new JLabel("<html><div style='text-align:center; color:#1a237e; font-weight:bold; font-size:14px;'>" + product.getProductName() + "</div></html>");
         nameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        infoPanel.add(nameLabel);
-
-        // Giá sản phẩm (cỡ nhỏ hơn, căn giữa)
-        JLabel priceLabel = new JLabel("<html><div style='text-align:center;'><b style='color:#d32f2f; font-size:13px;'>" + product.getUnitPrice() + " $</b></div></html>");
-        priceLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        infoPanel.add(priceLabel);
-
         card.add(javax.swing.Box.createVerticalStrut(6));
-        card.add(infoPanel);
+        card.add(nameLabel);
+
+        // Giá sản phẩm (bôi đậm, căn giữa, màu đỏ, đơn vị USD)
+        JLabel priceLabel = new JLabel("<html><b style='color:#d32f2f; font-size:16px;'>" + product.getUnitPrice() + " $</b></html>");
+        priceLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        card.add(javax.swing.Box.createVerticalStrut(6));
+        card.add(priceLabel);
 
         card.add(javax.swing.Box.createVerticalGlue());
 
@@ -911,5 +904,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     }
 
     // Thêm sự kiện cho btnTimGia
-    
+    private void timGiaActionPerformed(java.awt.event.ActionEvent evt) {
+        
+    }
 }
