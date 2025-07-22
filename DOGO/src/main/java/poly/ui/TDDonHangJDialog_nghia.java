@@ -16,6 +16,8 @@ import poly.util.XDate;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import poly.controller.OrderController_Nghia;
+import poly.util.CurrentUserUtil;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -31,6 +33,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         initComponents();
         // Tự động load dữ liệu khi khởi tạo
         open();
+        // KHÔNG setEnabled cho các ô ngày nữa, luôn cho phép nhập tay
     }
 
     /**
@@ -53,9 +56,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         btnTimTrangThai = new javax.swing.JButton();
         cboThoiGian = new javax.swing.JComboBox();
         btnTimTheoThoiGian = new javax.swing.JButton();
-        txtTimKiemLichSu = new javax.swing.JTextField();
-        btnTimKiemLichSu = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtTuNgay = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtDenNgay = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHienTai = new javax.swing.JTable();
@@ -66,9 +70,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         btnTimTheoThoiGian1 = new javax.swing.JButton();
         cboTrangThai1 = new javax.swing.JComboBox();
         btnTimTrangThai1 = new javax.swing.JButton();
-        txtTimKiemHienTai = new javax.swing.JTextField();
-        btnTimKiemHienTai = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtTuNgay1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtDenNgay1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -122,7 +127,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboThoiGian.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây" }));
+        cboThoiGian.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây", "Tùy chọn" }));
         cboThoiGian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboThoiGianActionPerformed(evt);
@@ -136,22 +141,9 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        txtTimKiemLichSu.setToolTipText("Nhập tên khách hàng, số điện thoại, email hoặc mã đơn hàng");
-        txtTimKiemLichSu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTimKiemLichSuActionPerformed(evt);
-            }
-        });
+        jLabel4.setText("Ngày");
 
-        btnTimKiemLichSu.setText("Tìm kiếm");
-        btnTimKiemLichSu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimKiemLichSuActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Tìm kiếm:");
+        jLabel5.setText("Đến");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -164,13 +156,15 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 .addComponent(btnXemChiTietLichSu)
                 .addGap(162, 162, 162))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel2)
+                .addContainerGap()
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTimKiemLichSu, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtTuNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTimKiemLichSu)
-                .addGap(20, 20, 20)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboThoiGian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTimTheoThoiGian)
@@ -189,13 +183,14 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtTimKiemLichSu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimKiemLichSu)
                     .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTimTrangThai)
                     .addComponent(cboThoiGian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimTheoThoiGian))
+                    .addComponent(btnTimTheoThoiGian)
+                    .addComponent(jLabel4)
+                    .addComponent(txtTuNgay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -246,7 +241,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboThoiGian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây" }));
+        cboThoiGian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây", "Tùy chọn" }));
         cboThoiGian1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboThoiGian1ActionPerformed(evt);
@@ -274,34 +269,24 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        txtTimKiemHienTai.setToolTipText("Nhập tên khách hàng, số điện thoại, email hoặc mã đơn hàng");
-        txtTimKiemHienTai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTimKiemHienTaiActionPerformed(evt);
-            }
-        });
+        jLabel6.setText("Ngày");
 
-        btnTimKiemHienTai.setText("Tìm kiếm");
-        btnTimKiemHienTai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimKiemHienTaiActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Tìm kiếm:");
+        jLabel7.setText("Đến");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
-                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTimKiemHienTai, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtTuNgay1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTimKiemHienTai)
-                .addGap(20, 20, 20)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDenNgay1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTimTheoThoiGian1)
@@ -313,7 +298,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(96, 96, 96)
                 .addComponent(btnYeuCauDoiTraHienTai)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
                 .addComponent(btnHuy)
                 .addGap(151, 151, 151)
                 .addComponent(btnXemChiTietDonHienTai)
@@ -327,14 +312,17 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtTimKiemHienTai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimKiemHienTai)
-                    .addComponent(cboTrangThai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimTrangThai1)
-                    .addComponent(cboThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimTheoThoiGian1))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(txtTuNgay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7)
+                        .addComponent(txtDenNgay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cboTrangThai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTimTrangThai1)
+                        .addComponent(cboThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnTimTheoThoiGian1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
@@ -411,10 +399,6 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         searchByTime();
     }//GEN-LAST:event_btnTimTheoThoiGianActionPerformed
 
-    private void btnTimKiemLichSuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemLichSuActionPerformed
-        searchOrders();
-    }//GEN-LAST:event_btnTimKiemLichSuActionPerformed
-
     private void btnTimTheoThoiGian1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimTheoThoiGian1ActionPerformed
         searchByTime();
     }//GEN-LAST:event_btnTimTheoThoiGian1ActionPerformed
@@ -423,38 +407,78 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         searchByStatus();
     }//GEN-LAST:event_btnTimTrangThai1ActionPerformed
 
-    private void btnTimKiemHienTaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemHienTaiActionPerformed
-        searchOrders();
-    }//GEN-LAST:event_btnTimKiemHienTaiActionPerformed
-
-    private void txtTimKiemLichSuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemLichSuActionPerformed
+    private void cboTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTimKiemLichSuActionPerformed
+    }                                            
 
-    private void cboThoiGianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboThoiGianActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboThoiGianActionPerformed
+    private void cboThoiGianActionPerformed(java.awt.event.ActionEvent evt) {
+        String selected = (String) cboThoiGian.getSelectedItem();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if ("Hôm nay".equals(selected)) {
+            txtTuNgay.setText(today.format(formatter));
+            txtDenNgay.setText(today.format(formatter));
+        } else if ("Tuần này".equals(selected)) {
+            java.time.LocalDate weekStart = today.with(java.time.DayOfWeek.MONDAY);
+            java.time.LocalDate weekEnd = today.with(java.time.DayOfWeek.SUNDAY);
+            txtTuNgay.setText(weekStart.format(formatter));
+            txtDenNgay.setText(weekEnd.format(formatter));
+        } else if ("Tháng này".equals(selected)) {
+            java.time.LocalDate monthStart = today.withDayOfMonth(1);
+            java.time.LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+            txtTuNgay.setText(monthStart.format(formatter));
+            txtDenNgay.setText(monthEnd.format(formatter));
+        } else if ("3 tháng gần đây".equals(selected)) {
+            java.time.LocalDate threeMonthsAgo = today.minusMonths(2).withDayOfMonth(1);
+            java.time.LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+            txtTuNgay.setText(threeMonthsAgo.format(formatter));
+            txtDenNgay.setText(monthEnd.format(formatter));
+        } else if ("Tùy chọn".equals(selected)) {
+            // Không set gì cả, cho phép nhập tay
+        } else {
+            // "Tất cả thởi gian" hoặc giá trị khác
+            txtTuNgay.setText("");
+            txtDenNgay.setText("");
+        }
+    }
 
-    private void cboTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThaiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboTrangThaiActionPerformed
+    private void cboThoiGian1ActionPerformed(java.awt.event.ActionEvent evt) {
+        String selected = (String) cboThoiGian1.getSelectedItem();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if ("Hôm nay".equals(selected)) {
+            txtTuNgay1.setText(today.format(formatter));
+            txtDenNgay1.setText(today.format(formatter));
+        } else if ("Tuần này".equals(selected)) {
+            java.time.LocalDate weekStart = today.with(java.time.DayOfWeek.MONDAY);
+            java.time.LocalDate weekEnd = today.with(java.time.DayOfWeek.SUNDAY);
+            txtTuNgay1.setText(weekStart.format(formatter));
+            txtDenNgay1.setText(weekEnd.format(formatter));
+        } else if ("Tháng này".equals(selected)) {
+            java.time.LocalDate monthStart = today.withDayOfMonth(1);
+            java.time.LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+            txtTuNgay1.setText(monthStart.format(formatter));
+            txtDenNgay1.setText(monthEnd.format(formatter));
+        } else if ("3 tháng gần đây".equals(selected)) {
+            java.time.LocalDate threeMonthsAgo = today.minusMonths(2).withDayOfMonth(1);
+            java.time.LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+            txtTuNgay1.setText(threeMonthsAgo.format(formatter));
+            txtDenNgay1.setText(monthEnd.format(formatter));
+        } else if ("Tùy chọn".equals(selected)) {
+            // Không set gì cả, cho phép nhập tay
+        } else {
+            // "Tất cả thởi gian" hoặc giá trị khác
+            txtTuNgay1.setText("");
+            txtDenNgay1.setText("");
+        }
+    }
 
-    private void txtTimKiemHienTaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimKiemHienTaiActionPerformed
+    private void cboTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTimKiemHienTaiActionPerformed
-
-    private void cboThoiGian1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboThoiGian1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboThoiGian1ActionPerformed
-
-    private void cboTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTrangThai1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboTrangThai1ActionPerformed
+    }                                             
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHuy;
-    private javax.swing.JButton btnTimKiemHienTai;
-    private javax.swing.JButton btnTimKiemLichSu;
     private javax.swing.JButton btnTimTheoThoiGian;
     private javax.swing.JButton btnTimTheoThoiGian1;
     private javax.swing.JButton btnTimTrangThai;
@@ -468,8 +492,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private javax.swing.JComboBox cboTrangThai;
     private javax.swing.JComboBox cboTrangThai1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -477,8 +503,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable tblHienTai;
     private javax.swing.JTable tblLichSu;
-    private javax.swing.JTextField txtTimKiemHienTai;
-    private javax.swing.JTextField txtTimKiemLichSu;
+    private javax.swing.JTextField txtDenNgay;
+    private javax.swing.JTextField txtDenNgay1;
+    private javax.swing.JTextField txtTuNgay;
+    private javax.swing.JTextField txtTuNgay1;
     // End of variables declaration//GEN-END:variables
 
     // ========== IMPLEMENTATION ==========
@@ -507,13 +535,16 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     public void fillToTable() {
         DefaultTableModel model = (DefaultTableModel) tblLichSu.getModel();
         model.setRowCount(0);
-        
+        Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+        if (currentUserId == null) {
+            XDialog.alert("Không xác định được người dùng hiện tại!");
+            return;
+        }
         try {
-            List<Order> list = orderDAO.selectAll();
+            List<Order> list = orderDAO.selectByUserId(currentUserId);
             for (Order order : list) {
                 User user = userDAO.selectById(order.getUserId());
                 String customerName = user != null ? user.getFullName() : "N/A";
-                
                 model.addRow(new Object[]{
                     order.getOrderId(),
                     order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
@@ -524,24 +555,26 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         } catch (Exception e) {
             XDialog.alert("Lỗi tải dữ liệu: " + e.getMessage());
         }
-        
         fillCurrentOrdersTable();
     }
 
     private void fillCurrentOrdersTable() {
         DefaultTableModel model = (DefaultTableModel) tblHienTai.getModel();
         model.setRowCount(0);
-        
+        Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+        if (currentUserId == null) {
+            XDialog.alert("Không xác định được người dùng hiện tại!");
+            return;
+        }
         try {
-            // Lấy đơn hàng chưa hoàn thành
-            List<Order> list = orderDAO.selectByStatus("Pending");
-            list.addAll(orderDAO.selectByStatus("Processing"));
-            list.addAll(orderDAO.selectByStatus("Shipped"));
-            
+            // Lấy đơn hàng chưa hoàn thành của user hiện tại
+            List<Order> list = new java.util.ArrayList<>();
+            list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Pending".equals(o.getOrderStatus())).toList());
+            list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Processing".equals(o.getOrderStatus())).toList());
+            list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Shipped".equals(o.getOrderStatus())).toList());
             for (Order order : list) {
                 User user = userDAO.selectById(order.getUserId());
                 String customerName = user != null ? user.getFullName() : "N/A";
-                
                 model.addRow(new Object[]{
                     order.getOrderId(),
                     getProductNames(order.getOrderId()),
@@ -651,108 +684,27 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     }
 
     // ========== BUSINESS LOGIC ==========
-    private void searchOrders() {
-        int selectedTab = jTabbedPane1.getSelectedIndex();
-        String keyword = selectedTab == 0 ? 
-            txtTimKiemLichSu.getText() : txtTimKiemHienTai.getText();
-        
-        if (keyword.trim().isEmpty()) {
-            fillToTable();
-            return;
-        }
-        
-        DefaultTableModel model = (DefaultTableModel) (selectedTab == 0 ? 
-            tblLichSu.getModel() : tblHienTai.getModel());
-        model.setRowCount(0);
-        
-        try {
-            List<Order> allOrders = orderDAO.selectAll();
-            List<Order> filteredOrders = new java.util.ArrayList<>();
-            
-            for (Order order : allOrders) {
-                User user = userDAO.selectById(order.getUserId());
-                if (user == null) continue;
-                
-                // Tìm kiếm theo nhiều tiêu chí
-                boolean matches = false;
-                String searchLower = keyword.toLowerCase().trim();
-                
-                // Tìm theo mã đơn hàng
-                if (order.getOrderId().toString().contains(searchLower)) {
-                    matches = true;
-                }
-                // Tìm theo tên khách hàng
-                else if (user.getFullName() != null && 
-                         user.getFullName().toLowerCase().contains(searchLower)) {
-                    matches = true;
-                }
-                // Tìm theo số điện thoại
-                else if (user.getPhone() != null && 
-                         user.getPhone().toLowerCase().contains(searchLower)) {
-                    matches = true;
-                }
-                // Tìm theo email
-                else if (user.getEmail() != null && 
-                         user.getEmail().toLowerCase().contains(searchLower)) {
-                    matches = true;
-                }
-                
-                if (matches) {
-                    filteredOrders.add(order);
-                }
-            }
-            
-            // Hiển thị kết quả
-            for (Order order : filteredOrders) {
-                User user = userDAO.selectById(order.getUserId());
-                String customerName = user != null ? user.getFullName() : "N/A";
-                
-                if (selectedTab == 0) {
-                    model.addRow(new Object[]{
-                        order.getOrderId(),
-                        order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
-                    });
-                } else {
-                    model.addRow(new Object[]{
-                        order.getOrderId(),
-                        getProductNames(order.getOrderId()),
-                        order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
-                    });
-                }
-            }
-            
-            if (filteredOrders.isEmpty()) {
-                XDialog.alert("Không tìm thấy đơn hàng nào phù hợp với từ khóa: " + keyword);
-            }
-        } catch (Exception e) {
-            XDialog.alert("Lỗi tìm kiếm: " + e.getMessage());
-        }
-    }
-
     private void searchByStatus() {
         int selectedTab = jTabbedPane1.getSelectedIndex();
         String status = selectedTab == 0 ? 
             (String) cboTrangThai.getSelectedItem() : (String) cboTrangThai1.getSelectedItem();
-            
+        Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+        if (currentUserId == null) {
+            XDialog.alert("Không xác định được người dùng hiện tại!");
+            return;
+        }
         if ("Tất cả trạng thái".equals(status)) {
             fillToTable();
             return;
         }
-        
         DefaultTableModel model = (DefaultTableModel) (selectedTab == 0 ? 
             tblLichSu.getModel() : tblHienTai.getModel());
         model.setRowCount(0);
-        
         try {
-            List<Order> list = orderDAO.selectByStatus(status);
+            List<Order> list = orderDAO.selectByUserId(currentUserId).stream().filter(o -> status.equals(o.getOrderStatus())).toList();
             for (Order order : list) {
                 User user = userDAO.selectById(order.getUserId());
                 String customerName = user != null ? user.getFullName() : "N/A";
-                
                 if (selectedTab == 0) {
                     model.addRow(new Object[]{
                         order.getOrderId(),
@@ -779,24 +731,57 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         int selectedTab = jTabbedPane1.getSelectedIndex();
         String timeFilter = selectedTab == 0 ? 
             (String) cboThoiGian.getSelectedItem() : (String) cboThoiGian1.getSelectedItem();
-            
-        if ("Tất cả thời gian".equals(timeFilter)) {
+        Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+        if (currentUserId == null) {
+            XDialog.alert("Không xác định được người dùng hiện tại!");
+            return;
+        }
+        if ("Tất cả thời gian".equals(timeFilter) || "Tất cả thởi gian".equals(timeFilter)) {
             fillToTable();
             return;
         }
-        
         DefaultTableModel model = (DefaultTableModel) (selectedTab == 0 ? 
             tblLichSu.getModel() : tblHienTai.getModel());
         model.setRowCount(0);
-        
         try {
-            List<Order> list = orderDAO.selectAll(); // Lấy tất cả đơn hàng trước
-            List<Order> filteredList = filterOrdersByTime(list, timeFilter);
-            
+            List<Order> list = orderDAO.selectByUserId(currentUserId); // Lấy đơn hàng của user hiện tại
+            List<Order> filteredList;
+            if ("Tùy chọn".equals(timeFilter)) {
+                // Lấy ngày từ các trường nhập
+                String tuNgayStr = selectedTab == 0 ? txtTuNgay.getText().trim() : txtTuNgay1.getText().trim();
+                String denNgayStr = selectedTab == 0 ? txtDenNgay.getText().trim() : txtDenNgay1.getText().trim();
+                if (tuNgayStr.isEmpty() || denNgayStr.isEmpty()) {
+                    XDialog.alert("Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc!");
+                    return;
+                }
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                java.time.LocalDate tuNgay, denNgay;
+                try {
+                    tuNgay = java.time.LocalDate.parse(tuNgayStr, formatter);
+                    denNgay = java.time.LocalDate.parse(denNgayStr, formatter);
+                } catch (Exception e) {
+                    XDialog.alert("Định dạng ngày không hợp lệ! Định dạng đúng: yyyy-MM-dd");
+                    return;
+                }
+                // Kiểm tra hợp lệ: ngày bắt đầu phải <= ngày kết thúc
+                if (tuNgay.isAfter(denNgay)) {
+                    XDialog.alert("Ngày bắt đầu không được lớn hơn ngày kết thúc!");
+                    return;
+                }
+                filteredList = new java.util.ArrayList<>();
+                for (Order order : list) {
+                    if (order.getOrderDate() == null) continue;
+                    java.time.LocalDate orderDate = order.getOrderDate().toLocalDate();
+                    if ((orderDate.isEqual(tuNgay) || orderDate.isAfter(tuNgay)) && (orderDate.isEqual(denNgay) || orderDate.isBefore(denNgay))) {
+                        filteredList.add(order);
+                    }
+                }
+            } else {
+                filteredList = filterOrdersByTime(list, timeFilter);
+            }
             for (Order order : filteredList) {
                 User user = userDAO.selectById(order.getUserId());
                 String customerName = user != null ? user.getFullName() : "N/A";
-                
                 if (selectedTab == 0) {
                     model.addRow(new Object[]{
                         order.getOrderId(),

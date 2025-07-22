@@ -614,8 +614,8 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         String tuNgay = "", denNgay = "";
         switch (selected) {
             case "Tuỳ chọn":
-                // Không set txtTuNgayDH, txtDenNgayDH, cho phép nhập tự do
-                break;
+                // Không set txtTuNgayDH, txtDenNgayDH, không gọi fillDonHangTable, showDonHangChart
+                return;
             case "Hôm nay":
                 tuNgay = sdf.format(cal.getTime());
                 denNgay = tuNgay;
@@ -851,6 +851,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     private void showDoanhThuChart() {
         java.time.LocalDateTime from = parseDate(txtTuNgay.getText());
         java.time.LocalDateTime to = parseDate(txtDenNgay.getText());
+        if (!isDateRangeValid(from, to)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         java.util.Map<String, Number> data = tongHopDoanhThu(from, to);
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -946,6 +950,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     private void showDonHangChart() {
         java.time.LocalDateTime from = parseDate(txtTuNgayDH.getText());
         java.time.LocalDateTime to = parseDate(txtDenNgayDH.getText());
+        if (!isDateRangeValid(from, to)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         java.util.Map<String, Double> data = tongHopTongTienTheoTrangThai(from, to);
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -981,6 +989,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     private void fillDonHangTable() {
         java.time.LocalDateTime from = parseDate(txtTuNgayDH.getText());
         java.time.LocalDateTime to = parseDate(txtDenNgayDH.getText());
+        if (!isDateRangeValid(from, to)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         String status = cbxTrangThaiDonHang.getSelectedItem().toString();
         java.util.List<poly.entity.Order> data = thongKeDonHang(from, to, status);
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblDonHang.getModel();
@@ -1150,6 +1162,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         System.arraycopy(bom, 0, result, 0, bom.length);
         System.arraycopy(content, 0, result, bom.length, content.length);
         return result;
+    }
+
+    private boolean isDateRangeValid(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        return !from.isAfter(to);
     }
 
     /**
