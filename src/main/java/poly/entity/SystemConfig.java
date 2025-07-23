@@ -12,16 +12,6 @@ public class SystemConfig {
     private String configKey;
     private String configValue;
 
-<<<<<<< HEAD
-=======
-    public SystemConfig() {}
-
-    public SystemConfig(String configKey, String configValue) {
-        this.configKey = configKey;
-        this.configValue = configValue;
-    }
-
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     public String getConfigKey() {
         return configKey;
     }
@@ -38,20 +28,11 @@ public class SystemConfig {
         this.configValue = configValue;
     }
 
-<<<<<<< HEAD
     public SystemConfig(String configKey, String configValue) {
         this.configKey = configKey;
         this.configValue = configValue;
     }
 
     public SystemConfig() {
-=======
-    @Override
-    public String toString() {
-        return "SystemConfig{" +
-                "configKey='" + configKey + '\'' +
-                ", configValue='" + configValue + '\'' +
-                '}';
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     }
 }

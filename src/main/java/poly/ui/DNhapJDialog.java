@@ -5,24 +5,13 @@
 package poly.ui;
 
 import javax.swing.JOptionPane;
-<<<<<<< HEAD
-import poly.dao.UserDAO;
-import poly.dao.impl.UserDAOImpl;
-import poly.entity.User;
-import poly.util.XDialog;
-=======
 import poly.controller.LogginController;
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
 
 /**
  *
  * @author Nghia
  */
-<<<<<<< HEAD
-public class DNhapJDialog extends javax.swing.JDialog {
-=======
 public class DNhapJDialog extends javax.swing.JDialog implements LogginController{
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
 
     /**
      * Creates new form DNhapJDialog
@@ -30,10 +19,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     public DNhapJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-<<<<<<< HEAD
-=======
         this.open();
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     }
 
     /**
@@ -53,13 +39,8 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         jLabel4 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         txtUsername = new javax.swing.JTextField();
-<<<<<<< HEAD
-        txtPassword = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-=======
         jButton3 = new javax.swing.JButton();
         txtPassword = new javax.swing.JPasswordField();
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -102,25 +83,8 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         jSeparator2.setAlignmentX(6.0F);
         jSeparator2.setAlignmentY(6.0F);
 
-<<<<<<< HEAD
-        txtUsername.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsernameActionPerformed(evt);
-            }
-        });
-
-        txtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPasswordActionPerformed(evt);
-            }
-        });
-
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setText("Chưa có tài khoản ?");
-=======
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton3.setText("Đăng Kí");
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -141,16 +105,6 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-<<<<<<< HEAD
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-=======
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -159,7 +113,6 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
                 .addContainerGap()
                 .addComponent(txtPassword)
                 .addContainerGap())
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
@@ -176,15 +129,9 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-<<<<<<< HEAD
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-=======
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -215,26 +162,6 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-<<<<<<< HEAD
-        // TODO add your handling code here:
-//         this.login();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-//        this.showDKyTaiKhoanJDialog(this);
-        this.dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsernameActionPerformed
-
-    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPasswordActionPerformed
-
-=======
         login();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -247,7 +174,6 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         this.setVisible(true); // Hiện lại dialog đăng nhập sau khi đăng ký xong
     }//GEN-LAST:event_jButton3ActionPerformed
 
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     /**
      * @param args the command line arguments
      */
@@ -299,34 +225,6 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     private javax.swing.JLabel jLabel4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-<<<<<<< HEAD
-    private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtUsername;
-    // End of variables declaration//GEN-END:variables
-
-// @Override
-//    public void open() {
-//        this.setLocationRelativeTo(null);
-//
-//    }
-// @Override
-//    public void login() {
-//        String username = txtUsername.getText();
-//        String password = txtPassword.getText();
-//        UserDAO dao = new UserDAOImpl();
-//        User user = dao.findById(username);
-//        if (user == null) {
-//            XDialog.alert("Sai tên đăng nhập!");
-//        } else if (!password.equals(user.getPasswordHash())) {
-//            XDialog.alert("Sai mật khẩu đăng nhập!");
-//        } else  {
-//            XDialog.alert("Tài khoản của bạn đang tạm dừng!");
-//      
-//        }
-//
-//    }
-}
-=======
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
@@ -385,4 +283,3 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         LogginController.super.exit(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 }
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)

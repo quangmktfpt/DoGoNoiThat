@@ -4,13 +4,7 @@
  */
 package poly.ui;
 
-
-
-import poly.controller.SupportRequestController;
-import poly.entity.SupportRequest;
-import poly.util.XDialog;
-import java.sql.Timestamp;
-
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,41 +12,23 @@ import java.sql.Timestamp;
  */
 public class HoTroJDialog extends javax.swing.JDialog {
 
-    private SupportRequestController controller = new SupportRequestController();
-
-
     /**
      * Creates new form HoTroJDialog
      */
     public HoTroJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-
-        setLocationRelativeTo(null);
-        jButton1.addActionListener(e -> guiYeuCau());
+        initSupportInfo();
     }
-
-    private void guiYeuCau() {
-        String subject = jTextField1.getText().trim();
-        String content = jTextArea1.getText().trim();
-        if (subject.isEmpty() || content.isEmpty()) {
-            XDialog.alert("Vui lòng nhập đầy đủ chủ đề và nội dung!");
-            return;
-        }
-        SupportRequest req = new SupportRequest();
-        req.setSubject(subject);
-        req.setContent(content);
-        req.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        req.setStatus("Chờ xử lý");
-        try {
-            controller.sendRequest(req);
-            XDialog.alert("Gửi yêu cầu hỗ trợ thành công!");
-            jTextField1.setText("");
-            jTextArea1.setText("");
-        } catch (Exception ex) {
-            XDialog.alert("Gửi yêu cầu thất bại: " + ex.getMessage());
-        }
-
+    
+    /**
+     * Khởi tạo thông tin hỗ trợ
+     */
+    private void initSupportInfo() {
+        // Có thể load thông tin từ database hoặc config
+        jLabel3.setText("support@storedogo2.com");
+        jLabel4.setText("0123456789");
+        jLabel5.setText("Khu Công Nghiệp Tư Bản, TP.HCM");
     }
 
     /**
@@ -128,16 +104,18 @@ public class HoTroJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addComponent(jLabel6)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(105, 127, Short.MAX_VALUE))))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(105, 129, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -183,11 +161,54 @@ public class HoTroJDialog extends javax.swing.JDialog {
                 .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        sendSupportRequest();
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+  
+    private void sendSupportRequest() {
+        String subject = jTextField1.getText().trim();
+        String content = jTextArea1.getText().trim();
+        
+        // Kiểm tra dữ liệu đầu vào
+        if (subject.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập chủ đề yêu cầu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            jTextField1.requestFocus();
+            return;
+        }
+        
+        if (content.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập nội dung yêu cầu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            jTextArea1.requestFocus();
+            return;
+        }
+        
+        try {
+            // Hiển thị thông báo thành công (có thể thay thế bằng logic lưu database sau)
+            JOptionPane.showMessageDialog(this, 
+                "Gửi yêu cầu hỗ trợ thành công!\nChúng tôi sẽ phản hồi trong thời gian sớm nhất.", 
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+            clearForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Xóa form
+     */
+    private void clearForm() {
+        jTextField1.setText("");
+        jTextArea1.setText("");
+        jTextField1.requestFocus();
+    }
 
     /**
      * @param args the command line arguments

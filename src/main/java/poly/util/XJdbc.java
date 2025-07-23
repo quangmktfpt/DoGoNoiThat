@@ -23,11 +23,6 @@ public class XJdbc {
      */
     public static Connection openConnection() {
         var driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-<<<<<<< HEAD
-        var dburl = "jdbc:sqlserver://localhost;database=furniture_store;encrypt=true;trustServerCertificate=true;";
-        var username = "sa";
-        var password = "123456";
-=======
 
         var dburl = "jdbc:sqlserver://localhost;database=Storedogo2;encrypt=true;trustServerCertificate=true;";
 
@@ -35,7 +30,6 @@ public class XJdbc {
 
         var username = "sa";
         var password = "123";
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         try {
             if (!XJdbc.isReady()) {
                 Class.forName(driver);
@@ -163,5 +157,9 @@ public class XJdbc {
     private static void demo3() {
         String sql = "DELETE FROM Drinks WHERE UnitPrice < ?";
         var count = XJdbc.executeUpdate(sql, 0.0);
+    }
+
+    public static Connection getConnection() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

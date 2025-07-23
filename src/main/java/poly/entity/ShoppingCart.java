@@ -11,41 +11,14 @@ import java.time.LocalDateTime;
  * @author quang
  */
 public class ShoppingCart {
-     private Integer cartId;
-    private Integer userId;
+    private int cartId;
+    private int userId;
     private LocalDateTime createdDate;
 
-    public ShoppingCart(Integer cartId, Integer userId, LocalDateTime createdDate) {
-        this.cartId = cartId;
-        this.userId = userId;
-        this.createdDate = createdDate;
-    }
-
-    public ShoppingCart() {
-    }
-
-    public Integer getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(Integer cartId) {
-        this.cartId = cartId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-    
+    public int getCartId() { return cartId; }
+    public void setCartId(int cartId) { this.cartId = cartId; }
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
 }

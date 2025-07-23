@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
-package poly.dao;
-
-import poly.entity.OrderDetail;
-
-/**
- *
- * @author admin
- */
-public interface OrderDetailDAO extends CrudDao<OrderDetail, Integer> {
-
-}
-=======
 package poly.dao;
 
 import poly.entity.OrderDetail;
@@ -34,4 +17,3 @@ public interface OrderDetailDAO extends CrudDAO<OrderDetail, Integer> {
     // Lấy tổng số lượng sản phẩm đã bán theo ProductID
     int getTotalQuantitySold(String productId);
 } 
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)

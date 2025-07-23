@@ -13,6 +13,15 @@ public class CurrentUserUtil {
         return currentUsername;
     }
 
-    public static void setCurrentUserId(Integer userId) { currentUserId = userId; }
-    public static Integer getCurrentUserId() { return currentUserId; }
+    public static void setCurrentUserId(Integer userId) { 
+        currentUserId = userId; 
+    }
+    
+    public static Integer getCurrentUserId() { 
+        return currentUserId; 
+    }
+
+    public static int getCurrentUserID() {
+        return currentUserId != null ? currentUserId : -1;
+    }
 } 

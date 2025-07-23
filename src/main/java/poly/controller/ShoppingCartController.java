@@ -1,15 +1,11 @@
-package poly.dao;
+package poly.controller;
 
 import poly.entity.ShoppingCart;
 import poly.entity.CartItem;
 import java.util.List;
 
-public interface ShoppingCartDAO {
-    void insert(ShoppingCart cart);
-    void update(ShoppingCart cart);
-    void delete(int cartId);
-    ShoppingCart selectById(int cartId);
-    ShoppingCart selectByUserId(int userId);
+public interface ShoppingCartController {
+    ShoppingCart getCartByUserId(int userId);
     List<CartItem> getCartItems(int cartId);
     void addCartItem(int cartId, CartItem item);
     void updateCartItem(int cartItemId, int quantity);

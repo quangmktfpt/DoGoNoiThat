@@ -4,13 +4,10 @@
  */
 package poly.ui.manager;
 
-import poly.dao.SystemConfigDAO;
-import poly.dao.impl.SystemConfigDAOImpl;
+import poly.controller.SystemConfigController;
+import poly.controller.SystemConfigControllerImpl;
 import poly.entity.SystemConfig;
-import poly.util.XDialog;
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
 import java.util.List;
 
 /**
@@ -18,112 +15,36 @@ import java.util.List;
  * @author Duy
  */
 public class CaiDatChung extends javax.swing.JDialog {
-    private SystemConfigDAO dao = new SystemConfigDAOImpl();
-    private DefaultTableModel model;
 
     /**
      * Creates new form CaiDatChung
      */
+    private SystemConfigController controller = new SystemConfigControllerImpl();
+    private SystemConfig currentConfig;
+
     public CaiDatChung(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(null);
-        initTable();
-        loadTable();
-        // Gắn sự kiện cho các nút
-        jButton2.addActionListener(this::btnThemActionPerformed); // Thêm
-        jButton3.addActionListener(this::btnCapNhatActionPerformed); // Cập nhật
-        jButton4.addActionListener(this::btnXoaActionPerformed); // Xóa
-        jButton5.addActionListener(this::btnLamMoiActionPerformed); // Làm mới
-        // Gắn sự kiện click cho bảng
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-                jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab Chỉnh sửa
+        btnAdd.addActionListener(evt -> addConfig());
+        btnUpdate.addActionListener(evt -> updateConfig());
+        btnDelete.addActionListener(evt -> deleteConfig());
+        btnRefresh.addActionListener(evt -> {
+            loadConfig();
+            clearForm();
+        });
+        tblConfig.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int row = tblConfig.getSelectedRow();
+                if (row >= 0) {
+                    txtKey.setText((String) tblConfig.getValueAt(row, 0));
+                    txtValue.setText((String) tblConfig.getValueAt(row, 1));
+                    txtKey.setEditable(false);
+                    jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab Chỉnh sửa
+                }
             }
         });
-    }
-
-    private void initTable() {
-        model = new DefaultTableModel(new Object[]{"ConfigKey", "ConfigValue"}, 0) {
-            public boolean isCellEditable(int row, int column) { return false; }
-        };
-        jTable1.setModel(model);
-    }
-
-    private void loadTable() {
-        model.setRowCount(0);
-        List<SystemConfig> list = dao.findAll();
-        for (SystemConfig sc : list) {
-            model.addRow(new Object[]{sc.getConfigKey(), sc.getConfigValue()});
-        }
-    }
-
-    private void clearForm() {
-        jTextField2.setText("");
-        jTextField1.setText("");
-        jTable1.clearSelection();
-    }
-
-    private void setForm(SystemConfig sc) {
-        jTextField2.setText(sc.getConfigKey());
-        jTextField1.setText(sc.getConfigValue());
-    }
-
-    private SystemConfig getForm() {
-        return new SystemConfig(jTextField2.getText().trim(), jTextField1.getText().trim());
-    }
-
-    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {
-        SystemConfig sc = getForm();
-        if (sc.getConfigKey().isEmpty() || sc.getConfigValue().isEmpty()) {
-            XDialog.alert("Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-        if (dao.findByKey(sc.getConfigKey()) != null) {
-            XDialog.alert("ConfigKey đã tồn tại!");
-            return;
-        }
-        dao.insert(sc);
-        loadTable();
-        clearForm();
-        XDialog.alert("Thêm thành công!");
-    }
-
-    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {
-        SystemConfig sc = getForm();
-        if (dao.findByKey(sc.getConfigKey()) == null) {
-            XDialog.alert("ConfigKey không tồn tại!");
-            return;
-        }
-        dao.update(sc);
-        loadTable();
-        XDialog.alert("Cập nhật thành công!");
-    }
-
-    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {
-        String key = jTextField2.getText().trim();
-        if (dao.findByKey(key) == null) {
-            XDialog.alert("ConfigKey không tồn tại!");
-            return;
-        }
-        dao.delete(key);
-        loadTable();
-        clearForm();
-        XDialog.alert("Xóa thành công!");
-    }
-
-    private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {
-        clearForm();
-    }
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-        int row = jTable1.getSelectedRow();
-        if (row >= 0) {
-            String key = (String) model.getValueAt(row, 0);
-            SystemConfig sc = dao.findByKey(key);
-            setForm(sc);
-        }
+        loadConfig();
     }
 
     /**
@@ -139,23 +60,23 @@ public class CaiDatChung extends javax.swing.JDialog {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblConfig = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtValue = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txtKey = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Cài đặt chung");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblConfig.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -166,13 +87,13 @@ public class CaiDatChung extends javax.swing.JDialog {
                 "ConfigKey", "ConfigValue"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblConfig);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,13 +108,13 @@ public class CaiDatChung extends javax.swing.JDialog {
 
         jLabel3.setText("ConfigKey:");
 
-        jButton4.setText("Xóa");
+        btnDelete.setText("Xóa");
 
-        jButton5.setText("Làm mới");
+        btnRefresh.setText("Làm mới");
 
-        jButton2.setText("Thêm");
+        btnAdd.setText("Thêm");
 
-        jButton3.setText("Cập nhật");
+        btnUpdate.setText("Cập nhật");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -207,21 +128,21 @@ public class CaiDatChung extends javax.swing.JDialog {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2))
+                                .addComponent(txtKey))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtValue, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(69, 69, 69)
-                        .addComponent(jButton2)
+                        .addComponent(btnAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(btnUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
+                        .addComponent(btnDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)))
-                .addContainerGap(97, Short.MAX_VALUE))
+                        .addComponent(btnRefresh)))
+                .addContainerGap(169, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,17 +150,17 @@ public class CaiDatChung extends javax.swing.JDialog {
                 .addGap(31, 31, 31)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btnAdd)
+                    .addComponent(btnUpdate)
+                    .addComponent(btnDelete)
+                    .addComponent(btnRefresh))
                 .addGap(39, 39, 39))
         );
 
@@ -255,7 +176,7 @@ public class CaiDatChung extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -270,6 +191,77 @@ public class CaiDatChung extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void loadConfig() {
+        DefaultTableModel model = (DefaultTableModel) tblConfig.getModel();
+        // Đảm bảo bảng không bị giới hạn số dòng, luôn clear hết trước khi add
+        model.setRowCount(0);
+        List<SystemConfig> configs = controller.getAllConfigs();
+        for (SystemConfig config : configs) {
+            model.addRow(new Object[]{config.getConfigKey(), config.getConfigValue()});
+        }
+    }
+
+    private void addConfig() {
+        String key = txtKey.getText().trim();
+        String value = txtValue.getText().trim();
+        if (key.isEmpty() || value.isEmpty()) {
+            showError("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+        if (controller.getConfigByKey(key) != null) {
+            showError("ConfigKey đã tồn tại!");
+            return;
+        }
+        controller.addConfig(new SystemConfig(key, value));
+        loadConfig();
+        clearForm();
+        showInfo("Thêm thành công!");
+    }
+
+    private void updateConfig() {
+        String key = txtKey.getText().trim();
+        String value = txtValue.getText().trim();
+        if (key.isEmpty() || value.isEmpty()) {
+            showError("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+        if (controller.getConfigByKey(key) == null) {
+            showError("ConfigKey không tồn tại!");
+            return;
+        }
+        controller.updateConfig(new SystemConfig(key, value));
+        loadConfig();
+        clearForm();
+        showInfo("Cập nhật thành công!");
+    }
+
+    private void deleteConfig() {
+        String key = txtKey.getText().trim();
+        if (key.isEmpty()) {
+            showError("Vui lòng chọn cấu hình để xóa!");
+            return;
+        }
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+        controller.deleteConfig(key);
+        loadConfig();
+        clearForm();
+        showInfo("Đã xóa !");
+    }
+
+    private void clearForm() {
+        txtKey.setText("");
+        txtValue.setText("");
+        txtKey.setEditable(true);
+    }
+
+    private void showError(String message) {
+        javax.swing.JOptionPane.showMessageDialog(this, message, "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    private void showInfo(String message) {
+        javax.swing.JOptionPane.showMessageDialog(this, message, "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }
 
     /**
      * @param args the command line arguments
@@ -297,6 +289,7 @@ public class CaiDatChung extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(CaiDatChung.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -314,10 +307,10 @@ public class CaiDatChung extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -325,8 +318,8 @@ public class CaiDatChung extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tblConfig;
+    private javax.swing.JTextField txtKey;
+    private javax.swing.JTextField txtValue;
     // End of variables declaration//GEN-END:variables
 }

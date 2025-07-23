@@ -17,10 +17,7 @@ public class AdminJFrame extends javax.swing.JFrame {
      */
     public AdminJFrame() {
         initComponents();
-<<<<<<< HEAD
-=======
         this.setLocationRelativeTo(null);
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         
     }
 
@@ -50,10 +47,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
         cardBrowse = new javax.swing.JPanel();
-<<<<<<< HEAD
-=======
         jButton12 = new javax.swing.JButton();
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         cardCart = new javax.swing.JPanel();
         cardCheckout = new javax.swing.JPanel();
         cardTrack = new javax.swing.JPanel();
@@ -83,14 +77,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton2.setBorderPainted(false);
         jButton2.setContentAreaFilled(false);
         jButton2.setFocusPainted(false);
-<<<<<<< HEAD
-=======
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         jPanelX.add(jButton2);
 
         headerPanel.add(jPanelX, java.awt.BorderLayout.LINE_END);
@@ -160,22 +151,17 @@ public class AdminJFrame extends javax.swing.JFrame {
         sidebarPanel.add(jButton3);
 
         jButton11.setText("Cài đặt chung");
-<<<<<<< HEAD
-=======
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
             }
         });
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         sidebarPanel.add(jButton11);
 
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
-<<<<<<< HEAD
-=======
         jButton12.setText("Đổi mật khẩu");
         jButton12.setMaximumSize(new java.awt.Dimension(200, 40));
         jButton12.addActionListener(new java.awt.event.ActionListener() {
@@ -184,18 +170,10 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
 
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         javax.swing.GroupLayout cardBrowseLayout = new javax.swing.GroupLayout(cardBrowse);
         cardBrowse.setLayout(cardBrowseLayout);
         cardBrowseLayout.setHorizontalGroup(
             cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-<<<<<<< HEAD
-            .addGap(0, 543, Short.MAX_VALUE)
-        );
-        cardBrowseLayout.setVerticalGroup(
-            cardBrowseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 474, Short.MAX_VALUE)
-=======
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardBrowseLayout.createSequentialGroup()
                 .addContainerGap(389, Short.MAX_VALUE)
                 .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,7 +185,6 @@ public class AdminJFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(420, Short.MAX_VALUE))
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
         );
 
         mainPanel.add(cardBrowse, "cardBrowse");
@@ -330,8 +307,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton10ActionPerformed
 
-<<<<<<< HEAD
-=======
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -349,7 +324,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
 
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     /**
      * @param args the command line arguments
      */
@@ -397,10 +371,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
-<<<<<<< HEAD
-=======
     private javax.swing.JButton jButton12;
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

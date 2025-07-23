@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
-package poly.dao;
-
-import poly.entity.Order;
-
-/**
- *
- * @author admin
- */
-public interface OrderDAO extends CrudDao<Order, Integer> {
-
-}
-=======
 package poly.dao;
 
 import poly.entity.Order;
@@ -61,4 +44,3 @@ public interface OrderDAO extends CrudDAO<Order, Integer> {
     // Lấy thông tin đơn hàng với thông tin khách hàng
     List<Order> selectOrdersWithCustomerInfo();
 } 
->>>>>>> eed6712 (đây là code của phần Caidatchung.java HotroJDialog.java GioHangJDialog.java)
