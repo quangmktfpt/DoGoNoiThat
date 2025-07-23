@@ -10,7 +10,7 @@ import org.apache.http.util.EntityUtils;
 
 public class OpenAIClient {
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
-    private static final String API_KEY = "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";
+    private static final String API_KEY = "key";
 
     public static String getAIResponse(String userMessage) throws Exception {
         RequestConfig config = RequestConfig.custom()
