@@ -34,8 +34,19 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     public DuyetspJDialog_nghia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        productGridPanel.setLayout(new WrapLayout(java.awt.FlowLayout.LEFT, 10, 10));
-        productScrollPane.getVerticalScrollBar().setUnitIncrement(32); // Tăng tốc độ cuộn dọc
+        // Hiển thị sản phẩm dạng lưới 3 cột, khoảng cách 16px
+        productGridPanel.setLayout(new java.awt.GridLayout(0, 3, 16, 16));
+        productScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        // Sự kiện Enter gửi chat
+        jTextArea2.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER && !evt.isShiftDown()) {
+                    evt.consume();
+                    jButton1.doClick();
+                }
+            }
+        });
         // 1. Đổi màu nền panel (phối màu mới)
         jPanel1.setBackground(new java.awt.Color(227, 242, 253)); // Xanh nhạt pastel
         jPanel2.setBackground(new java.awt.Color(240, 244, 195)); // Xám xanh nhạt
@@ -61,6 +72,37 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String userMessage = jTextArea2.getText().trim();
+                if (userMessage.isEmpty()) return;
+                jTextArea1.append("\n[Bạn]: " + userMessage + "\n[AI]: Đang trả lời...\n");
+                jTextArea2.setText("");
+                jButton1.setEnabled(false);
+                jTextArea2.setEnabled(false);
+                new javax.swing.SwingWorker<String, Void>() {
+                    @Override
+                    protected String doInBackground() throws Exception {
+                        return poly.util.OpenAIClient.getAIResponse(userMessage);
+                    }
+                    @Override
+                    protected void done() {
+                        try {
+                            String aiResponse = get();
+                            String currentText = jTextArea1.getText();
+                            jTextArea1.setText(currentText.replace("[AI]: Đang trả lời...", "[AI]: " + aiResponse));
+                        } catch (Exception e) {
+                            jTextArea1.append("[Lỗi]: " + e.getMessage() + "\n");
+                        } finally {
+                            jButton1.setEnabled(true);
+                            jTextArea2.setEnabled(true);
+                            jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                            jTextArea2.requestFocusInWindow();
+                        }
+                    }
+                }.execute();
             }
         });
     }
@@ -89,6 +131,12 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         jLabel11 = new javax.swing.JLabel();
         txtGiaDen = new javax.swing.JTextField();
         btnTimGia = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblHinhAnh = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -144,6 +192,8 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         });
 
         productScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        productGridPanel.setLayout(new java.awt.GridBagLayout());
         productScrollPane.setViewportView(productGridPanel);
 
         jLabel2.setText("Từ");
@@ -157,6 +207,42 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
             }
         });
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
+        jButton1.setText("Gửi");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(85, 85, 85))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -165,9 +251,6 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(325, 325, 325))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
@@ -189,7 +272,12 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                 .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTimGia)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,7 +297,9 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                     .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTimGia))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(productScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -332,7 +422,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtKichThuoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtGiaKichThuoc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(200, Short.MAX_VALUE))))
+                        .addContainerGap(294, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -574,6 +664,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnTimLoai;
     private javax.swing.JComboBox<String> cboLoaiSanPham;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -589,8 +680,13 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JLabel lblHinhAnh;
     private javax.swing.JPanel productGridPanel;
     private javax.swing.JScrollPane productScrollPane;
@@ -823,7 +919,7 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
 
     private JPanel createProductCard(Product_Nghia product) {
         JPanel card = new JPanel();
-        card.setPreferredSize(new java.awt.Dimension(200, 240));
+        card.setPreferredSize(new java.awt.Dimension(160, 220));
         card.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.LIGHT_GRAY, 1));
         card.setLayout(new javax.swing.BoxLayout(card, javax.swing.BoxLayout.Y_AXIS));
         card.setBackground(java.awt.Color.WHITE);
@@ -833,21 +929,23 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
         JLabel imgLabel = new JLabel();
         imgLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         if (icon != null) {
-            Image img = icon.getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH);
+            Image img = icon.getImage().getScaledInstance(140, 90, Image.SCALE_SMOOTH);
             imgLabel.setIcon(new ImageIcon(img));
             imgLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
         }
         card.add(javax.swing.Box.createVerticalStrut(8));
         card.add(imgLabel);
 
-        // Tên sản phẩm (bôi đậm, căn giữa, màu xanh đậm)
-        JLabel nameLabel = new JLabel("<html><div style='text-align:center; color:#1a237e; font-weight:bold; font-size:14px;'>" + product.getProductName() + "</div></html>");
+        // Tên sản phẩm (căn giữa, font to, đậm, tối đa 2 dòng, không tràn)
+        String name = product.getProductName() != null ? product.getProductName() : "";
+        JLabel nameLabel = new JLabel("<html><div style='text-align:center; color:#1a237e; font-weight:bold; font-size:14px; max-width:140px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:normal;'>" + name + "</div></html>");
         nameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         card.add(javax.swing.Box.createVerticalStrut(6));
         card.add(nameLabel);
 
-        // Giá sản phẩm (bôi đậm, căn giữa, màu đỏ, đơn vị USD)
-        JLabel priceLabel = new JLabel("<html><b style='color:#d32f2f; font-size:16px;'>" + product.getUnitPrice() + " $</b></html>");
+        // Giá sản phẩm (căn giữa, font to, màu nổi bật, không tràn)
+        String price = product.getUnitPrice() != null ? product.getUnitPrice().toString() : "";
+        JLabel priceLabel = new JLabel("<html><div style='text-align:center; color:#d32f2f; font-weight:bold; font-size:16px; max-width:140px; overflow:hidden;'>" + price + " ₫</div></html>");
         priceLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         card.add(javax.swing.Box.createVerticalStrut(6));
         card.add(priceLabel);
