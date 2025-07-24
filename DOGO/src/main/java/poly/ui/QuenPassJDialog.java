@@ -4,11 +4,28 @@
  */
 package poly.ui;
 
+import poly.controller.PasswordResetController;
+import poly.dao.UserDAO;
+import poly.dao.impl.UserDAOImpl;
+import poly.dao.PasswordResetTokenDAO;
+import poly.dao.impl.PasswordResetTokenDAOImpl;
+import poly.entity.User;
+import poly.entity.PasswordResetToken;
+import java.util.Date;
+import java.util.Random;
+import java.util.Properties;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Nghia
  */
-public class QuenPassJDialog extends javax.swing.JDialog {
+public class QuenPassJDialog extends javax.swing.JDialog implements PasswordResetController {
+    private final UserDAO userDAO = new UserDAOImpl();
+    private final PasswordResetTokenDAO tokenDAO = new PasswordResetTokenDAOImpl();
+    private boolean codeVerified = false; // Đánh dấu đã xác nhận mã thành công
 
     /**
      * Creates new form QuenPassJDialog
@@ -16,6 +33,9 @@ public class QuenPassJDialog extends javax.swing.JDialog {
     public QuenPassJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Mặc định disable 2 ô mật khẩu mới và xác nhận
+        txtMatKhauMoi.setEnabled(false);
+        txtXacNhanMatKhau.setEnabled(false);
     }
 
     /**
@@ -33,13 +53,16 @@ public class QuenPassJDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txtEmail = new javax.swing.JTextField();
+        txtMaXacMinh = new javax.swing.JTextField();
+        btnGuiMa = new javax.swing.JButton();
+        txtMatKhauMoi = new javax.swing.JPasswordField();
+        txtXacNhanMatKhau = new javax.swing.JPasswordField();
+        btnXacNhan = new javax.swing.JButton();
+        btnQuayLai = new javax.swing.JButton();
+        btnXacNhanMa = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        txtUsername = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -63,27 +86,66 @@ public class QuenPassJDialog extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel5.setText("Xác nhận mật khẩu:");
 
-        jButton1.setText("Gửi mã");
-
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton2.setText("Xác Nhận");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                txtEmailActionPerformed(evt);
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 102, 153));
-        jButton3.setText("Quay Lại");
-        jButton3.setBorderPainted(false);
-        jButton3.setContentAreaFilled(false);
-        jButton3.setFocusPainted(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        txtMaXacMinh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                txtMaXacMinhActionPerformed(evt);
             }
         });
+
+        btnGuiMa.setText("Gửi mã");
+        btnGuiMa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuiMaActionPerformed(evt);
+            }
+        });
+
+        txtMatKhauMoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMatKhauMoiActionPerformed(evt);
+            }
+        });
+
+        txtXacNhanMatKhau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtXacNhanMatKhauActionPerformed(evt);
+            }
+        });
+
+        btnXacNhan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnXacNhan.setText("Xác Nhận");
+        btnXacNhan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXacNhanActionPerformed(evt);
+            }
+        });
+
+        btnQuayLai.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnQuayLai.setForeground(new java.awt.Color(0, 102, 153));
+        btnQuayLai.setText("Quay Lại");
+        btnQuayLai.setBorderPainted(false);
+        btnQuayLai.setContentAreaFilled(false);
+        btnQuayLai.setFocusPainted(false);
+        btnQuayLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuayLaiActionPerformed(evt);
+            }
+        });
+
+        btnXacNhanMa.setText("Xác Nhận Mã");
+        btnXacNhanMa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXacNhanMaActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        jLabel6.setText("Username:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,34 +153,42 @@ public class QuenPassJDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(137, 137, 137)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(34, 34, 34)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
-                            .addComponent(jPasswordField1)
-                            .addComponent(jPasswordField2)))
+                                .addGap(137, 137, 137)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(btnXacNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnQuayLai)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton3)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(89, 89, 89)
+                                .addComponent(txtUsername))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(34, 34, 34)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtEmail)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtMaXacMinh, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnGuiMa))
+                                    .addComponent(txtMatKhauMoi)
+                                    .addComponent(txtXacNhanMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnXacNhanMa, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -127,42 +197,216 @@ public class QuenPassJDialog extends javax.swing.JDialog {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txtMaXacMinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuiMa)
+                    .addComponent(btnXacNhanMa))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMatKhauMoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtXacNhanMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
-                .addContainerGap(56, Short.MAX_VALUE))
+                    .addComponent(btnXacNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnQuayLai))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    // ================= PasswordResetController Implementation =================
+    @Override
+    public boolean sendVerificationCode(String email, String usernameInput) {
+        User user = userDAO.findByUsernameAndEmail(usernameInput, email);
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "Username hoặc Email không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        // Sinh mã xác minh 6 số
+        String code = String.format("%06d", new Random().nextInt(1000000));
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + 5 * 60 * 1000); // 5 phút
+        PasswordResetToken token = new PasswordResetToken();
+        token.setUserID(user.getUserId());
+        token.setToken(code);
+        token.setExpiryTime(expiry);
+        token.setUsed(false);
+        token.setCreatedTime(now);
+        tokenDAO.insert(token);
+        // Gửi email thật, truyền thêm username
+        if (sendEmail(email, code, user.getUsername())) {
+            JOptionPane.showMessageDialog(this, "Mã xác minh đã được gửi về email!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this, "Không gửi được email. Vui lòng thử lại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean verifyCode(String email, String usernameInput, String code) {
+        User user = userDAO.findByUsernameAndEmail(usernameInput, email);
+        if (user == null) return false;
+        PasswordResetToken token = tokenDAO.findValidToken(user.getUserId(), code);
+        if (token != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean resetPassword(String email, String usernameInput, String newPassword) {
+        User user = userDAO.findByUsernameAndEmail(usernameInput, email);
+        if (user == null) return false;
+        return userDAO.updatePassword(user.getUserId(), newPassword);
+    }
+
+    // ================== Email Sending (JavaMail) =====================
+    private boolean sendEmail(String to, String code, String usernameUser) {
+        final String username = "trannghia2006nd@gmail.com"; // Email gửi đi (SMTP)
+        final String password = "qcux lqmg samo cceh";    // App password
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = jakarta.mail.Session.getInstance(props, new jakarta.mail.Authenticator() {
+            protected jakarta.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new jakarta.mail.PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            jakarta.mail.Message message = new jakarta.mail.internet.MimeMessage(session);
+            message.setFrom(new jakarta.mail.internet.InternetAddress(username));
+            message.setRecipients(jakarta.mail.Message.RecipientType.TO, jakarta.mail.internet.InternetAddress.parse(to));
+            message.setSubject("Mã xác minh đổi mật khẩu");
+            message.setText("Mã xác minh của " + usernameUser + " là: " + code + "\nMã này có hiệu lực trong 5 phút.");
+            jakarta.mail.Transport.send(message);
+            return true;
+        } catch (jakarta.mail.MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // ================== UI Event Handlers =====================
+    private void btnGuiMaActionPerformed(java.awt.event.ActionEvent evt) {
+        String email = txtEmail.getText().trim();
+        String username = txtUsername.getText().trim();
+        if (email.isEmpty() || username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Username và Email!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        codeVerified = false;
+        sendVerificationCode(email, username);
+    }
+
+    private void btnXacNhanMaActionPerformed(java.awt.event.ActionEvent evt) {
+        String email = txtEmail.getText().trim();
+        String username = txtUsername.getText().trim();
+        String code = txtMaXacMinh.getText().trim();
+        if (email.isEmpty() || username.isEmpty() || code.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Username, Email và mã xác minh!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (verifyCode(email, username, code)) {
+            codeVerified = true;
+            JOptionPane.showMessageDialog(this, "Mã xác minh hợp lệ! Bạn có thể đặt lại mật khẩu.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            // Cho phép nhập mật khẩu mới
+            txtMatKhauMoi.setEnabled(true);
+            txtXacNhanMatKhau.setEnabled(true);
+            txtMatKhauMoi.requestFocus();
+        } else {
+            codeVerified = false;
+            JOptionPane.showMessageDialog(this, "Mã xác minh không hợp lệ hoặc đã hết hạn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            // Disable lại 2 ô mật khẩu
+            txtMatKhauMoi.setEnabled(false);
+            txtXacNhanMatKhau.setEnabled(false);
+        }
+    }
+
+    private void btnXacNhanActionPerformed(java.awt.event.ActionEvent evt) {
+        String email = txtEmail.getText().trim();
+        String username = txtUsername.getText().trim();
+        String code = txtMaXacMinh.getText().trim();
+        String newPass = new String(txtMatKhauMoi.getPassword());
+        String confirmPass = new String(txtXacNhanMatKhau.getPassword());
+        if (email.isEmpty() || username.isEmpty() || code.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!newPass.equals(confirmPass)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!codeVerified) {
+            JOptionPane.showMessageDialog(this, "Bạn cần xác nhận mã trước khi đổi mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Đánh dấu mã đã dùng sau khi đổi mật khẩu thành công
+        User user = userDAO.findByUsernameAndEmail(username, email);
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "Username hoặc Email không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        PasswordResetToken token = tokenDAO.findValidToken(user.getUserId(), code);
+        if (token == null) {
+            JOptionPane.showMessageDialog(this, "Mã xác minh không hợp lệ hoặc đã hết hạn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (resetPassword(email, username, newPass)) {
+            tokenDAO.markTokenAsUsed(token.getTokenID());
+            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+            // Mở lại màn hình đăng nhập
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new poly.ui.DNhapJDialog(new javax.swing.JFrame(), true).setVisible(true);
+                }
+            });
+        } else {
+            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnQuayLaiActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailActionPerformed
 
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void txtMaXacMinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMaXacMinhActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMaXacMinhActionPerformed
+
+    private void txtMatKhauMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMatKhauMoiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMatKhauMoiActionPerformed
+
+    private void txtXacNhanMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtXacNhanMatKhauActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtXacNhanMatKhauActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,18 +451,21 @@ public class QuenPassJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnGuiMa;
+    private javax.swing.JButton btnQuayLai;
+    private javax.swing.JButton btnXacNhan;
+    private javax.swing.JButton btnXacNhanMa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtMaXacMinh;
+    private javax.swing.JPasswordField txtMatKhauMoi;
+    private javax.swing.JTextField txtUsername;
+    private javax.swing.JPasswordField txtXacNhanMatKhau;
     // End of variables declaration//GEN-END:variables
 }

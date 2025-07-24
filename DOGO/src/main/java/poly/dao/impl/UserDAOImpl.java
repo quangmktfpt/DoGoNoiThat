@@ -4,6 +4,7 @@ import poly.dao.UserDAO;
 import poly.entity.User;
 import poly.util.XJdbc;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -78,5 +79,50 @@ public class UserDAOImpl implements UserDAO {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE Email = ?";
+        try {
+            ResultSet rs = XJdbc.executeQuery(sql, email);
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("UserID"));
+                user.setUsername(rs.getString("Username"));
+                user.setPasswordHash(rs.getString("PasswordHash"));
+                user.setFullName(rs.getString("FullName"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setRole(rs.getBoolean("Role"));
+                user.setIsActive(rs.getBoolean("IsActive"));
+                java.sql.Timestamp ts = rs.getTimestamp("CreatedDate");
+                if (ts != null) {
+                    user.setCreatedDate(ts.toLocalDateTime());
+                }
+                user.setEmail(rs.getString("Email"));
+                return user;
+            }
+            if (rs.getStatement() != null && rs.getStatement().getConnection() != null) {
+                rs.getStatement().getConnection().close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updatePassword(int userID, String newPasswordHash) {
+        String sql = "UPDATE Users SET PasswordHash = ? WHERE UserID = ?";
+        int result = XJdbc.executeUpdate(sql, newPasswordHash, userID);
+        return result > 0;
+    }
+
+    @Override
+    public User findByUsernameAndEmail(String username, String email) {
+        String sql = "SELECT * FROM Users WHERE Username = ? AND Email = ?";
+        List<User> list = selectBySql(sql, username, email);
+        return list.isEmpty() ? null : list.get(0);
     }
 } 
