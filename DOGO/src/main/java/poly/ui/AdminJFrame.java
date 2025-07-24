@@ -22,6 +22,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     public AdminJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+        customizeLayout();
         // Thêm hiệu ứng hover cho màu chữ các nút
         addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
@@ -59,6 +60,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -76,7 +78,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
         sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
-        sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
+        sidebarPanel.setLayout(new java.awt.GridLayout(0, 1, 0, 10));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -230,6 +232,21 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton12);
 
+        jButton14.setBackground(new java.awt.Color(204, 204, 255));
+        jButton14.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jButton14.setText("Đăng xuất");
+        jButton14.setBorder(null);
+        jButton14.setBorderPainted(false);
+        jButton14.setContentAreaFilled(false);
+        jButton14.setFocusPainted(false);
+        jButton14.setMaximumSize(new java.awt.Dimension(200, 40));
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+        sidebarPanel.add(jButton14);
+
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
@@ -308,6 +325,10 @@ public class AdminJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton14ActionPerformed
+
     // Hiệu ứng hover cho màu chữ JButton
     private void addHoverTextEffect(javax.swing.JButton button) {
         Color originalFg = button.getForeground();
@@ -322,6 +343,56 @@ public class AdminJFrame extends javax.swing.JFrame {
                 button.setForeground(originalFg);
             }
         });
+    }
+
+    private void customizeLayout() {
+        // Sidebar style (giữ nguyên nếu đã có)
+        sidebarPanel.setBackground(new java.awt.Color(30, 30, 30));
+        sidebarPanel.setLayout(new java.awt.GridLayout(0, 1, 0, 10));
+        javax.swing.JButton[] buttons = {
+            jButton4, jButton5, jButton6, jButton7, jButton8, jButton9, jButton10,
+            jButton3, jButton11, jButton13, jButton12, jButton14
+        };
+        for (javax.swing.JButton btn : buttons) {
+            btn.setBackground(new java.awt.Color(30, 30, 30));
+            btn.setForeground(java.awt.Color.WHITE);
+            btn.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+            btn.setBorderPainted(false);
+            btn.setFocusPainted(false);
+            btn.setContentAreaFilled(false);
+            addHoverTextEffect(btn);
+        }
+        // Header style
+        headerPanel.setBackground(new java.awt.Color(0, 153, 0));
+        headerPanel.setLayout(new java.awt.BorderLayout());
+        jLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 28));
+        jLabel1.setForeground(java.awt.Color.BLACK);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        timeLabel = new javax.swing.JLabel("", javax.swing.SwingConstants.CENTER);
+        timeLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        timeLabel.setForeground(java.awt.Color.BLACK);
+        dateLabel = new javax.swing.JLabel("", javax.swing.SwingConstants.RIGHT);
+        dateLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 16));
+        dateLabel.setForeground(java.awt.Color.BLACK);
+        headerPanel.removeAll();
+        headerPanel.add(jLabel1, java.awt.BorderLayout.WEST);
+        headerPanel.add(timeLabel, java.awt.BorderLayout.CENTER);
+        headerPanel.add(dateLabel, java.awt.BorderLayout.EAST);
+        headerPanel.revalidate();
+        headerPanel.repaint();
+        getContentPane().setBackground(new java.awt.Color(230, 236, 240));
+        startClock();
+    }
+
+    private void startClock() {
+        javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
+            java.time.LocalTime now = java.time.LocalTime.now();
+            java.time.LocalDate today = java.time.LocalDate.now();
+            java.time.format.DateTimeFormatter dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            timeLabel.setText(now.withNano(0).toString());
+            dateLabel.setText(today.format(dateFmt));
+        });
+        timer.start();
     }
 
     /**
@@ -365,6 +436,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -375,5 +447,8 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel sidebarPanel;
+    // Thêm biến thành viên cho đồng hồ
+    private javax.swing.JLabel timeLabel;
+    private javax.swing.JLabel dateLabel;
     // End of variables declaration//GEN-END:variables
 }

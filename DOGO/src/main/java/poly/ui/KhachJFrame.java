@@ -8,6 +8,7 @@ import poly.ui.manager.Doimatkhaudialog;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
 
 /**
  *
@@ -21,13 +22,20 @@ public class KhachJFrame extends javax.swing.JFrame {
      */
     public KhachJFrame() {
         initComponents();
-        addHoverTextEffect(jButton4);
+        customizeLayout(); // Thêm hàm này để chỉnh lại giao diện
+        // Xóa hiệu ứng hover và các xử lý cho jButton4 vì đã xóa nút này
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
         addHoverTextEffect(jButton7);
         addHoverTextEffect(jButton8);
         addHoverTextEffect(jButton9);
         addHoverTextEffect(jButton10);
+        // Tự động mở dialog duyệt sản phẩm sau khi giao diện hiển thị
+        java.awt.EventQueue.invokeLater(() -> {
+            poly.ui.DuyetspJDialog_nghia duyetsp = new poly.ui.DuyetspJDialog_nghia(this, true);
+            duyetsp.setLocationRelativeTo(this);
+            duyetsp.setVisible(true);
+        });
     }
 
     /**
@@ -43,13 +51,13 @@ public class KhachJFrame extends javax.swing.JFrame {
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         sidebarPanel = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
+        jButtonLogOut = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
@@ -72,21 +80,6 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
         sidebarPanel.setLayout(new java.awt.GridLayout(7, 1, 0, 5));
-
-        jButton4.setBackground(new java.awt.Color(204, 204, 255));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton4.setText("Duyệt Sản phẩm ");
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setFocusPainted(false);
-        jButton4.setMaximumSize(new java.awt.Dimension(200, 40));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        sidebarPanel.add(jButton4);
 
         jButton5.setBackground(new java.awt.Color(204, 204, 255));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -172,6 +165,20 @@ public class KhachJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton10);
 
+        jButtonLogOut.setBackground(new java.awt.Color(204, 204, 255));
+        jButtonLogOut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButtonLogOut.setText("Đăng xuất");
+        jButtonLogOut.setBorder(null);
+        jButtonLogOut.setBorderPainted(false);
+        jButtonLogOut.setContentAreaFilled(false);
+        jButtonLogOut.setFocusPainted(false);
+        jButtonLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLogOutActionPerformed(evt);
+            }
+        });
+        sidebarPanel.add(jButtonLogOut);
+
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
@@ -188,12 +195,45 @@ public class KhachJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // Mở màn hình duyệt sản phẩm
-        poly.ui.DuyetspJDialog_nghia duyetsp = new poly.ui.DuyetspJDialog_nghia(this, true);
-        duyetsp.setLocationRelativeTo(this);
-        duyetsp.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void customizeLayout() {
+        // Sidebar style
+        sidebarPanel.setBackground(new java.awt.Color(30, 30, 30));
+        sidebarPanel.setLayout(new java.awt.GridLayout(0, 1, 0, 10));
+        javax.swing.JButton[] buttons = {jButton5, jButton6, jButton7, jButton8, jButton9, jButton10, jButtonLogOut};
+        for (javax.swing.JButton btn : buttons) {
+            btn.setBackground(new java.awt.Color(30, 30, 30));
+            btn.setForeground(java.awt.Color.WHITE);
+            btn.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+            btn.setBorderPainted(false);
+            btn.setFocusPainted(false);
+            btn.setContentAreaFilled(false);
+        }
+        // Không còn nút đầu tiên là Trang Chủ nữa
+        // Header style
+        headerPanel.setBackground(new java.awt.Color(0, 153, 0));
+        headerPanel.setLayout(new java.awt.BorderLayout());
+        jLabel1.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 28));
+        jLabel1.setForeground(java.awt.Color.BLACK);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        // Khởi tạo biến thành viên cho đồng hồ
+        timeLabel = new JLabel("", javax.swing.SwingConstants.CENTER);
+        timeLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        timeLabel.setForeground(java.awt.Color.BLACK);
+        dateLabel = new JLabel("", javax.swing.SwingConstants.RIGHT);
+        dateLabel.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 16));
+        dateLabel.setForeground(java.awt.Color.BLACK);
+        headerPanel.removeAll();
+        headerPanel.add(jLabel1, java.awt.BorderLayout.WEST);
+        headerPanel.add(timeLabel, java.awt.BorderLayout.CENTER);
+        headerPanel.add(dateLabel, java.awt.BorderLayout.EAST);
+        headerPanel.revalidate();
+        headerPanel.repaint();
+        // Main content background
+        getContentPane().setBackground(new java.awt.Color(230, 236, 240));
+        // Khởi động timer cập nhật thời gian
+        startClock();
+        addHoverTextEffect(jButtonLogOut);
+    }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // Mở màn hình giỏ hàng
@@ -229,6 +269,10 @@ public class KhachJFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton10ActionPerformed
 
+    private void jButtonLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogOutActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButtonLogOutActionPerformed
+
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
       
     }
@@ -248,6 +292,24 @@ public class KhachJFrame extends javax.swing.JFrame {
             }
         });
     }
+
+    // Thêm biến thành viên cho đồng hồ
+    private JLabel timeLabel;
+    private JLabel dateLabel;
+
+    private void startClock() {
+        javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
+            java.time.LocalTime now = java.time.LocalTime.now();
+            java.time.LocalDate today = java.time.LocalDate.now();
+            java.time.format.DateTimeFormatter dateFmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yy");
+            timeLabel.setText(now.withNano(0).toString());
+            dateLabel.setText(today.format(dateFmt));
+        });
+        timer.start();
+    }
+
+    // Thêm hàm xử lý sự kiện cho nút Đăng Xuất
+   
 
     /**
      * @param args the command line arguments
@@ -287,12 +349,12 @@ public class KhachJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
+    private javax.swing.JButton jButtonLogOut;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
