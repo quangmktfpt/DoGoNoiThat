@@ -121,8 +121,8 @@ public class ProductDAOImpl_Nghia implements ProductDAO_Nghia {
     // Tìm kiếm theo tên sản phẩm
     @Override
     public List<Product_Nghia> searchByName(String name) {
-        String sql = "SELECT * FROM Products WHERE ProductName LIKE ?";
-        return selectBySql(sql, "%" + name + "%");
+        String sql = "SELECT * FROM Products WHERE LOWER(ProductName) LIKE ?";
+        return selectBySql(sql, "%" + name.toLowerCase() + "%");
     }
 
     // Tìm kiếm theo khoảng giá
