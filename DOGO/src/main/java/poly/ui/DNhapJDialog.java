@@ -157,8 +157,12 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-       
+        // Mở dialog Quên mật khẩu
+        this.setVisible(false); // Ẩn dialog đăng nhập hiện tại
+        QuenPassJDialog quenPassDialog = new QuenPassJDialog((java.awt.Frame) this.getParent(), true);
+        quenPassDialog.setLocationRelativeTo(this);
+        quenPassDialog.setVisible(true);
+        this.setVisible(true); // Hiện lại dialog đăng nhập sau khi đóng dialog quên mật khẩu
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
