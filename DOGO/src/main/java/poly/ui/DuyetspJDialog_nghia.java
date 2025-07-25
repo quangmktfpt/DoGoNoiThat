@@ -34,6 +34,9 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
     public DuyetspJDialog_nghia(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Đảm bảo AI trả lời luôn xuống dòng, không kéo ngang
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setWrapStyleWord(true);
         // Hiển thị sản phẩm dạng lưới 3 cột, khoảng cách 16px
         productGridPanel.setLayout(new java.awt.GridLayout(0, 3, 16, 16));
         productScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

@@ -105,6 +105,7 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
             }
         });
 
+
         txtMatKhauMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtMatKhauMoiActionPerformed(evt);
@@ -143,6 +144,48 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
                 btnXacNhanMaActionPerformed(evt);
             }
         });
+
+
+
+        txtMatKhauMoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMatKhauMoiActionPerformed(evt);
+            }
+        });
+
+        txtXacNhanMatKhau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtXacNhanMatKhauActionPerformed(evt);
+            }
+        });
+
+        btnXacNhan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnXacNhan.setText("Xác Nhận");
+        btnXacNhan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXacNhanActionPerformed(evt);
+            }
+        });
+
+        btnQuayLai.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnQuayLai.setForeground(new java.awt.Color(0, 102, 153));
+        btnQuayLai.setText("Quay Lại");
+        btnQuayLai.setBorderPainted(false);
+        btnQuayLai.setContentAreaFilled(false);
+        btnQuayLai.setFocusPainted(false);
+        btnQuayLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuayLaiActionPerformed(evt);
+            }
+        });
+
+        btnXacNhanMa.setText("Xác Nhận Mã");
+        btnXacNhanMa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXacNhanMaActionPerformed(evt);
+            }
+        });
+
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel6.setText("Username:");
@@ -388,6 +431,7 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
     }
 
     private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
+
         this.dispose();
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -396,6 +440,10 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
                 loginDialog.setVisible(true);
             }
         });
+
+        // TODO add your handling code here:
+
+
     }//GEN-LAST:event_btnQuayLaiActionPerformed
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
