@@ -5,6 +5,7 @@
 package poly.ui;
 
 import poly.ui.manager.Doimatkhaudialog;
+import poly.ui.DNhapJDialog;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -270,7 +271,28 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButtonLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogOutActionPerformed
-        this.dispose();
+        // Hiển thị hộp thoại xác nhận đăng xuất
+        int choice = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Bạn có chắc chắn muốn đăng xuất?",
+            "Xác nhận đăng xuất",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+        
+        if (choice == javax.swing.JOptionPane.YES_OPTION) {
+            // Đóng màn hình khách hàng hiện tại
+            this.dispose();
+            
+            // Mở màn hình đăng nhập mới
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    DNhapJDialog loginDialog = new DNhapJDialog(null, false);
+                    loginDialog.setLocationRelativeTo(null);
+                    loginDialog.setVisible(true);
+                }
+            });
+        }
     }//GEN-LAST:event_jButtonLogOutActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
