@@ -4,11 +4,276 @@
  */
 package poly.ui;
 
+import poly.controller.ShoppingCartController;
+import poly.dao.ShoppingCartDAO;
+import poly.dao.impl.ShoppingCartDAOImpl;
+import poly.dao.impl.ProductDAOImpl;
+import poly.entity.ShoppingCart;
+import poly.entity.CartItem;
+import poly.entity.Product;
+import java.util.List;
+import java.math.BigDecimal;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import poly.util.CurrentUserUtil;
+
 /**
  *
  * @author Nghia
  */
-public class GioHangJDialog extends javax.swing.JDialog {
+public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartController {
+    private ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAOImpl();
+    private ProductDAOImpl productDAO = new ProductDAOImpl();
+    private ShoppingCart currentCart;
+    private List<CartItem> cartItems;
+    private DefaultTableModel tableModel;
+
+    @Override
+    public void setShoppingCartDAO(ShoppingCartDAO dao) {
+        this.shoppingCartDAO = dao;
+    }
+
+    @Override
+    public List<CartItem> getCartItems(int cartId) {
+        return shoppingCartDAO.findCartItemsByCartId(cartId);
+    }
+
+    @Override
+    public CartItem getCartItem(int cartId, String productId) {
+        return shoppingCartDAO.findCartItemByCartIdAndProductId(cartId, productId);
+    }
+
+    @Override
+    public void addCartItem(CartItem item) {
+        shoppingCartDAO.insertCartItem(item);
+    }
+
+    @Override
+    public void updateCartItem(CartItem item) {
+        shoppingCartDAO.updateCartItem(item);
+    }
+
+    @Override
+    public void deleteCartItem(int cartItemId) {
+        shoppingCartDAO.deleteCartItem(cartItemId);
+    }
+
+    @Override
+    public void deleteCartItemByProduct(int cartId, String productId) {
+        shoppingCartDAO.deleteCartItemByCartIdAndProductId(cartId, productId);
+    }
+
+    @Override
+    public void addProductToCart(int userId, String productId, int quantity) {
+        shoppingCartDAO.addProductToCart(userId, productId, quantity);
+    }
+
+    @Override
+    public void updateProductQuantity(int userId, String productId, int quantity) {
+        shoppingCartDAO.updateProductQuantity(userId, productId, quantity);
+    }
+
+    @Override
+    public void removeProductFromCart(int userId, String productId) {
+        shoppingCartDAO.removeProductFromCart(userId, productId);
+    }
+
+    @Override
+    public void clearCart(int userId) {
+        shoppingCartDAO.clearCart(userId);
+    }
+
+    // CRUD ShoppingCart (dùng CrudController<ShoppingCart> method)
+    @Override
+    public void open() {
+        loadCartData();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    @Override
+    public void setForm(ShoppingCart entity) {
+        this.currentCart = entity;
+    }
+
+    @Override
+    public ShoppingCart getForm() {
+        return this.currentCart;
+    }
+
+    @Override
+    public void fillToTable() {
+        loadCartData();
+    }
+
+    @Override
+    public void edit() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Lấy productId từ CartItem thay vì từ bảng
+            CartItem selectedItem = cartItems.get(selectedRow);
+            String productId = selectedItem.getProductId();
+            
+            String quantityStr = JOptionPane.showInputDialog(this, 
+                "Nhập số lượng mới:", "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE);
+            
+            if (quantityStr != null && !quantityStr.trim().isEmpty()) {
+                try {
+                    int newQuantity = Integer.parseInt(quantityStr.trim());
+                    if (newQuantity > 0) {
+                        // Cập nhật trực tiếp CartItem
+                        selectedItem.setQuantity(newQuantity);
+                        updateCartItem(selectedItem);
+                        loadCartData(); // Reload dữ liệu
+                        JOptionPane.showMessageDialog(this, "Cập nhật thành công!", 
+                            "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", 
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", 
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần cập nhật!", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    @Override
+    public void create() {
+        // Không cần tạo mới giỏ hàng
+    }
+
+    @Override
+    public void update() {
+        // Không cần update giỏ hàng
+    }
+
+    @Override
+    public void delete() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            CartItem selectedItem = cartItems.get(selectedRow);
+            String productId = selectedItem.getProductId();
+            
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?", 
+                "Xác nhận", JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (currentCart != null) {
+                    deleteCartItemByProduct(currentCart.getCartId(), productId);
+                    loadCartData(); // Reload dữ liệu
+                    JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi giỏ hàng!", 
+                        "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần xóa!", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    @Override
+    public void clear() {
+        Integer userId = CurrentUserUtil.getCurrentUserId();
+        if (userId == null) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa đăng nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xóa toàn bộ giỏ hàng?", 
+            "Xác nhận", JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            clearCart(userId);
+            loadCartData();
+            JOptionPane.showMessageDialog(this, "Đã xóa toàn bộ giỏ hàng!", 
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        // Không cần implement cho giỏ hàng
+    }
+
+    @Override
+    public void checkAll() {}
+    @Override
+    public void uncheckAll() {}
+    @Override
+    public void deleteCheckedItems() {}
+    @Override
+    public void moveFirst() {}
+    @Override
+    public void movePrevious() {}
+    @Override
+    public void moveNext() {}
+    @Override
+    public void moveLast() {}
+    @Override
+    public void moveTo(int rowIndex) {}
+
+    // Phương thức hỗ trợ
+    private void loadCartData() {
+        // Lấy giỏ hàng của user đang đăng nhập hiện tại
+        Integer userId = CurrentUserUtil.getCurrentUserId();
+        if (userId == null) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa đăng nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            // Hiển thị bảng trống
+            tableModel = new DefaultTableModel();
+            tableModel.addColumn("Sản Phẩm");
+            tableModel.addColumn("Số Lượng");
+            tableModel.addColumn("Giá");
+            tableModel.addColumn("Tổng Cộng");
+            jTable1.setModel(tableModel);
+            return;
+        }
+        currentCart = shoppingCartDAO.findByUserId(userId);
+        if (currentCart != null) {
+            cartItems = getCartItems(currentCart.getCartId());
+            displayCartItems();
+        } else {
+            // Hiển thị bảng trống nếu chưa có giỏ hàng
+            tableModel = new DefaultTableModel();
+            tableModel.addColumn("Sản Phẩm");
+            tableModel.addColumn("Số Lượng");
+            tableModel.addColumn("Giá");
+            tableModel.addColumn("Tổng Cộng");
+            jTable1.setModel(tableModel);
+        }
+    }
+
+    private void displayCartItems() {
+        tableModel = new DefaultTableModel();
+        tableModel.addColumn("Sản Phẩm");
+        tableModel.addColumn("Số Lượng");
+        tableModel.addColumn("Giá");
+        tableModel.addColumn("Tổng Cộng");
+        
+        if (cartItems != null && !cartItems.isEmpty()) {
+            for (CartItem item : cartItems) {
+                Product product = productDAO.selectById(item.getProductId());
+                if (product != null) {
+                    BigDecimal unitPrice = product.getUnitPrice();
+                    BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(item.getQuantity()));
+                    
+                    tableModel.addRow(new Object[]{
+                        product.getProductName(),
+                        item.getQuantity(),
+                        unitPrice.toString() + " ₫",
+                        totalPrice.toString() + " ₫"
+                    });
+                }
+            }
+        }
+        
+        jTable1.setModel(tableModel);
+    }
 
     /**
      * Creates new form GioHangJDialog
@@ -16,6 +281,25 @@ public class GioHangJDialog extends javax.swing.JDialog {
     public GioHangJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setupEventHandlers();
+    }
+
+    private void setupEventHandlers() {
+        // Nút xóa khỏi giỏ
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delete();
+            }
+        });
+
+        // Nút thanh toán (chưa implement)
+        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JOptionPane.showMessageDialog(GioHangJDialog.this, 
+                    "Chức năng thanh toán sẽ được phát triển sau!", 
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
     }
 
     /**
@@ -30,11 +314,16 @@ public class GioHangJDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         lblCartTitle = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnCapNhat = new javax.swing.JButton();
+        btnXoa = new javax.swing.JButton();
+        btnThanhToan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -53,11 +342,16 @@ public class GioHangJDialog extends javax.swing.JDialog {
         lblCartTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCartTitle.setText("Giỏ hàng của bạn");
 
-        jButton1.setText("Cập nhật số lượng");
+        btnCapNhat.setText("Cập nhật số lượng");
+        btnCapNhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapNhatActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Xoá khỏi giỏ");
+        btnXoa.setText("Xoá khỏi giỏ");
 
-        jButton3.setText("Thanh Toán");
+        btnThanhToan.setText("Thanh Toán");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,11 +367,11 @@ public class GioHangJDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(85, 85, 85)
-                .addComponent(jButton1)
+                .addComponent(btnCapNhat)
                 .addGap(84, 84, 84)
-                .addComponent(jButton2)
+                .addComponent(btnXoa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(btnThanhToan)
                 .addGap(67, 67, 67))
         );
         layout.setVerticalGroup(
@@ -88,14 +382,23 @@ public class GioHangJDialog extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnCapNhat)
+                    .addComponent(btnXoa)
+                    .addComponent(btnThanhToan))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        this.open();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
+        edit();
+    }//GEN-LAST:event_btnCapNhatActionPerformed
 
     /**
      * @param args the command line arguments
@@ -140,9 +443,9 @@ public class GioHangJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnCapNhat;
+    private javax.swing.JButton btnThanhToan;
+    private javax.swing.JButton btnXoa;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCartTitle;

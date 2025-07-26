@@ -9,6 +9,11 @@ import poly.entity.Product;
 import poly.entity.Category;
 import poly.dao.impl.ProductDAOImpl;
 import poly.dao.impl.CategoryDAOImpl;
+import poly.dao.ShoppingCartDAO;
+import poly.dao.impl.ShoppingCartDAOImpl;
+import poly.entity.ShoppingCart;
+import poly.entity.CartItem;
+import poly.util.CurrentUserUtil;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import java.util.List;
@@ -543,6 +548,17 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
                     javax.swing.JOptionPane.showMessageDialog(this, "Số lượng vượt quá tồn kho sẵn có! (Tồn kho: " + tonKho + ")", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                // Lấy thông tin người dùng đang đăng nhập
+                Integer userId = CurrentUserUtil.getCurrentUserId();
+                if (userId == null) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Thêm sản phẩm vào giỏ hàng
+                ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAOImpl();
+                shoppingCartDAO.addProductToCart(userId, selectedProduct.getProductId(), soLuong);
+
                 javax.swing.JOptionPane.showMessageDialog(this, 
                     "Đã thêm " + soLuong + " sản phẩm '" + selectedProduct.getProductName() + "' vào giỏ hàng!", 
                     "Thông báo", 
