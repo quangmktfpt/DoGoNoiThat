@@ -244,8 +244,9 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở dialog đánh giá sản phẩm thông qua controller
+        // Kiểm tra đơn hàng đã nhận trước khi cho phép đánh giá
+        checkAndOpenDanhGia();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -272,6 +273,101 @@ public class KhachJFrame extends javax.swing.JFrame {
             poly.ui.DNhapJDialog loginDialog = new poly.ui.DNhapJDialog(null, true);
             loginDialog.setLocationRelativeTo(null);
             loginDialog.setVisible(true);
+        }
+    }
+
+    // Kiểm tra và mở dialog đánh giá
+    private void checkAndOpenDanhGia() {
+        try {
+            // Lấy user ID hiện tại
+            Integer currentUserId = poly.util.CurrentUserUtil.getCurrentUserId();
+            if (currentUserId == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Vui lòng đăng nhập để đánh giá sản phẩm!", 
+                    "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Lấy đơn hàng đã nhận của khách hàng
+            poly.dao.impl.OrderDAOImpl orderDAO = new poly.dao.impl.OrderDAOImpl();
+            java.util.List<poly.entity.Order> allUserOrders = orderDAO.selectByUserId(currentUserId);
+            java.util.List<poly.entity.Order> receivedOrders = new java.util.ArrayList<>();
+            
+            // Lọc đơn hàng có trạng thái "Đã nhận"
+            for (poly.entity.Order order : allUserOrders) {
+                if ("Đã nhận".equals(order.getOrderStatus())) {
+                    receivedOrders.add(order);
+                }
+            }
+            
+            if (receivedOrders.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Bạn chưa có đơn hàng nào đã nhận để đánh giá!", 
+                    "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            // Hiện dialog chọn sản phẩm để đánh giá
+            showProductSelectionDialog(receivedOrders);
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Lỗi khi kiểm tra đơn hàng: " + e.getMessage(), 
+                "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    // Hiện dialog chọn sản phẩm để đánh giá
+    private void showProductSelectionDialog(java.util.List<poly.entity.Order> receivedOrders) {
+        // Tạo danh sách sản phẩm đã nhận
+        java.util.List<String> productOptions = new java.util.ArrayList<>();
+        java.util.List<poly.entity.OrderDetail> orderDetails = new java.util.ArrayList<>();
+        
+        for (poly.entity.Order order : receivedOrders) {
+            poly.dao.impl.OrderDetailDAOImpl orderDetailDAO = new poly.dao.impl.OrderDetailDAOImpl();
+            java.util.List<poly.entity.OrderDetail> details = orderDetailDAO.selectByOrderId(order.getOrderId());
+            orderDetails.addAll(details);
+        }
+        
+        if (orderDetails.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Không tìm thấy sản phẩm nào để đánh giá!", 
+                "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        // Tạo danh sách tên sản phẩm
+        for (poly.entity.OrderDetail detail : orderDetails) {
+            poly.dao.impl.ProductDAOImpl productDAO = new poly.dao.impl.ProductDAOImpl();
+            poly.entity.Product product = productDAO.selectById(detail.getProductId());
+            if (product != null) {
+                productOptions.add(product.getProductName());
+            }
+        }
+        
+        // Hiện dialog chọn sản phẩm
+        String selectedProduct = (String) javax.swing.JOptionPane.showInputDialog(
+            this,
+            "Chọn sản phẩm để đánh giá:",
+            "Chọn sản phẩm",
+            javax.swing.JOptionPane.QUESTION_MESSAGE,
+            null,
+            productOptions.toArray(),
+            productOptions.get(0)
+        );
+        
+        if (selectedProduct != null) {
+            // Tìm sản phẩm được chọn
+            for (poly.entity.OrderDetail detail : orderDetails) {
+                poly.dao.impl.ProductDAOImpl productDAO = new poly.dao.impl.ProductDAOImpl();
+                poly.entity.Product product = productDAO.selectById(detail.getProductId());
+                if (product != null && product.getProductName().equals(selectedProduct)) {
+                    // Mở dialog đánh giá với thông tin sản phẩm thực tế
+                    javax.swing.ImageIcon productImage = new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
+                    controller.openDanhGia(product.getProductName(), productImage, true);
+                    return;
+                }
+            }
         }
     }
 

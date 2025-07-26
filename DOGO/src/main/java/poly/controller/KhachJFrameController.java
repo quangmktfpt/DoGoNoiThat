@@ -4,6 +4,9 @@ import poly.ui.KhachJFrame;
 import poly.ui.DatHangJDialog;
 import poly.ui.HoSoJDialog;
 import poly.ui.HoTroJDialog;
+import poly.ui.DanhGiaJDialog1;
+
+import javax.swing.ImageIcon;
 
 /**
  * Controller cho KhachJFrame
@@ -42,5 +45,16 @@ public class KhachJFrameController {
         HoTroJDialog hoTro = new HoTroJDialog(view, true);
         hoTro.setLocationRelativeTo(view);
         hoTro.setVisible(true);
+    }
+
+    /**
+     * Mở dialog đánh giá sản phẩm
+     * @param tenSanPham tên sản phẩm
+     * @param hinhAnh icon sản phẩm
+     * @param daMua true nếu khách đã mua sản phẩm
+     */
+    public void openDanhGia(String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
+        DanhGiaJDialog1 dlg = new DanhGiaJDialog1(view, tenSanPham, hinhAnh, daMua);
+        dlg.setVisible(true);
     }
 } 
