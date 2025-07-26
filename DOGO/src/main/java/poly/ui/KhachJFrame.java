@@ -178,10 +178,28 @@ public class KhachJFrame extends javax.swing.JFrame {
         getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
 
         jMenu2.setText("Menu");
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/menu.jpg")));
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Edit");
         jMenuBar1.add(jMenu3);
+
+        // Thêm nút đăng xuất bên phải
+        javax.swing.JButton logoutButton = new javax.swing.JButton();
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout.jpg")));
+        logoutButton.setToolTipText("Đăng xuất");
+        logoutButton.setBorder(null);
+        logoutButton.setContentAreaFilled(false);
+        logoutButton.setFocusPainted(false);
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+        
+        // Thêm glue để đẩy nút logout sang phải
+        jMenuBar1.add(javax.swing.Box.createHorizontalGlue());
+        jMenuBar1.add(logoutButton);
 
         setJMenuBar(jMenuBar1);
 
@@ -237,6 +255,24 @@ public class KhachJFrame extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
       
+    }
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // Xác nhận đăng xuất
+        int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc chắn muốn đăng xuất?", 
+            "Xác nhận đăng xuất", 
+            javax.swing.JOptionPane.YES_NO_OPTION);
+        
+        if (choice == javax.swing.JOptionPane.YES_OPTION) {
+            // Đóng cửa sổ hiện tại
+            this.dispose();
+            
+            // Mở lại màn hình đăng nhập
+            poly.ui.DNhapJDialog loginDialog = new poly.ui.DNhapJDialog(null, true);
+            loginDialog.setLocationRelativeTo(null);
+            loginDialog.setVisible(true);
+        }
     }
 
     // Hiệu ứng hover cho màu chữ JButton

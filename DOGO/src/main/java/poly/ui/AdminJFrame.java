@@ -240,6 +240,28 @@ public class AdminJFrame extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
         getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
 
+        // Tạo JMenuBar và thêm nút đăng xuất
+        jMenuBar1 = new javax.swing.JMenuBar();
+        
+        // Thêm nút đăng xuất bên phải
+        javax.swing.JButton logoutButton = new javax.swing.JButton();
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout.jpg")));
+        logoutButton.setToolTipText("Đăng xuất");
+        logoutButton.setBorder(null);
+        logoutButton.setContentAreaFilled(false);
+        logoutButton.setFocusPainted(false);
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+        
+        // Thêm glue để đẩy nút logout sang phải
+        jMenuBar1.add(javax.swing.Box.createHorizontalGlue());
+        jMenuBar1.add(logoutButton);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -323,6 +345,24 @@ public class AdminJFrame extends javax.swing.JFrame {
         magiamgia.setVisible(true);
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // Xác nhận đăng xuất
+        int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc chắn muốn đăng xuất?", 
+            "Xác nhận đăng xuất", 
+            javax.swing.JOptionPane.YES_NO_OPTION);
+        
+        if (choice == javax.swing.JOptionPane.YES_OPTION) {
+            // Đóng cửa sổ hiện tại
+            this.dispose();
+            
+            // Mở lại màn hình đăng nhập
+            poly.ui.DNhapJDialog loginDialog = new poly.ui.DNhapJDialog(null, true);
+            loginDialog.setLocationRelativeTo(null);
+            loginDialog.setVisible(true);
+        }
+    }
+
     // Hiệu ứng hover cho màu chữ JButton
     private void addHoverTextEffect(javax.swing.JButton button) {
         Color originalFg = button.getForeground();
@@ -389,6 +429,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }
