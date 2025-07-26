@@ -24,6 +24,14 @@ public class HoaDonChiTiet extends javax.swing.JDialog implements OrderDetailCon
         initComponents();
     }
 
+    public HoaDonChiTiet(java.awt.Frame parent, boolean modal, int orderId) {
+        super(parent, modal);
+        initComponents();
+        this.currentOrderId = orderId;
+        jLabel4.setText("OrderID: " + orderId);
+        fillToTable(); // hoặc load dữ liệu chi tiết hóa đơn theo orderId
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

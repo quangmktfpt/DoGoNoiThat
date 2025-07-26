@@ -36,6 +36,23 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
     public QLDonHang(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Thêm MouseListener cho jTable1 để mở chi tiết hóa đơn khi double click
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int row = jTable1.getSelectedRow();
+                    if (row != -1) {
+                        Object orderIdObj = jTable1.getValueAt(row, 0); // cột 0 là mã đơn hàng
+                        if (orderIdObj != null) {
+                            int orderId = Integer.parseInt(orderIdObj.toString());
+                            poly.ui.manager.HoaDonChiTiet hoadonct = new poly.ui.manager.HoaDonChiTiet(null, true, orderId);
+                            hoadonct.setLocationRelativeTo(null);
+                            hoadonct.setVisible(true);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**

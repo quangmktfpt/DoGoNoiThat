@@ -44,6 +44,23 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                 formWindowOpened(evt);
             }
         });
+        // Thêm MouseListener cho jTable2 để mở chi tiết hóa đơn khi double click
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int row = jTable2.getSelectedRow();
+                    if (row != -1) {
+                        Object orderIdObj = jTable2.getValueAt(row, 1); // cột 1 là mã đơn hàng
+                        if (orderIdObj != null) {
+                            int orderId = Integer.parseInt(orderIdObj.toString());
+                            poly.ui.manager.HoaDonChiTiet hoadonct = new poly.ui.manager.HoaDonChiTiet(null, true, orderId);
+                            hoadonct.setLocationRelativeTo(null);
+                            hoadonct.setVisible(true);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -158,8 +175,19 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
             new String [] {
                 "STT", "Mã đơn hàng", "Ngày đặt đơn", "Tổng Tiền", "Trạng Thái"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         jLabel4.setText("Tên khách hàng :");
 
