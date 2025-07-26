@@ -184,6 +184,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
         jButton3.setFocusPainted(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         sidebarPanel.add(jButton3);
 
         jButton11.setBackground(new java.awt.Color(204, 204, 255));
@@ -239,8 +244,10 @@ public class AdminJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình phân quyền
+        poly.ui.manager.PhanQuyen_nghia phanQuyen = new poly.ui.manager.PhanQuyen_nghia(this, true);
+        phanQuyen.setLocationRelativeTo(this);
+        phanQuyen.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -289,7 +296,10 @@ public class AdminJFrame extends javax.swing.JFrame {
 
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // TODO add your handling code here:
+        // Mở màn hình cài đặt chung
+        poly.ui.manager.CaiDatChung caidat = new poly.ui.manager.CaiDatChung(this, true);
+        caidat.setLocationRelativeTo(this);
+        caidat.setVisible(true);
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -307,7 +317,10 @@ public class AdminJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
+        // Mở màn hình mã giảm giá
+        poly.ui.manager.MaGiamGia1 magiamgia = new poly.ui.manager.MaGiamGia1(this, true);
+        magiamgia.setLocationRelativeTo(this);
+        magiamgia.setVisible(true);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     // Hiệu ứng hover cho màu chữ JButton

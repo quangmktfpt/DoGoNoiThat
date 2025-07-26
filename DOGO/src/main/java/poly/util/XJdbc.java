@@ -29,7 +29,7 @@ public class XJdbc {
        
 
         var username = "sa";
-        var password = "123456";
+        var password = "123";
         try {
             if (!XJdbc.isReady()) {
                 Class.forName(driver);

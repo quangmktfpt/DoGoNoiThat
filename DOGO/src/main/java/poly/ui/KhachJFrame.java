@@ -203,8 +203,10 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình thanh toán
+        poly.ui.DatHangJDialog datHang = new poly.ui.DatHangJDialog(this, true);
+        datHang.setLocationRelativeTo(this);
+        datHang.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -215,8 +217,10 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-       
+        // Mở màn hình hồ sơ
+        poly.ui.HoSoJDialog hoSo = new poly.ui.HoSoJDialog(this, true);
+        hoSo.setLocationRelativeTo(this);
+        hoSo.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -225,8 +229,10 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
-        
+        // Mở màn hình hỗ trợ
+        poly.ui.HoTroJDialog hoTro = new poly.ui.HoTroJDialog(this, true);
+        hoTro.setLocationRelativeTo(this);
+        hoTro.setVisible(true);
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
