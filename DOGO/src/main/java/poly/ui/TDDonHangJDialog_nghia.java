@@ -435,6 +435,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             txtDenNgay.setText(monthEnd.format(formatter));
         } else if ("Tùy chọn".equals(selected)) {
             // Không set gì cả, cho phép nhập tay
+            // Không tự động cập nhật bảng
         } else {
             // "Tất cả thởi gian" hoặc giá trị khác
             txtTuNgay.setText("");
@@ -466,6 +467,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             txtDenNgay1.setText(monthEnd.format(formatter));
         } else if ("Tùy chọn".equals(selected)) {
             // Không set gì cả, cho phép nhập tay
+            // Không tự động cập nhật bảng
         } else {
             // "Tất cả thởi gian" hoặc giá trị khác
             txtTuNgay1.setText("");
@@ -772,7 +774,8 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 for (Order order : list) {
                     if (order.getOrderDate() == null) continue;
                     java.time.LocalDate orderDate = order.getOrderDate().toLocalDate();
-                    if ((orderDate.isEqual(tuNgay) || orderDate.isAfter(tuNgay)) && (orderDate.isEqual(denNgay) || orderDate.isBefore(denNgay))) {
+                    // Sửa logic: bao gồm cả ngày bắt đầu và ngày kết thúc
+                    if (!orderDate.isBefore(tuNgay) && !orderDate.isAfter(denNgay)) {
                         filteredList.add(order);
                     }
                 }
@@ -819,8 +822,9 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                     include = orderDate.equals(today);
                     break;
                 case "Tuần này":
-                    java.time.LocalDate weekStart = today.minusDays(today.getDayOfWeek().getValue() - 1);
-                    include = !orderDate.isBefore(weekStart) && !orderDate.isAfter(today);
+                    java.time.LocalDate weekStart = today.with(java.time.DayOfWeek.MONDAY);
+                    java.time.LocalDate weekEnd = today.with(java.time.DayOfWeek.SUNDAY);
+                    include = !orderDate.isBefore(weekStart) && !orderDate.isAfter(weekEnd);
                     break;
                 case "Tháng này":
                     include = orderDate.getYear() == today.getYear() && 
