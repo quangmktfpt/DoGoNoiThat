@@ -59,10 +59,10 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
         txtMatKhauMoi = new javax.swing.JPasswordField();
         txtXacNhanMatKhau = new javax.swing.JPasswordField();
         btnXacNhan = new javax.swing.JButton();
-        btnQuayLai = new javax.swing.JButton();
         btnXacNhanMa = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
+        btnQuayLai = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -125,18 +125,6 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
             }
         });
 
-        btnQuayLai.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btnQuayLai.setForeground(new java.awt.Color(0, 102, 153));
-        btnQuayLai.setText("Quay Lại");
-        btnQuayLai.setBorderPainted(false);
-        btnQuayLai.setContentAreaFilled(false);
-        btnQuayLai.setFocusPainted(false);
-        btnQuayLai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnQuayLaiActionPerformed(evt);
-            }
-        });
-
         btnXacNhanMa.setText("Xác Nhận Mã");
         btnXacNhanMa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +135,14 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel6.setText("Username:");
 
+        btnQuayLai.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnQuayLai.setText("Quay lại");
+        btnQuayLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuayLaiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,17 +150,6 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(137, 137, 137)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(btnXacNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41)
-                                .addComponent(btnQuayLai)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -187,7 +172,18 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
                                     .addComponent(txtMatKhauMoi)
                                     .addComponent(txtXacNhanMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnXacNhanMa, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                        .addComponent(btnXacNhanMa, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(137, 137, 137)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(btnXacNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(btnQuayLai, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -220,9 +216,9 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
                     .addComponent(jLabel5)
                     .addComponent(txtXacNhanMatKhau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnXacNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnQuayLai))
+                    .addComponent(btnQuayLai, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -387,11 +383,6 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
         }
     }
 
-    private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnQuayLaiActionPerformed
-
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
@@ -407,6 +398,21 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
     private void txtXacNhanMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtXacNhanMatKhauActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtXacNhanMatKhauActionPerformed
+
+    private void btnQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayLaiActionPerformed
+        // Quay lại màn hình đăng nhập
+        this.dispose(); // Đóng dialog quên mật khẩu
+        
+        // Quay lại parent window (màn hình đăng nhập)
+        if (this.getParent() != null) {
+            this.getParent().setVisible(true);
+        } else {
+            // Nếu không có parent, tạo mới màn hình đăng nhập
+            DNhapJDialog loginDialog = new DNhapJDialog(null, true);
+            loginDialog.setLocationRelativeTo(null);
+            loginDialog.setVisible(true);
+        }
+    }//GEN-LAST:event_btnQuayLaiActionPerformed
 
     /**
      * @param args the command line arguments
