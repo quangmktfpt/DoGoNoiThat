@@ -23,8 +23,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         super(parent, modal);
         initComponents();
         loadLoaiSanPham();
-        cbxKhoangThoiGianActionPerformed(null);
-        cbxKhoangThoiGian1ActionPerformed(null); // Auto load 'Hôm nay' cho tab Đơn Hàng
+        // Không gọi event handler ở đây để tránh vòng lặp
     }
 
     /**
@@ -48,18 +47,22 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         txtDenNgay = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         panelDoanhThuChart = new javax.swing.JPanel();
+        panelLoiNhuanChart = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        txtTop = new javax.swing.JTextField();
         cbxLoaiSP = new javax.swing.JComboBox<>();
         btnLocLoai = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        btnTimTop = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         panelBanChay = new javax.swing.JPanel();
         panelTonKho = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        txtTuNgaySP = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtDenNgaySP = new javax.swing.JTextField();
+        cbxKhoangThoiGianSP = new javax.swing.JComboBox<>();
+        btnLocThoiGianSP = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -72,6 +75,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         tblDonHang = new javax.swing.JTable();
         cbxKhoangThoiGian1 = new javax.swing.JComboBox<>();
         panelDonHangChart = new javax.swing.JPanel();
+        btnLocThoiGianDH = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -101,7 +105,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
         });
 
-        cbxKhoangThoiGian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tuỳ chọn" }));
+        cbxKhoangThoiGian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
         cbxKhoangThoiGian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxKhoangThoiGianActionPerformed(evt);
@@ -142,19 +146,32 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         );
         panelDoanhThuChartLayout.setVerticalGroup(
             panelDoanhThuChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 261, Short.MAX_VALUE)
+            .addGap(0, 233, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelLoiNhuanChartLayout = new javax.swing.GroupLayout(panelLoiNhuanChart);
+        panelLoiNhuanChart.setLayout(panelLoiNhuanChartLayout);
+        panelLoiNhuanChartLayout.setHorizontalGroup(
+            panelLoiNhuanChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelLoiNhuanChartLayout.setVerticalGroup(
+            panelLoiNhuanChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 244, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(229, 229, 229))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(panelDoanhThuChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
+                    .addComponent(panelLoiNhuanChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(26, 26, 26)
@@ -163,14 +180,13 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(txtDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                         .addComponent(cbxKhoangThoiGian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(jLabel3)
-                        .addGap(1, 270, Short.MAX_VALUE))))
+                        .addComponent(panelDoanhThuChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,20 +203,14 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                     .addComponent(txtDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelDoanhThuChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(panelLoiNhuanChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Doanh Thu", jPanel1);
 
-        jLabel4.setText("Top Sản Phẩm");
-
-        txtTop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTopActionPerformed(evt);
-            }
-        });
-
-        cbxLoaiSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxLoaiSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbxLoaiSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxLoaiSPActionPerformed(evt);
@@ -222,13 +232,6 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Sản phẩm tồn kho nhiều nhất");
 
-        btnTimTop.setText("Tìm Kiếm");
-        btnTimTop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimTopActionPerformed(evt);
-            }
-        });
-
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setText("Thống Kê Sản Phẩm");
 
@@ -236,41 +239,77 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
         panelTonKho.setLayout(new java.awt.BorderLayout());
 
+        jLabel15.setText("Từ Ngày");
+
+        txtTuNgaySP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTuNgaySPActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Đến Ngày");
+
+        txtDenNgaySP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDenNgaySPActionPerformed(evt);
+            }
+        });
+
+        cbxKhoangThoiGianSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
+        cbxKhoangThoiGianSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxKhoangThoiGianSPActionPerformed(evt);
+            }
+        });
+
+        btnLocThoiGianSP.setText("Tìm");
+        btnLocThoiGianSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLocThoiGianSPActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel8)
-                .addGap(243, 243, 243))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelTonKho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(panelBanChay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtTop, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnTimTop)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
-                        .addComponent(cbxLoaiSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnLocLoai)
-                        .addGap(34, 34, 34))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(199, 199, 199)
                         .addComponent(jLabel6)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(panelBanChay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTuNgaySP, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDenNgaySP, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbxKhoangThoiGianSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnLocThoiGianSP, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbxLoaiSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnLocLoai))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
+                                .addComponent(jLabel8)
+                                .addGap(237, 237, 237)))
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,12 +317,17 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                 .addGap(15, 15, 15)
                 .addComponent(jLabel8)
                 .addGap(27, 27, 27)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(cbxLoaiSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLocLoai)
-                    .addComponent(btnTimTop))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel15)
+                        .addComponent(txtTuNgaySP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel16)
+                        .addComponent(txtDenNgaySP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbxKhoangThoiGianSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cbxLoaiSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLocLoai)
+                        .addComponent(btnLocThoiGianSP)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -345,7 +389,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         ));
         jScrollPane5.setViewportView(tblDonHang);
 
-        cbxKhoangThoiGian1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tuỳ chọn" }));
+        cbxKhoangThoiGian1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
         cbxKhoangThoiGian1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxKhoangThoiGian1ActionPerformed(evt);
@@ -363,6 +407,13 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             .addGap(0, 248, Short.MAX_VALUE)
         );
 
+        btnLocThoiGianDH.setText("Tìm");
+        btnLocThoiGianDH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLocThoiGianDHActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -371,22 +422,24 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
-                .addGap(238, 238, 238))
+                .addGap(235, 235, 235))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelDonHangChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel10)
-                        .addGap(26, 26, 26)
-                        .addComponent(txtTuNgayDH, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTuNgayDH, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDenNgayDH, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtDenNgayDH, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbxKhoangThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLocThoiGianDH, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cbxTrangThaiDonHang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLocDonHang)))
@@ -405,7 +458,8 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                     .addComponent(txtTuNgayDH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(txtDenNgayDH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxKhoangThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxKhoangThoiGian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLocThoiGianDH))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -429,7 +483,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
         jLabel14.setText("Định dạng");
 
-        cbxDinhDang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF", "Excel", "CSV" }));
+        cbxDinhDang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF", "Word", "CSV" }));
         cbxDinhDang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxDinhDangActionPerformed(evt);
@@ -463,7 +517,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                 .addComponent(jLabel14)
                 .addGap(28, 28, 28)
                 .addComponent(cbxDinhDang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
                 .addComponent(btnXemTruoc)
                 .addGap(62, 62, 62))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -511,6 +565,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     private void btnLocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocActionPerformed
         showDoanhThuChart();
+        showLoiNhuanChart();
     }//GEN-LAST:event_btnLocActionPerformed
 
     private void cbxKhoangThoiGianActionPerformed(java.awt.event.ActionEvent evt) {
@@ -520,81 +575,13 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         String tuNgay = "", denNgay = "";
 
         switch (selected) {
-            case "Tuỳ chọn":
-                // Không set txtTuNgay, txtDenNgay, cho phép nhập tự do
+            case "Tùy chọn":
+                // Không set txtTuNgay, txtDenNgay, giữ nguyên thời gian có sẵn
                 break;
             case "Tất Cả":
                 txtTuNgay.setText("");
                 txtDenNgay.setText("");
                 break;
-            case "Hôm nay":
-                tuNgay = sdf.format(cal.getTime());
-                denNgay = tuNgay;
-                txtTuNgay.setText(tuNgay);
-                txtDenNgay.setText(denNgay);
-                break;
-            case "Tuần Này":
-                cal.set(java.util.Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-                tuNgay = sdf.format(cal.getTime());
-                cal.add(java.util.Calendar.DAY_OF_WEEK, 6);
-                denNgay = sdf.format(cal.getTime());
-                txtTuNgay.setText(tuNgay);
-                txtDenNgay.setText(denNgay);
-                break;
-            case "Tháng này":
-                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
-                tuNgay = sdf.format(cal.getTime());
-                cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
-                denNgay = sdf.format(cal.getTime());
-                txtTuNgay.setText(tuNgay);
-                txtDenNgay.setText(denNgay);
-                break;
-            case "Nửa Năm":
-                denNgay = sdf.format(cal.getTime());
-                cal.add(java.util.Calendar.MONTH, -5);
-                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
-                tuNgay = sdf.format(cal.getTime());
-                txtTuNgay.setText(tuNgay);
-                txtDenNgay.setText(denNgay);
-                break;
-            case "Năm Nay":
-                cal.set(java.util.Calendar.MONTH, 0);
-                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
-                tuNgay = sdf.format(cal.getTime());
-                cal = java.util.Calendar.getInstance();
-                denNgay = sdf.format(cal.getTime());
-                txtTuNgay.setText(tuNgay);
-                txtDenNgay.setText(denNgay);
-                break;
-            default:
-                txtTuNgay.setText("");
-                txtDenNgay.setText("");
-                break;
-        }
-        showDoanhThuChart();
-    }                                                 
-
-    private void cbxTrangThaiDonHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTrangThaiDonHangActionPerformed
-        fillDonHangTable();
-        String status = cbxTrangThaiDonHang.getSelectedItem().toString();
-        showDonHangChart(status);
-    }//GEN-LAST:event_cbxTrangThaiDonHangActionPerformed
-
-    private void btnLocDonHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocDonHangActionPerformed
-        fillDonHangTable();
-        String status = cbxTrangThaiDonHang.getSelectedItem().toString();
-        showDonHangChart(status);
-    }//GEN-LAST:event_btnLocDonHangActionPerformed
-
-    private void cbxKhoangThoiGian1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxKhoangThoiGian1ActionPerformed
-        String selected = cbxKhoangThoiGian1.getSelectedItem().toString();
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        String tuNgay = "", denNgay = "";
-        switch (selected) {
-            case "Tuỳ chọn":
-                // Không set txtTuNgayDH, txtDenNgayDH, không gọi fillDonHangTable, showDonHangChart
-                return;
             case "Hôm nay":
                 tuNgay = sdf.format(cal.getTime());
                 denNgay = tuNgay;
@@ -629,34 +616,99 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                 denNgay = "";
                 break;
         }
-        txtTuNgayDH.setText(tuNgay);
-        txtDenNgayDH.setText(denNgay);
+        // Chỉ set text và cập nhật biểu đồ nếu không phải "Tùy chọn"
+        if (!"Tùy chọn".equals(selected)) {
+            txtTuNgay.setText(tuNgay);
+            txtDenNgay.setText(denNgay);
+            showDoanhThuChart();
+            showLoiNhuanChart();
+        }
+    }                                                 
+
+    private void cbxTrangThaiDonHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTrangThaiDonHangActionPerformed
         fillDonHangTable();
         String status = cbxTrangThaiDonHang.getSelectedItem().toString();
         showDonHangChart(status);
+    }//GEN-LAST:event_cbxTrangThaiDonHangActionPerformed
+
+    private void btnLocDonHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocDonHangActionPerformed
+        // Cập nhật bảng và biểu đồ đơn hàng theo thời gian và trạng thái
+        fillDonHangTable();
+        String status = cbxTrangThaiDonHang.getSelectedItem().toString();
+        showDonHangChart(status);
+    }//GEN-LAST:event_btnLocDonHangActionPerformed
+
+    private void cbxKhoangThoiGian1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxKhoangThoiGian1ActionPerformed
+        String selected = cbxKhoangThoiGian1.getSelectedItem().toString();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        String tuNgay = "", denNgay = "";
+        switch (selected) {
+            case "Tùy chọn":
+                // Không set txtTuNgayDH, txtDenNgayDH, giữ nguyên thời gian có sẵn
+                break;
+            case "Hôm nay":
+                tuNgay = sdf.format(cal.getTime());
+                denNgay = tuNgay;
+                break;
+            case "Tuần Này":
+                cal.set(java.util.Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                tuNgay = sdf.format(cal.getTime());
+                cal.add(java.util.Calendar.DAY_OF_WEEK, 6);
+                denNgay = sdf.format(cal.getTime());
+                break;
+            case "Tháng này":
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
+                denNgay = sdf.format(cal.getTime());
+                break;
+            case "Nửa Năm":
+                denNgay = sdf.format(cal.getTime());
+                cal.add(java.util.Calendar.MONTH, -5);
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                break;
+            case "Năm Nay":
+                cal.set(java.util.Calendar.MONTH, 0);
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                cal = java.util.Calendar.getInstance();
+                denNgay = sdf.format(cal.getTime());
+                break;
+            default:
+                tuNgay = "";
+                denNgay = "";
+                break;
+        }
+        // Chỉ set text nếu không phải "Tùy chọn"
+        if (!"Tùy chọn".equals(selected)) {
+            txtTuNgayDH.setText(tuNgay);
+            txtDenNgayDH.setText(denNgay);
+            fillDonHangTable();
+            String status = cbxTrangThaiDonHang.getSelectedItem().toString();
+            showDonHangChart(status);
+        }
     }//GEN-LAST:event_cbxKhoangThoiGian1ActionPerformed
 
     private void txtTuNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTuNgayActionPerformed
         showDoanhThuChart();
+        showLoiNhuanChart();
     }//GEN-LAST:event_txtTuNgayActionPerformed
 
     private void txtDenNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDenNgayActionPerformed
         showDoanhThuChart();
+        showLoiNhuanChart();
     }//GEN-LAST:event_txtDenNgayActionPerformed
 
-    private void btnTimTopActionPerformed(java.awt.event.ActionEvent evt) {
-        updateSanPhamCharts();
-    }                                         
-
-    private void txtTopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTopActionPerformed
-        updateSanPhamCharts();
-    }//GEN-LAST:event_txtTopActionPerformed
+                                         
 
     private void cbxLoaiSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxLoaiSPActionPerformed
         updateSanPhamCharts();
     }//GEN-LAST:event_cbxLoaiSPActionPerformed
 
     private void btnLocLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocLoaiActionPerformed
+        // Cập nhật biểu đồ sản phẩm theo thời gian và loại sản phẩm
         updateSanPhamCharts();
     }//GEN-LAST:event_btnLocLoaiActionPerformed
 
@@ -682,10 +734,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         java.time.LocalDateTime from, to;
         if ("Đơn hàng".equalsIgnoreCase(loaiBaoCao)) {
             from = parseDate(txtTuNgayDH.getText());
-            to = parseDate(txtDenNgayDH.getText());
+            to = parseEndDate(txtDenNgayDH.getText());
         } else if ("Doanh thu".equalsIgnoreCase(loaiBaoCao)) {
             from = parseDate(txtTuNgay.getText());
-            to = parseDate(txtDenNgay.getText());
+            to = parseEndDate(txtDenNgay.getText());
         } else {
             // Sản phẩm: không cần ngày, truyền ngày hiện tại
             from = java.time.LocalDateTime.now();
@@ -701,10 +753,14 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         java.time.LocalDateTime from, to;
         if ("Đơn hàng".equalsIgnoreCase(loaiBaoCao)) {
             from = parseDate(txtTuNgayDH.getText());
-            to = parseDate(txtDenNgayDH.getText());
+            to = parseEndDate(txtDenNgayDH.getText());
         } else if ("Doanh thu".equalsIgnoreCase(loaiBaoCao)) {
             from = parseDate(txtTuNgay.getText());
-            to = parseDate(txtDenNgay.getText());
+            to = parseEndDate(txtDenNgay.getText());
+        } else if ("Sản phẩm".equalsIgnoreCase(loaiBaoCao)) {
+            // Sử dụng khoảng thời gian từ tab Sản Phẩm
+            from = parseDate(txtTuNgaySP.getText());
+            to = parseEndDate(txtDenNgaySP.getText());
         } else {
             from = java.time.LocalDateTime.now();
             to = java.time.LocalDateTime.now();
@@ -725,11 +781,25 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                 javax.swing.JOptionPane.showMessageDialog(this, "Hiện tại chỉ hỗ trợ xuất PDF cho các loại báo cáo chính.", "Thông báo", javax.swing.JOptionPane.WARNING_MESSAGE);
                 return;
             }
-        } else if (!dinhDang.equalsIgnoreCase("CSV")) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Hiện tại chỉ hỗ trợ xuất báo cáo dạng CSV (Excel) hoặc PDF.", "Thông báo", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        } else {
+        } else if (dinhDang.equalsIgnoreCase("Word")) {
+            if ("Đơn hàng".equalsIgnoreCase(loaiBaoCao)) {
+                data = xuatBaoCaoDonHangWord(from, to);
+                fileExt = ".doc";
+            } else if ("Doanh thu".equalsIgnoreCase(loaiBaoCao)) {
+                data = xuatBaoCaoDoanhThuWord(from, to);
+                fileExt = ".doc";
+            } else if ("Sản phẩm".equalsIgnoreCase(loaiBaoCao)) {
+                data = xuatBaoCaoSanPhamWord();
+                fileExt = ".doc";
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Hiện tại chỉ hỗ trợ xuất Word cho các loại báo cáo chính.", "Thông báo", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } else if (dinhDang.equalsIgnoreCase("CSV")) {
             data = xuatBaoCao(loaiBaoCao, dinhDang, from, to);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Hiện tại chỉ hỗ trợ xuất báo cáo dạng PDF, Word hoặc CSV.", "Thông báo", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
         }
         javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
         if (chooser.showSaveDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
@@ -748,14 +818,98 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     }//GEN-LAST:event_btnXuatBaoCaoActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.loadNguoiBan();
         this.open();
     }//GEN-LAST:event_formWindowOpened
+
+    private void txtTuNgaySPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTuNgaySPActionPerformed
+        updateSanPhamCharts();
+    }//GEN-LAST:event_txtTuNgaySPActionPerformed
+
+    private void txtDenNgaySPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDenNgaySPActionPerformed
+        updateSanPhamCharts();
+    }//GEN-LAST:event_txtDenNgaySPActionPerformed
+
+    private void cbxKhoangThoiGianSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxKhoangThoiGianSPActionPerformed
+        String selected = cbxKhoangThoiGianSP.getSelectedItem().toString();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        String tuNgay = "", denNgay = "";
+
+        switch (selected) {
+            case "Hôm nay":
+                tuNgay = sdf.format(cal.getTime());
+                denNgay = tuNgay;
+                break;
+            case "Tuần Này":
+                cal.set(java.util.Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                tuNgay = sdf.format(cal.getTime());
+                cal.add(java.util.Calendar.DAY_OF_WEEK, 6);
+                denNgay = sdf.format(cal.getTime());
+                break;
+            case "Tháng này":
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
+                denNgay = sdf.format(cal.getTime());
+                break;
+            case "Nửa Năm":
+                denNgay = sdf.format(cal.getTime());
+                cal.add(java.util.Calendar.MONTH, -5);
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                break;
+            case "Năm Nay":
+                cal.set(java.util.Calendar.MONTH, 0);
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                tuNgay = sdf.format(cal.getTime());
+                cal = java.util.Calendar.getInstance();
+                denNgay = sdf.format(cal.getTime());
+                break;
+            default:
+                tuNgay = "";
+                denNgay = "";
+                break;
+        }
+        // Chỉ set text nếu không phải "Tùy chọn"
+        if (!"Tùy chọn".equals(selected)) {
+            txtTuNgaySP.setText(tuNgay);
+            txtDenNgaySP.setText(denNgay);
+            updateSanPhamCharts();
+        }
+    }//GEN-LAST:event_cbxKhoangThoiGianSPActionPerformed
+
+    private void btnLocThoiGianSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocThoiGianSPActionPerformed
+        // Cập nhật biểu đồ sản phẩm theo thời gian và loại sản phẩm
+        updateSanPhamCharts();
+    }//GEN-LAST:event_btnLocThoiGianSPActionPerformed
+
+    private void btnLocThoiGianDHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLocThoiGianDHActionPerformed
+        // Cập nhật bảng và biểu đồ đơn hàng theo thời gian và trạng thái
+        fillDonHangTable();
+        String status = cbxTrangThaiDonHang.getSelectedItem().toString();
+        showDonHangChart(status);
+    }//GEN-LAST:event_btnLocThoiGianDHActionPerformed
 
     // Hàm parseDate hỗ trợ chuyển đổi chuỗi sang LocalDateTime
     private java.time.LocalDateTime parseDate(String text) {
         try {
-            return java.time.LocalDate.parse(text, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+            if (text == null || text.trim().isEmpty()) {
+                return java.time.LocalDateTime.now();
+            }
+            return java.time.LocalDate.parse(text.trim(), java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+        } catch (Exception e) {
+            return java.time.LocalDateTime.now();
+        }
+    }
+
+    // Parse ngày cuối với thời gian cuối ngày (23:59:59)
+    private java.time.LocalDateTime parseEndDate(String text) {
+        try {
+            if (text == null || text.trim().isEmpty()) {
+                return java.time.LocalDateTime.now();
+            }
+            return java.time.LocalDate.parse(text.trim(), java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    .atTime(23, 59, 59, 999999999);
         } catch (Exception e) {
             return java.time.LocalDateTime.now();
         }
@@ -771,10 +925,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         }
     }
 
-    // Hàm load danh sách admin vào combo box Người Bán
-    private void loadNguoiBan() {
-        // Không còn khai báo biến cbxNguoiBan và btnLocNguoiBan
-    }
+
 
     // Hàm lấy categoryId từ combobox
     private String getSelectedCategoryId() {
@@ -791,21 +942,24 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     // Không còn khai báo biến tblDoanhThu trong variables declaration
     // Khi cần cập nhật doanh thu, chỉ gọi showDoanhThuChart()
 
-    // Vẽ biểu đồ sản phẩm bán chạy
+    // Vẽ biểu đồ sản phẩm bán chạy theo khoảng thời gian
     private void showBanChayChart(String categoryId) {
-        int top = 10;
-        try { top = Integer.parseInt(txtTop.getText()); } catch (Exception e) {}
-        java.util.List<Object[]> data = thongKeSanPhamBanChay(top, categoryId);
+        java.time.LocalDateTime from = parseDate(txtTuNgaySP.getText());
+        java.time.LocalDateTime to = parseEndDate(txtDenNgaySP.getText());
+        if (!isDateRangeValid(from, to)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        java.util.List<Object[]> data = thongKeSanPhamBanChayTheoThoiGian(from, to, categoryId);
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (Object[] row : data) {
             String tenSP = (String) row[1];
             int soLuong = (int) row[2];
-            if (soLuong > 0) {
-                dataset.addValue(soLuong, "Số lượng", tenSP);
-            }
+            dataset.addValue(soLuong, "Số lượng", tenSP);
         }
         JFreeChart chart = ChartFactory.createBarChart(
-            "Biểu Đồ Top Sản Phẩm Bán Chạy", "Sản Phẩm", "Số Lượng", dataset);
+            "Biểu Đồ Sản Phẩm Bán Chạy Theo Thời Gian", "Sản Phẩm", "Số Lượng", dataset);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(new java.awt.Color(0xe3f2fd));
         org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot.getRenderer();
@@ -829,25 +983,18 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     // Vẽ biểu đồ tồn kho (lọc theo categoryId)
     private void showTonKhoChart(String categoryId) {
-        int top = 10;
-        try { top = Integer.parseInt(txtTop.getText()); } catch (Exception e) {}
         java.util.List<Object[]> data = thongKeTonKhoWithCategory();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        int count = 0;
         for (Object[] row : data) {
             String catId = (String) row[3];
             if (categoryId.isEmpty() || categoryId.equals(catId)) {
                 String tenSP = (String) row[1];
                 int tonKho = (int) row[2];
-                if (tonKho > 0) {
-                    dataset.addValue(tonKho, "Sản phẩm trong kho", tenSP);
-                    count++;
-                    if (count >= top) break;
-                }
+                dataset.addValue(tonKho, "Số lượng trong kho", tenSP);
             }
         }
         JFreeChart chart = ChartFactory.createBarChart(
-            "Biểu Đồ Sản Phẩm Trong Kho Nhiều Nhất", "Sản Phẩm", "Sản Phẩm Trong Kho", dataset);
+            "Biểu Đồ Sản Phẩm Trong Kho Nhiều Nhất", "Sản Phẩm", "Số Lượng Trong Kho", dataset);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(new java.awt.Color(0xe3f2fd));
         org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot.getRenderer();
@@ -872,7 +1019,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     // Vẽ biểu đồ doanh thu
     private void showDoanhThuChart() {
         java.time.LocalDateTime from = parseDate(txtTuNgay.getText());
-        java.time.LocalDateTime to = parseDate(txtDenNgay.getText());
+        java.time.LocalDateTime to = parseEndDate(txtDenNgay.getText());
         if (!isDateRangeValid(from, to)) {
             javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
@@ -908,6 +1055,45 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         panelDoanhThuChart.add(chartPanel, java.awt.BorderLayout.CENTER);
         panelDoanhThuChart.revalidate();
         panelDoanhThuChart.repaint();
+    }
+
+    // Vẽ biểu đồ lợi nhuận (đường)
+    private void showLoiNhuanChart() {
+        java.time.LocalDateTime from = parseDate(txtTuNgay.getText());
+        java.time.LocalDateTime to = parseEndDate(txtDenNgay.getText());
+        if (!isDateRangeValid(from, to)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        boolean isForceByDay = false;
+        if (cbxKhoangThoiGian.getSelectedItem() != null && cbxKhoangThoiGian.getSelectedItem().toString().equals("Tháng này")) {
+            isForceByDay = true;
+        }
+        java.util.Map<String, Number> data = tongHopLoiNhuan(from, to, isForceByDay);
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (String key : data.keySet()) {
+            dataset.addValue(data.get(key), "Lợi nhuận", key);
+        }
+        JFreeChart chart = ChartFactory.createLineChart(
+            "Biểu Đồ Lợi Nhuận", "Thời gian", "Lợi nhuận (VNĐ)", dataset);
+        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(new java.awt.Color(0xe8f5e8));
+        org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = (org.jfree.chart.renderer.category.LineAndShapeRenderer) plot.getRenderer();
+        java.awt.Color green = new java.awt.Color(76, 175, 80);
+        renderer.setSeriesPaint(0, green);
+        renderer.setSeriesStroke(0, new java.awt.BasicStroke(3.0f));
+        renderer.setSeriesShapesVisible(0, true);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        if (dataset.getColumnCount() == 1) {
+            chartPanel.setPreferredSize(new java.awt.Dimension(300, panelLoiNhuanChart.getHeight()));
+        } else {
+            chartPanel.setPreferredSize(panelLoiNhuanChart.getSize());
+        }
+        panelLoiNhuanChart.removeAll();
+        panelLoiNhuanChart.setLayout(new java.awt.BorderLayout());
+        panelLoiNhuanChart.add(chartPanel, java.awt.BorderLayout.CENTER);
+        panelLoiNhuanChart.revalidate();
+        panelLoiNhuanChart.repaint();
     }
 
     // Tổng hợp doanh thu theo ngày/tuần/tháng
@@ -952,6 +1138,48 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         return result;
     }
 
+    // Tổng hợp lợi nhuận theo ngày/tuần/tháng
+    private java.util.Map<String, Number> tongHopLoiNhuan(java.time.LocalDateTime from, java.time.LocalDateTime to, boolean forceByDay) {
+        java.util.List<Object[]> data = thongKeLoiNhuan(from, to);
+        java.util.Map<String, Number> result = new java.util.LinkedHashMap<>();
+        long days = java.time.Duration.between(from, to).toDays() + 1;
+        java.time.format.DateTimeFormatter fmtNgay = java.time.format.DateTimeFormatter.ofPattern("dd/MM");
+        java.time.format.DateTimeFormatter fmtThang = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
+
+        if (forceByDay || days <= 7) { // Theo ngày
+            for (Object[] row : data) {
+                java.time.LocalDate date = (java.time.LocalDate) row[0];
+                Number loiNhuan = (Number) row[2];
+                String key = date.format(fmtNgay);
+                result.put(key, loiNhuan);
+            }
+        } else if (days <= 31) { // Theo tuần (hiển thị Tuần X - MM/yyyy)
+            java.util.Map<String, Number> weekMap = new java.util.LinkedHashMap<>();
+            java.time.format.DateTimeFormatter fmtThangNam = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
+            for (Object[] row : data) {
+                java.time.LocalDate date = (java.time.LocalDate) row[0];
+                int weekOfMonth = date.get(java.time.temporal.WeekFields.ISO.weekOfMonth());
+                String thangNam = date.format(fmtThangNam);
+                String key = "Tuần " + weekOfMonth + " - " + thangNam;
+                Number loiNhuan = (Number) row[2];
+                weekMap.put(key, weekMap.getOrDefault(key, 0).doubleValue() + loiNhuan.doubleValue());
+            }
+            for (String key : weekMap.keySet()) {
+                result.put(key, weekMap.get(key));
+            }
+        } else { // Theo tháng
+            java.util.Map<String, Number> monthMap = new java.util.LinkedHashMap<>();
+            for (Object[] row : data) {
+                java.time.LocalDate date = (java.time.LocalDate) row[0];
+                String thang = date.format(fmtThang);
+                Number loiNhuan = (Number) row[2];
+                monthMap.put(thang, monthMap.getOrDefault(thang, 0).doubleValue() + loiNhuan.doubleValue());
+            }
+            result.putAll(monthMap);
+        }
+        return result;
+    }
+
     // Thống kê số lượng đơn hàng theo trạng thái
     private java.util.Map<String, Integer> tongHopDonHangTheoTrangThai(java.time.LocalDateTime from, java.time.LocalDateTime to) {
         java.util.List<poly.entity.Order> data = thongKeDonHang(from, to, "Tất Cả");
@@ -978,7 +1206,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     // Vẽ biểu đồ đơn hàng theo trạng thái (lọc đúng trạng thái đã chọn)
     private void showDonHangChart(String status) {
         java.time.LocalDateTime from = parseDate(txtTuNgayDH.getText());
-        java.time.LocalDateTime to = parseDate(txtDenNgayDH.getText());
+        java.time.LocalDateTime to = parseEndDate(txtDenNgayDH.getText());
         if (!isDateRangeValid(from, to)) {
             javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
@@ -1028,7 +1256,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     // Fill dữ liệu cho bảng Đơn Hàng (hiển thị tên khách hàng)
     private void fillDonHangTable() {
         java.time.LocalDateTime from = parseDate(txtTuNgayDH.getText());
-        java.time.LocalDateTime to = parseDate(txtDenNgayDH.getText());
+        java.time.LocalDateTime to = parseEndDate(txtDenNgayDH.getText());
         if (!isDateRangeValid(from, to)) {
             javax.swing.JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi ngày", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
@@ -1052,29 +1280,32 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     // Gọi fill dữ liệu khi mở form
     public void open() {
+        // Auto chọn "Hôm nay" cho các combo box trước khi load dữ liệu
+        cbxKhoangThoiGian.setSelectedIndex(0);
+        cbxKhoangThoiGian1.setSelectedIndex(0);
+        cbxKhoangThoiGianSP.setSelectedIndex(0);
+        
+        // Load dữ liệu
         showDoanhThuChart();
+        showLoiNhuanChart();
         updateSanPhamCharts();
         fillDonHangTable();
         String status = cbxTrangThaiDonHang.getSelectedItem().toString();
         showDonHangChart(status);
-        // Auto chọn "Hôm nay" cho cbxKhoangThoiGian
-        cbxKhoangThoiGian.setSelectedIndex(0);
+        
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    // Gắn fill vào các nút lọc/tìm kiếm (nên đặt trong initComponents hoặc sau khi init)
-    // Ví dụ:
-    // btnLoc.addActionListener(e -> fillDoanhThuTable());
-    // btnTimTop.addActionListener(e -> fillSanPhamBanChayTable());
-    // btnLocSanPham.addActionListener(e -> fillSanPhamBanChayTable());
-    // btnLocDonHang.addActionListener(e -> fillDonHangTable());
+
 
     // Khai báo DAO cần thiết
     private final poly.dao.impl.OrderDAOImpl orderDAO = new poly.dao.impl.OrderDAOImpl();
     private final poly.dao.impl.OrderDetailDAOImpl orderDetailDAO = new poly.dao.impl.OrderDetailDAOImpl();
     private final poly.dao.impl.ProductDAOImpl productDAO = new poly.dao.impl.ProductDAOImpl();
     private final poly.dao.impl.InventoryDAOImpl inventoryDAO = new poly.dao.impl.InventoryDAOImpl();
+    
+
 
     // --- ThongKeController methods ---
     @Override
@@ -1123,6 +1354,52 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         return new java.util.ArrayList<>(map.values());
     }
 
+    // Thống kê lợi nhuận theo khoảng thời gian
+    @Override
+    public java.util.List<Object[]> thongKeLoiNhuan(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        java.util.List<poly.entity.Order> orders = orderDAO.selectByDateRange(from, to);
+        java.util.Map<java.time.LocalDate, Object[]> map = new java.util.LinkedHashMap<>();
+        
+        for (poly.entity.Order o : orders) {
+            java.time.LocalDate date = o.getOrderDate().toLocalDate();
+            Object[] row = map.getOrDefault(date, new Object[]{date, 0, java.math.BigDecimal.ZERO, 0});
+            int tongDon = (int) row[1] + 1;
+            
+            // Sử dụng TotalAmount từ Order làm doanh thu
+            java.math.BigDecimal doanhThu = o.getTotalAmount();
+            java.math.BigDecimal chiPhiVon = java.math.BigDecimal.ZERO;
+            
+            // Tính chi phí vốn từ OrderDetail
+            java.util.List<poly.entity.OrderDetail> details = orderDetailDAO.selectByOrderId(o.getOrderId());
+            for (poly.entity.OrderDetail d : details) {
+                // Chi phí vốn = số lượng * giá nhập
+                poly.entity.Product product = productDAO.selectById(d.getProductId());
+                if (product != null && product.getGianhap() != null && product.getGianhap().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                    java.math.BigDecimal chiPhiItem = product.getGianhap().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
+                    chiPhiVon = chiPhiVon.add(chiPhiItem);
+                } else {
+                    // Nếu không có giá nhập, giả sử chi phí vốn = 70% doanh thu (tỷ lệ lợi nhuận 30%)
+                    java.math.BigDecimal doanhThuItem = d.getUnitPrice().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
+                    java.math.BigDecimal chiPhiItem = doanhThuItem.multiply(new java.math.BigDecimal("0.7"));
+                    chiPhiVon = chiPhiVon.add(chiPhiItem);
+                }
+            }
+            
+            // Lợi nhuận = doanh thu - chi phí vốn
+            java.math.BigDecimal loiNhuan = doanhThu.subtract(chiPhiVon);
+            
+            // Cộng dồn vào map
+            java.math.BigDecimal tongLoiNhuan = ((java.math.BigDecimal) row[2]).add(loiNhuan);
+            int soLuongBan = (int) row[3];
+            for (poly.entity.OrderDetail d : details) {
+                soLuongBan += d.getQuantity();
+            }
+            
+            map.put(date, new Object[]{date, tongDon, tongLoiNhuan, soLuongBan});
+        }
+        return new java.util.ArrayList<>(map.values());
+    }
+
     @Override
     public java.util.List<Object[]> thongKeSanPhamBanChay(int top, String categoryId) {
         java.util.List<poly.entity.Product> products;
@@ -1135,10 +1412,45 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         java.util.List<Object[]> result = new java.util.ArrayList<>();
         for (poly.entity.Product p : products) {
             int sold = orderDetailDAO.getTotalQuantitySold(p.getProductId());
-            result.add(new Object[]{p.getProductId(), p.getProductName(), sold});
+            // Chỉ thêm sản phẩm có số lượng bán > 0
+            if (sold > 0) {
+                result.add(new Object[]{p.getProductId(), p.getProductName(), sold});
+            }
         }
         result.sort((a, b) -> Integer.compare((int) b[2], (int) a[2]));
         return result.subList(0, Math.min(top, result.size()));
+    }
+
+    // Thống kê sản phẩm bán chạy theo khoảng thời gian
+    public java.util.List<Object[]> thongKeSanPhamBanChayTheoThoiGian(java.time.LocalDateTime from, java.time.LocalDateTime to, String categoryId) {
+        java.util.List<poly.entity.Product> products;
+        if (categoryId == null || categoryId.isEmpty()) {
+            // Nếu chọn 'Tất cả', lấy toàn bộ sản phẩm
+            products = productDAO.selectAll();
+        } else {
+            products = productDAO.searchByCategory(categoryId);
+        }
+        
+        java.util.List<Object[]> result = new java.util.ArrayList<>();
+        for (poly.entity.Product p : products) {
+            // Lấy số lượng bán trong khoảng thời gian bằng cách lọc đơn hàng
+            int sold = 0;
+            java.util.List<poly.entity.Order> orders = orderDAO.selectByDateRange(from, to);
+            for (poly.entity.Order order : orders) {
+                java.util.List<poly.entity.OrderDetail> details = orderDetailDAO.selectByOrderId(order.getOrderId());
+                for (poly.entity.OrderDetail detail : details) {
+                    if (detail.getProductId().equals(p.getProductId())) {
+                        sold += detail.getQuantity();
+                    }
+                }
+            }
+            // Chỉ thêm sản phẩm có số lượng bán > 0
+            if (sold > 0) {
+                result.add(new Object[]{p.getProductId(), p.getProductName(), sold});
+            }
+        }
+        result.sort((a, b) -> Integer.compare((int) b[2], (int) a[2]));
+        return result;
     }
 
     @Override
@@ -1147,7 +1459,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         products.sort((a, b) -> Integer.compare(b.getQuantity(), a.getQuantity()));
         java.util.List<Object[]> result = new java.util.ArrayList<>();
         for (poly.entity.Product p : products) {
-            result.add(new Object[]{p.getProductId(), p.getProductName(), p.getQuantity()});
+            // Chỉ thêm sản phẩm có tồn kho > 0
+            if (p.getQuantity() > 0) {
+                result.add(new Object[]{p.getProductId(), p.getProductName(), p.getQuantity()});
+            }
         }
         return result;
     }
@@ -1158,7 +1473,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         products.sort((a, b) -> Integer.compare(b.getQuantity(), a.getQuantity()));
         java.util.List<Object[]> result = new java.util.ArrayList<>();
         for (poly.entity.Product p : products) {
-            result.add(new Object[]{p.getProductId(), p.getProductName(), p.getQuantity(), p.getCategoryId()});
+            // Chỉ thêm sản phẩm có tồn kho > 0
+            if (p.getQuantity() > 0) {
+                result.add(new Object[]{p.getProductId(), p.getProductName(), p.getQuantity(), p.getCategoryId()});
+            }
         }
         return result;
     }
@@ -1177,19 +1495,31 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         StringBuilder sb = new StringBuilder();
         if ("Doanh thu".equalsIgnoreCase(loaiBaoCao)) {
             java.util.List<Object[]> data = thongKeDoanhThu(from, to, "Tất cả");
-            sb.append("Ngày,Tổng Đơn,Tổng Tiền,Số Lượng Bán\n");
-            for (Object[] row : data) {
-                sb.append(row[0]).append(",").append(row[1]).append(",").append(row[2]).append(",").append(row[3]).append("\n");
+            java.util.List<Object[]> dataLoiNhuan = thongKeLoiNhuan(from, to);
+            sb.append("BÁO CÁO DOANH THU VÀ LỢI NHUẬN\n");
+            sb.append("Từ ngày: ").append(from.toLocalDate()).append("  Đến ngày: ").append(to.toLocalDate()).append("\n\n");
+            sb.append("Ngày,Tổng Đơn,Doanh Thu,Lợi Nhuận,Số Lượng Bán\n");
+            for (int i = 0; i < data.size(); i++) {
+                Object[] row = data.get(i);
+                Object[] rowLoiNhuan = i < dataLoiNhuan.size() ? dataLoiNhuan.get(i) : new Object[]{row[0], 0, java.math.BigDecimal.ZERO, 0};
+                sb.append(row[0]).append(",").append(row[1]).append(",").append(row[2]).append(",").append(rowLoiNhuan[2]).append(",").append(row[3]).append("\n");
             }
         } else if ("Sản phẩm".equalsIgnoreCase(loaiBaoCao)) {
-            java.util.List<Object[]> data = thongKeSanPhamBanChay(100, ""); // Top 100 hoặc tất cả
+            // Sử dụng khoảng thời gian từ tab Sản Phẩm
+            java.time.LocalDateTime fromSP = parseDate(txtTuNgaySP.getText());
+            java.time.LocalDateTime toSP = parseEndDate(txtDenNgaySP.getText());
+            
+            sb.append("BÁO CÁO SẢN PHẨM\n");
+            sb.append("Từ ngày: ").append(fromSP.toLocalDate()).append("  Đến ngày: ").append(toSP.toLocalDate()).append("\n\n");
+            
+            java.util.List<Object[]> data = thongKeSanPhamBanChayTheoThoiGian(fromSP, toSP, "");
             sb.append("SẢN PHẨM BÁN CHẠY NHẤT\n");
             sb.append("Mã Sản Phẩm,Tên Sản Phẩm,Số Lượng Bán Ra\n");
             for (Object[] row : data) {
                 sb.append(row[0]).append(",").append(row[1]).append(",").append(row[2]).append("\n");
             }
-            sb.append("\nSẢN PHẨM TỒN KHO NHIỀU NHẤT\n");
-            sb.append("Mã Sản Phẩm,Tên Sản Phẩm,Tồn Kho\n");
+            sb.append("\nSẢN PHẨM TRONG KHO NHIỀU NHẤT\n");
+            sb.append("Mã Sản Phẩm,Tên Sản Phẩm,Trong Kho\n");
             java.util.List<Object[]> tonKho = thongKeTonKho();
             for (Object[] row : tonKho) {
                 sb.append(row[0]).append(",").append(row[1]).append(",").append(row[2]).append("\n");
@@ -1197,6 +1527,8 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         } else if ("Đơn hàng".equalsIgnoreCase(loaiBaoCao)) {
             // Sửa: chỉ lấy đơn hàng theo khoảng thời gian from, to
             java.util.List<poly.entity.Order> data = thongKeDonHang(from, to, "Tất Cả");
+            sb.append("BÁO CÁO ĐƠN HÀNG\n");
+            sb.append("Từ ngày: ").append(from.toLocalDate()).append("  Đến ngày: ").append(to.toLocalDate()).append("\n\n");
             sb.append("Mã Đơn,Ngày,Khách Hàng,Tổng Tiền,Trạng Thái\n");
             for (poly.entity.Order o : data) {
                 poly.entity.User user = new poly.dao.impl.UserDAOImpl().selectById(o.getUserId());
@@ -1265,6 +1597,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     // Hàm xuất báo cáo Doanh thu ra PDF
     private byte[] xuatBaoCaoDoanhThuPDF(java.time.LocalDateTime from, java.time.LocalDateTime to) {
         java.util.List<Object[]> data = thongKeDoanhThu(from, to, "Tất cả");
+        java.util.List<Object[]> dataLoiNhuan = thongKeLoiNhuan(from, to);
         java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
         com.lowagie.text.Document document = new com.lowagie.text.Document();
         try {
@@ -1278,19 +1611,23 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
             com.lowagie.text.Font font = new com.lowagie.text.Font(bf, 12);
             com.lowagie.text.Font fontTitle = new com.lowagie.text.Font(bf, 16, com.lowagie.text.Font.BOLD);
-            document.add(new com.lowagie.text.Paragraph("BÁO CÁO DOANH THU", fontTitle));
+            document.add(new com.lowagie.text.Paragraph("BÁO CÁO DOANH THU VÀ LỢI NHUẬN", fontTitle));
             document.add(new com.lowagie.text.Paragraph("Từ ngày: " + from.toLocalDate() + "  Đến ngày: " + to.toLocalDate(), font));
             document.add(new com.lowagie.text.Paragraph(" "));
-            com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(4);
+            com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(5);
             table.setWidthPercentage(100);
             table.addCell(new com.lowagie.text.Phrase("Ngày", font));
             table.addCell(new com.lowagie.text.Phrase("Tổng Đơn", font));
-            table.addCell(new com.lowagie.text.Phrase("Tổng Tiền", font));
+            table.addCell(new com.lowagie.text.Phrase("Doanh Thu", font));
+            table.addCell(new com.lowagie.text.Phrase("Lợi Nhuận", font));
             table.addCell(new com.lowagie.text.Phrase("Số Lượng Bán", font));
-            for (Object[] row : data) {
+            for (int i = 0; i < data.size(); i++) {
+                Object[] row = data.get(i);
+                Object[] rowLoiNhuan = i < dataLoiNhuan.size() ? dataLoiNhuan.get(i) : new Object[]{row[0], 0, java.math.BigDecimal.ZERO, 0};
                 table.addCell(new com.lowagie.text.Phrase(String.valueOf(row[0]), font));
                 table.addCell(new com.lowagie.text.Phrase(String.valueOf(row[1]), font));
                 table.addCell(new com.lowagie.text.Phrase(String.valueOf(row[2]), font));
+                table.addCell(new com.lowagie.text.Phrase(String.valueOf(rowLoiNhuan[2]), font));
                 table.addCell(new com.lowagie.text.Phrase(String.valueOf(row[3]), font));
             }
             document.add(table);
@@ -1304,7 +1641,11 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     // Hàm xuất báo cáo Sản phẩm ra PDF
     private byte[] xuatBaoCaoSanPhamPDF() {
-        java.util.List<Object[]> dataBanChay = thongKeSanPhamBanChay(100, "");
+        // Sử dụng khoảng thời gian từ tab Sản Phẩm
+        java.time.LocalDateTime fromSP = parseDate(txtTuNgaySP.getText());
+        java.time.LocalDateTime toSP = parseEndDate(txtDenNgaySP.getText());
+        
+        java.util.List<Object[]> dataBanChay = thongKeSanPhamBanChayTheoThoiGian(fromSP, toSP, "");
         java.util.List<Object[]> tonKho = thongKeTonKho();
         java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
         com.lowagie.text.Document document = new com.lowagie.text.Document();
@@ -1320,6 +1661,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             com.lowagie.text.Font font = new com.lowagie.text.Font(bf, 12);
             com.lowagie.text.Font fontTitle = new com.lowagie.text.Font(bf, 16, com.lowagie.text.Font.BOLD);
             document.add(new com.lowagie.text.Paragraph("BÁO CÁO SẢN PHẨM", fontTitle));
+            document.add(new com.lowagie.text.Paragraph("Từ ngày: " + fromSP.toLocalDate() + "  Đến ngày: " + toSP.toLocalDate(), font));
             document.add(new com.lowagie.text.Paragraph(" "));
             document.add(new com.lowagie.text.Paragraph("SẢN PHẨM BÁN CHẠY NHẤT", font));
             com.lowagie.text.pdf.PdfPTable table1 = new com.lowagie.text.pdf.PdfPTable(3);
@@ -1334,12 +1676,12 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
             document.add(table1);
             document.add(new com.lowagie.text.Paragraph(" "));
-            document.add(new com.lowagie.text.Paragraph("SẢN PHẨM TỒN KHO NHIỀU NHẤT", font));
+            document.add(new com.lowagie.text.Paragraph("SẢN PHẨM TRONG KHO NHIỀU NHẤT", font));
             com.lowagie.text.pdf.PdfPTable table2 = new com.lowagie.text.pdf.PdfPTable(3);
             table2.setWidthPercentage(100);
             table2.addCell(new com.lowagie.text.Phrase("Mã Sản Phẩm", font));
             table2.addCell(new com.lowagie.text.Phrase("Tên Sản Phẩm", font));
-            table2.addCell(new com.lowagie.text.Phrase("Tồn Kho", font));
+            table2.addCell(new com.lowagie.text.Phrase("Trong Kho", font));
             for (Object[] row : tonKho) {
                 table2.addCell(new com.lowagie.text.Phrase(String.valueOf(row[0]), font));
                 table2.addCell(new com.lowagie.text.Phrase(String.valueOf(row[1]), font));
@@ -1355,7 +1697,158 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     }
 
     private boolean isDateRangeValid(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        // Kiểm tra từ ngày không được sau đến ngày
         return !from.isAfter(to);
+    }
+
+    // Hàm xuất báo cáo Đơn hàng ra Word
+    private byte[] xuatBaoCaoDonHangWord(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        java.util.List<poly.entity.Order> data = thongKeDonHang(from, to, "Tất cả");
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        try {
+            // Tạo file HTML mà Word có thể mở được
+            StringBuilder html = new StringBuilder();
+            html.append("<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>");
+            html.append("<head><meta charset='UTF-8'>");
+            html.append("<xml>");
+            html.append("<w:WordDocument>");
+            html.append("<w:View>Print</w:View>");
+            html.append("<w:Zoom>90</w:Zoom>");
+            html.append("<w:DoNotHyphenateCaps/>");
+            html.append("<w:PunctuationKerning/>");
+            html.append("<w:DrawingGridHorizontalSpacing>9.35 pt</w:DrawingGridHorizontalSpacing>");
+            html.append("<w:DrawingGridVerticalSpacing>9.35 pt</w:DrawingGridVerticalSpacing>");
+            html.append("</w:WordDocument>");
+            html.append("</xml>");
+            html.append("</head>");
+            html.append("<body>");
+            html.append("<h1 style='text-align: center;'>BÁO CÁO ĐƠN HÀNG</h1>");
+            html.append("<p><strong>Từ ngày:</strong> ").append(from.toLocalDate()).append("  <strong>Đến ngày:</strong> ").append(to.toLocalDate()).append("</p>");
+            html.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
+            html.append("<tr><th>Mã Đơn</th><th>Ngày</th><th>Khách Hàng</th><th>Tổng Tiền</th><th>Trạng Thái</th></tr>");
+            
+            for (poly.entity.Order o : data) {
+                poly.entity.User user = new poly.dao.impl.UserDAOImpl().selectById(o.getUserId());
+                String tenKhach = user != null ? user.getFullName() : String.valueOf(o.getUserId());
+                html.append("<tr>");
+                html.append("<td>").append(o.getOrderId()).append("</td>");
+                html.append("<td>").append(o.getOrderDate()).append("</td>");
+                html.append("<td>").append(tenKhach).append("</td>");
+                html.append("<td>").append(o.getTotalAmount()).append("</td>");
+                html.append("<td>").append(o.getOrderStatus()).append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</table></body></html>");
+            
+            baos.write(html.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return baos.toByteArray();
+    }
+
+    // Hàm xuất báo cáo Doanh thu ra Word
+    private byte[] xuatBaoCaoDoanhThuWord(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        java.util.List<Object[]> data = thongKeDoanhThu(from, to, "Tất cả");
+        java.util.List<Object[]> dataLoiNhuan = thongKeLoiNhuan(from, to);
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        try {
+            StringBuilder html = new StringBuilder();
+            html.append("<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>");
+            html.append("<head><meta charset='UTF-8'>");
+            html.append("<xml>");
+            html.append("<w:WordDocument>");
+            html.append("<w:View>Print</w:View>");
+            html.append("<w:Zoom>90</w:Zoom>");
+            html.append("<w:DoNotHyphenateCaps/>");
+            html.append("<w:PunctuationKerning/>");
+            html.append("<w:DrawingGridHorizontalSpacing>9.35 pt</w:DrawingGridHorizontalSpacing>");
+            html.append("<w:DrawingGridVerticalSpacing>9.35 pt</w:DrawingGridVerticalSpacing>");
+            html.append("</w:WordDocument>");
+            html.append("</xml>");
+            html.append("</head>");
+            html.append("<body>");
+            html.append("<h1 style='text-align: center;'>BÁO CÁO DOANH THU VÀ LỢI NHUẬN</h1>");
+            html.append("<p><strong>Từ ngày:</strong> ").append(from.toLocalDate()).append("  <strong>Đến ngày:</strong> ").append(to.toLocalDate()).append("</p>");
+            html.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
+            html.append("<tr><th>Ngày</th><th>Tổng Đơn</th><th>Doanh Thu</th><th>Lợi Nhuận</th><th>Số Lượng Bán</th></tr>");
+            
+            for (int i = 0; i < data.size(); i++) {
+                Object[] row = data.get(i);
+                Object[] rowLoiNhuan = i < dataLoiNhuan.size() ? dataLoiNhuan.get(i) : new Object[]{row[0], 0, java.math.BigDecimal.ZERO, 0};
+                html.append("<tr>");
+                html.append("<td>").append(row[0]).append("</td>");
+                html.append("<td>").append(row[1]).append("</td>");
+                html.append("<td>").append(row[2]).append("</td>");
+                html.append("<td>").append(rowLoiNhuan[2]).append("</td>");
+                html.append("<td>").append(row[3]).append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</table></body></html>");
+            
+            baos.write(html.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return baos.toByteArray();
+    }
+
+    // Hàm xuất báo cáo Sản phẩm ra Word
+    private byte[] xuatBaoCaoSanPhamWord() {
+        java.time.LocalDateTime fromSP = parseDate(txtTuNgaySP.getText());
+        java.time.LocalDateTime toSP = parseEndDate(txtDenNgaySP.getText());
+        
+        java.util.List<Object[]> dataBanChay = thongKeSanPhamBanChayTheoThoiGian(fromSP, toSP, "");
+        java.util.List<Object[]> tonKho = thongKeTonKho();
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        try {
+            StringBuilder html = new StringBuilder();
+            html.append("<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>");
+            html.append("<head><meta charset='UTF-8'>");
+            html.append("<xml>");
+            html.append("<w:WordDocument>");
+            html.append("<w:View>Print</w:View>");
+            html.append("<w:Zoom>90</w:Zoom>");
+            html.append("<w:DoNotHyphenateCaps/>");
+            html.append("<w:PunctuationKerning/>");
+            html.append("<w:DrawingGridHorizontalSpacing>9.35 pt</w:DrawingGridHorizontalSpacing>");
+            html.append("<w:DrawingGridVerticalSpacing>9.35 pt</w:DrawingGridVerticalSpacing>");
+            html.append("</w:WordDocument>");
+            html.append("</xml>");
+            html.append("</head>");
+            html.append("<body>");
+            html.append("<h1 style='text-align: center;'>BÁO CÁO SẢN PHẨM</h1>");
+            html.append("<p><strong>Từ ngày:</strong> ").append(fromSP.toLocalDate()).append("  <strong>Đến ngày:</strong> ").append(toSP.toLocalDate()).append("</p>");
+            
+            html.append("<h2>SẢN PHẨM BÁN CHẠY NHẤT</h2>");
+            html.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
+            html.append("<tr><th>Mã Sản Phẩm</th><th>Tên Sản Phẩm</th><th>Số Lượng Bán Ra</th></tr>");
+            for (Object[] row : dataBanChay) {
+                html.append("<tr>");
+                html.append("<td>").append(row[0]).append("</td>");
+                html.append("<td>").append(row[1]).append("</td>");
+                html.append("<td>").append(row[2]).append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</table>");
+            
+            html.append("<h2>SẢN PHẨM TRONG KHO NHIỀU NHẤT</h2>");
+            html.append("<table border='1' style='border-collapse: collapse; width: 100%;'>");
+            html.append("<tr><th>Mã Sản Phẩm</th><th>Tên Sản Phẩm</th><th>Trong Kho</th></tr>");
+            for (Object[] row : tonKho) {
+                html.append("<tr>");
+                html.append("<td>").append(row[0]).append("</td>");
+                html.append("<td>").append(row[1]).append("</td>");
+                html.append("<td>").append(row[2]).append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</table></body></html>");
+            
+            baos.write(html.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return baos.toByteArray();
     }
 
     /**
@@ -1400,17 +1893,21 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
         });
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLoc;
     private javax.swing.JButton btnLocDonHang;
     private javax.swing.JButton btnLocLoai;
-    private javax.swing.JButton btnTimTop;
+    private javax.swing.JButton btnLocThoiGianDH;
+    private javax.swing.JButton btnLocThoiGianSP;
     private javax.swing.JButton btnXemTruoc;
     private javax.swing.JButton btnXuatBaoCao;
     private javax.swing.JComboBox<String> cbxDinhDang;
     private javax.swing.JComboBox<String> cbxKhoangThoiGian;
     private javax.swing.JComboBox<String> cbxKhoangThoiGian1;
+    private javax.swing.JComboBox<String> cbxKhoangThoiGianSP;
     private javax.swing.JComboBox<String> cbxLoaiBaoCao;
     private javax.swing.JComboBox<String> cbxLoaiSP;
     private javax.swing.JComboBox<String> cbxTrangThaiDonHang;
@@ -1420,9 +1917,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1439,12 +1937,14 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
     private javax.swing.JPanel panelBanChay;
     private javax.swing.JPanel panelDoanhThuChart;
     private javax.swing.JPanel panelDonHangChart;
+    private javax.swing.JPanel panelLoiNhuanChart;
     private javax.swing.JPanel panelTonKho;
     private javax.swing.JTable tblDonHang;
     private javax.swing.JTextField txtDenNgay;
     private javax.swing.JTextField txtDenNgayDH;
-    private javax.swing.JTextField txtTop;
+    private javax.swing.JTextField txtDenNgaySP;
     private javax.swing.JTextField txtTuNgay;
     private javax.swing.JTextField txtTuNgayDH;
+    private javax.swing.JTextField txtTuNgaySP;
     // End of variables declaration//GEN-END:variables
 }

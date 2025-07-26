@@ -9,6 +9,9 @@ public interface ThongKeController {
     // Thống kê doanh thu theo khoảng thời gian
     List<Object[]> thongKeDoanhThu(LocalDateTime from, LocalDateTime to);
 
+    // Thống kê lợi nhuận theo khoảng thời gian
+    List<Object[]> thongKeLoiNhuan(LocalDateTime from, LocalDateTime to);
+
     // Thống kê sản phẩm bán chạy nhất
     List<Object[]> thongKeSanPhamBanChay(int top, String categoryId);
 

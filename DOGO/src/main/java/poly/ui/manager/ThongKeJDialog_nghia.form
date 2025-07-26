@@ -75,13 +75,15 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="229" max="-2" attributes="0"/>
+                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="panelDoanhThuChart" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="panelLoiNhuanChart" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
@@ -90,15 +92,14 @@
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="txtDenNgay" min="-2" pref="166" max="-2" attributes="0"/>
-                              <EmptySpace pref="34" max="32767" attributes="0"/>
+                              <EmptySpace pref="37" max="32767" attributes="0"/>
                               <Component id="cbxKhoangThoiGian" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnLoc" min="-2" pref="109" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="226" max="-2" attributes="0"/>
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="1" pref="270" max="32767" attributes="0"/>
+                              <Component id="panelDoanhThuChart" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -120,7 +121,9 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="panelDoanhThuChart" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="260" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="panelLoiNhuanChart" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -191,7 +194,22 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="261" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="233" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+            </Container>
+            <Container class="javax.swing.JPanel" name="panelLoiNhuanChart">
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <EmptySpace min="0" pref="244" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -210,31 +228,10 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panelTonKho" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="panelBanChay" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="txtTop" min="-2" pref="71" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnTimTop" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="294" max="32767" attributes="0"/>
-                              <Component id="cbxLoaiSP" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnLocLoai" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                          </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="199" max="-2" attributes="0"/>
                               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
@@ -242,10 +239,38 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" alignment="0" min="-2" pref="214" max="-2" attributes="0"/>
+                                  <Component id="panelBanChay" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel7" alignment="0" min="-2" pref="214" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="txtTuNgaySP" min="-2" pref="141" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="txtDenNgaySP" min="-2" pref="142" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="cbxKhoangThoiGianSP" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="btnLocThoiGianSP" min="-2" pref="52" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="cbxLoaiSP" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnLocLoai" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace pref="269" max="32767" attributes="0"/>
+                                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="237" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -257,12 +282,19 @@
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtTop" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxLoaiSP" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnLocLoai" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnTimTop" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTuNgaySP" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtDenNgaySP" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxKhoangThoiGianSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="cbxLoaiSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnLocLoai" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnLocThoiGianSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
@@ -280,16 +312,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel4">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Top S&#x1ea3;n Ph&#x1ea9;m"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtTop">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTopActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JComboBox" name="cbxLoaiSP">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -339,14 +361,6 @@
                 <Property name="text" type="java.lang.String" value="S&#x1ea3;n ph&#x1ea9;m t&#x1ed3;n kho nhi&#x1ec1;u nh&#x1ea5;t"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnTimTop">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="T&#xec;m Ki&#x1ebf;m"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTimTopActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -363,6 +377,53 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
             </Container>
+            <Component class="javax.swing.JLabel" name="jLabel15">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="T&#x1eeb; Ng&#xe0;y"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtTuNgaySP">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTuNgaySPActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel16">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&#x110;&#x1ebf;n Ng&#xe0;y"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtDenNgaySP">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDenNgaySPActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxKhoangThoiGianSP">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="5">
+                    <StringItem index="0" value="H&#xf4;m nay"/>
+                    <StringItem index="1" value="Tu&#x1ea7;n N&#xe0;y"/>
+                    <StringItem index="2" value="Th&#xe1;ng n&#xe0;y"/>
+                    <StringItem index="3" value="N&#x1eed;a N&#x103;m"/>
+                    <StringItem index="4" value="N&#x103;m Nay"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxKhoangThoiGianSPActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnLocThoiGianSP">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="T&#xec;m"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLocThoiGianSPActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel3">
@@ -381,7 +442,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="238" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="235" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
@@ -389,15 +450,17 @@
                           <Component id="panelDonHangChart" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtTuNgayDH" pref="166" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtTuNgayDH" min="-2" pref="143" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtDenNgayDH" min="-2" pref="154" max="-2" attributes="0"/>
+                              <Component id="txtDenNgayDH" min="-2" pref="142" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cbxKhoangThoiGian1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnLocThoiGianDH" min="-2" pref="52" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="cbxTrangThaiDonHang" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnLocDonHang" min="-2" max="-2" attributes="0"/>
@@ -421,6 +484,7 @@
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtDenNgayDH" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbxKhoangThoiGian1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnLocThoiGianDH" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane5" min="-2" pref="224" max="-2" attributes="0"/>
@@ -576,6 +640,14 @@
                 </DimensionLayout>
               </Layout>
             </Container>
+            <Component class="javax.swing.JButton" name="btnLocThoiGianDH">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="T&#xec;m"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLocThoiGianDHActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel4">
@@ -599,7 +671,7 @@
                       <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="cbxDinhDang" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="124" max="32767" attributes="0"/>
+                      <EmptySpace pref="127" max="32767" attributes="0"/>
                       <Component id="btnXemTruoc" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                   </Group>
