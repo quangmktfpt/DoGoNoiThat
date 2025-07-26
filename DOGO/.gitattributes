@@ -1,0 +1,36 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Java source files
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.sql text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+
+# Form files
+*.form text eol=lf
+
+# Binary files
+*.class binary
+*.jar binary
+*.war binary
+*.ear binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.rar binary
+
+# IDE files
+*.iml text eol=lf
+*.ipr text eol=lf
+*.iws text eol=lf
+*.project text eol=lf
+*.classpath text eol=lf
+*.settings/* text eol=lf 

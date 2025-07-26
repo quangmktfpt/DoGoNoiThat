@@ -184,7 +184,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
 
         jMenu2.setText("Menu");
-        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/menu.jpg")));
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Edit");
