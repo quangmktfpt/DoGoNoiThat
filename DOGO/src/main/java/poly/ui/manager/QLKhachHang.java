@@ -100,8 +100,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
         jTextField3 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -367,9 +365,12 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
 
         jLabel9.setText("Tên khách");
 
-        jLabel13.setText("Mật Khẩu :");
-
         jButton1.setText("Đặt Lại Mật Khẩu");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Trạng Thái");
 
@@ -415,10 +416,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField11))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel10)
                                 .addGap(42, 42, 42)
                                 .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -461,8 +458,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -532,6 +527,44 @@ delete();        // TODO add your handling code here:
 clear();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Đặt lại mật khẩu
+        if (currentRow >= 0 && currentRow < customerList.size()) {
+            User selectedCustomer = customerList.get(currentRow);
+            
+            // Hiện JOptionPane để nhập mật khẩu mới
+            String newPassword = javax.swing.JOptionPane.showInputDialog(
+                this, 
+                "Nhập mật khẩu mới cho khách hàng '" + selectedCustomer.getFullName() + "':",
+                "Đặt lại mật khẩu",
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (newPassword == null) {
+                return; // User bấm Cancel
+            }
+            
+            if (newPassword.trim().isEmpty()) {
+                XDialog.alert("Mật khẩu không được để trống!");
+                return;
+            }
+            
+            if (newPassword.trim().length() < 6) {
+                XDialog.alert("Mật khẩu phải có ít nhất 6 ký tự!");
+                return;
+            }
+            
+            try {
+                resetCustomerPassword(selectedCustomer.getUserId(), newPassword.trim());
+                XDialog.alert("Đặt lại mật khẩu thành công!");
+            } catch (Exception e) {
+                XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
+            }
+        } else {
+            XDialog.alert("Vui lòng chọn một khách hàng để đặt lại mật khẩu!");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
 
 
@@ -594,7 +627,6 @@ clear();        // TODO add your handling code here:
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -623,7 +655,6 @@ clear();        // TODO add your handling code here:
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
@@ -636,14 +667,22 @@ clear();        // TODO add your handling code here:
 
     @Override
     public List<User> loadCustomers() {
-        customerList = userDAO.selectAll();
+        // Chỉ load khách hàng (role = 0), không load admin (role = 1)
+        List<User> allUsers = userDAO.selectAll();
+        customerList = allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // role = false (0) = customer
+                .collect(java.util.stream.Collectors.toList());
         return customerList;
     }
 
     @Override
     public List<User> loadActiveCustomers() {
-        // Tạm thời load tất cả, có thể cập nhật sau
-        return userDAO.selectAll();
+        // Chỉ load khách hàng đang hoạt động (role = 0 và isActive = true)
+        List<User> allUsers = userDAO.selectAll();
+        return allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole() && // role = false (0) = customer
+                               user.getIsActive() != null && user.getIsActive()) // isActive = true
+                .collect(java.util.stream.Collectors.toList());
     }
 
     @Override
@@ -651,9 +690,10 @@ clear();        // TODO add your handling code here:
         if (keyword == null || keyword.trim().isEmpty()) {
             return loadCustomers();
         }
-        // Tạm thời load tất cả và filter, có thể cập nhật sau
+        // Chỉ tìm kiếm trong khách hàng (role = 0)
         List<User> allUsers = userDAO.selectAll();
         return allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ khách hàng
                 .filter(user -> (user.getFullName() != null && user.getFullName().toLowerCase().contains(keyword.toLowerCase())) ||
                                (user.getEmail() != null && user.getEmail().toLowerCase().contains(keyword.toLowerCase())) ||
                                (user.getPhone() != null && user.getPhone().toLowerCase().contains(keyword.toLowerCase())))
@@ -667,6 +707,7 @@ clear();        // TODO add your handling code here:
         List<User> allUsers = userDAO.selectAll();
         
         return allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ khách hàng (role = 0)
                 .filter(user -> {
                     boolean match = true;
                     
@@ -702,13 +743,17 @@ clear();        // TODO add your handling code here:
     @Override
     public boolean checkUsernameExists(String username) {
         List<User> allUsers = userDAO.selectAll();
-        return allUsers.stream().anyMatch(user -> user.getUsername() != null && user.getUsername().equals(username));
+        return allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ kiểm tra trong khách hàng
+                .anyMatch(user -> user.getUsername() != null && user.getUsername().equals(username));
     }
 
     @Override
     public boolean checkEmailExists(String email) {
         List<User> allUsers = userDAO.selectAll();
-        return allUsers.stream().anyMatch(user -> user.getEmail() != null && user.getEmail().equals(email));
+        return allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ kiểm tra trong khách hàng
+                .anyMatch(user -> user.getEmail() != null && user.getEmail().equals(email));
     }
 
     @Override
@@ -729,11 +774,10 @@ clear();        // TODO add your handling code here:
     @Override
     public void resetCustomerPassword(Integer userId, String newPassword) {
         try {
-            User user = userDAO.selectById(userId);
-            if (user != null) {
-                String hashedPassword = hashPassword(newPassword);
-                user.setPasswordHash(hashedPassword);
-                userDAO.update(user);
+            String hashedPassword = hashPassword(newPassword);
+            boolean success = userDAO.updatePassword(userId, hashedPassword);
+            if (!success) {
+                XDialog.alert("Không thể cập nhật mật khẩu! Vui lòng thử lại.");
             }
         } catch (Exception e) {
             XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
@@ -759,6 +803,7 @@ clear();        // TODO add your handling code here:
     public int getCustomerCountByStatus(Boolean isActive) {
         List<User> allUsers = userDAO.selectAll();
         return (int) allUsers.stream()
+                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ khách hàng
                 .filter(user -> user.getIsActive() != null && user.getIsActive().equals(isActive))
                 .count();
     }
@@ -870,7 +915,6 @@ clear();        // TODO add your handling code here:
             jTextField3.setText(entity.getEmail() != null ? entity.getEmail() : "");
             jTextField6.setText(entity.getPhone() != null ? entity.getPhone() : "");
             jTextField5.setText(entity.getAddress() != null ? entity.getAddress() : "");
-            jTextField11.setText(""); // Không hiển thị mật khẩu
             jComboBox1.setSelectedItem(entity.getIsActive() != null && entity.getIsActive() ? "Hoạt Động" : "Không Hoạt Động");
         }
     }
@@ -890,7 +934,7 @@ clear();        // TODO add your handling code here:
             user.setEmail(jTextField3.getText().trim());
             user.setPhone(jTextField6.getText().trim());
             user.setAddress(jTextField5.getText().trim());
-            user.setPasswordHash(jTextField11.getText().trim());
+            // Không set mật khẩu khi update
             
             // Xử lý trạng thái
             String status = (String) jComboBox1.getSelectedItem();
@@ -985,20 +1029,31 @@ clear();        // TODO add your handling code here:
             return;
         }
         
-        String validationError = validateCustomerInfo(user);
-        if (validationError != null) {
-            XDialog.alert(validationError);
+        // Validate thông tin cơ bản (không bao gồm mật khẩu)
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            XDialog.alert("Username không được để trống!");
+            return;
+        }
+        
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+            XDialog.alert("Họ tên không được để trống!");
+            return;
+        }
+        
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            XDialog.alert("Email không được để trống!");
             return;
         }
         
         try {
-            // Kiểm tra username và email trùng lặp (trừ user hiện tại)
+            // Lấy thông tin user hiện tại từ database
             User existingUser = userDAO.selectById(user.getUserId());
             if (existingUser == null) {
                 XDialog.alert("Không tìm thấy khách hàng!");
                 return;
             }
             
+            // Kiểm tra username và email trùng lặp (trừ user hiện tại)
             if (!existingUser.getUsername().equals(user.getUsername()) && checkUsernameExists(user.getUsername())) {
                 XDialog.alert("Username đã tồn tại! Vui lòng sử dụng username khác.");
                 return;
@@ -1009,14 +1064,12 @@ clear();        // TODO add your handling code here:
                 return;
             }
             
-            // Nếu mật khẩu thay đổi thì hash lại
-            if (!existingUser.getPasswordHash().equals(user.getPasswordHash())) {
-                user.setPasswordHash(hashPassword(user.getPasswordHash()));
-            }
+            // Không cần set mật khẩu khi update thông tin
             
             userDAO.update(user);
             loadCustomers();
             fillToTable();
+            XDialog.alert("Cập nhật thông tin khách hàng thành công!");
         } catch (Exception e) {
             XDialog.alert("Lỗi khi cập nhật khách hàng: " + e.getMessage());
         }
@@ -1051,7 +1104,6 @@ clear();        // TODO add your handling code here:
         jTextField3.setText("");
         jTextField6.setText("");
         jTextField5.setText("");
-        jTextField11.setText("");
         jComboBox1.setSelectedItem("Hoạt Động");
         setEditable(true);
         currentRow = -1;
@@ -1066,7 +1118,6 @@ clear();        // TODO add your handling code here:
         jTextField3.setEnabled(editable);
         jTextField6.setEnabled(editable);
         jTextField5.setEnabled(editable);
-        jTextField11.setEnabled(editable);
         jComboBox1.setEnabled(editable);
     }
 
@@ -1113,28 +1164,7 @@ clear();        // TODO add your handling code here:
         }
     }
     
-    // Event handlers for buttons
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // Đặt lại mật khẩu
-        if (currentRow >= 0 && currentRow < customerList.size()) {
-            User selectedCustomer = customerList.get(currentRow);
-            String newPassword = jTextField11.getText().trim();
-            
-            if (newPassword.isEmpty()) {
-                XDialog.alert("Vui lòng nhập mật khẩu mới!");
-                return;
-            }
-            
-            try {
-                resetCustomerPassword(selectedCustomer.getUserId(), newPassword);
-                jTextField11.setText("");
-            } catch (Exception e) {
-                XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
-            }
-        } else {
-            XDialog.alert("Vui lòng chọn một khách hàng để đặt lại mật khẩu!");
-        }
-    }
+
     
 
     

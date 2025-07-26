@@ -44,7 +44,7 @@ public class GioHangJDialog extends javax.swing.JDialog {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Sản Phẩm", "Số Lượng", "Giá", "Tổng Cộng"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -57,7 +57,7 @@ public class GioHangJDialog extends javax.swing.JDialog {
 
         jButton2.setText("Xoá khỏi giỏ");
 
-        jButton3.setText("Tạm tính tổng tiền");
+        jButton3.setText("Thanh Toán");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

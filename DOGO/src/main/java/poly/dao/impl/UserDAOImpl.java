@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class UserDAOImpl implements UserDAO {
     private final String INSERT_SQL = "INSERT INTO Users (Username, PasswordHash, FullName, Phone, Address, Email, Role, IsActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE Users SET PasswordHash=?, FullName=?, Phone=?, Address=?, Email=?, Role=?, IsActive=? WHERE UserID=?";
+    private final String UPDATE_SQL = "UPDATE Users SET FullName=?, Phone=?, Address=?, Email=?, Role=?, IsActive=? WHERE UserID=?";
     private final String DELETE_SQL = "DELETE FROM Users WHERE UserID=?";
     private final String SELECT_ALL_SQL = "SELECT * FROM Users";
     private final String SELECT_BY_ID_SQL = "SELECT * FROM Users WHERE UserID=?";
@@ -24,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void update(User user) {
-        XJdbc.executeUpdate(UPDATE_SQL, user.getPasswordHash(), user.getFullName(), user.getPhone(), user.getAddress(), user.getEmail(), user.getRole(), user.getIsActive(), user.getUserId());
+        XJdbc.executeUpdate(UPDATE_SQL, user.getFullName(), user.getPhone(), user.getAddress(), user.getEmail(), user.getRole(), user.getIsActive(), user.getUserId());
     }
 
     @Override
