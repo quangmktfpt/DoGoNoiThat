@@ -5,6 +5,7 @@
 package poly.ui;
 
 import poly.ui.manager.Doimatkhaudialog;
+import poly.controller.KhachJFrameController;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,12 +16,17 @@ import java.awt.event.MouseEvent;
  */
 public class KhachJFrame extends javax.swing.JFrame {
    
+    private KhachJFrameController controller;
 
     /**
      * Creates new form KhachJFrame
      */
     public KhachJFrame() {
         initComponents();
+        
+        // Khởi tạo controller
+        controller = new KhachJFrameController(this);
+        
         addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
@@ -221,10 +227,8 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // Mở màn hình thanh toán
-        poly.ui.DatHangJDialog datHang = new poly.ui.DatHangJDialog(this, true);
-        datHang.setLocationRelativeTo(this);
-        datHang.setVisible(true);
+        // Mở màn hình thanh toán thông qua controller
+        controller.openThanhToan();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -235,10 +239,8 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // Mở màn hình hồ sơ
-        poly.ui.HoSoJDialog hoSo = new poly.ui.HoSoJDialog(this, true);
-        hoSo.setLocationRelativeTo(this);
-        hoSo.setVisible(true);
+        // Mở màn hình hồ sơ thông qua controller
+        controller.openHoSo();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -247,10 +249,8 @@ public class KhachJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // Mở màn hình hỗ trợ
-        poly.ui.HoTroJDialog hoTro = new poly.ui.HoTroJDialog(this, true);
-        hoTro.setLocationRelativeTo(this);
-        hoTro.setVisible(true);
+        // Mở màn hình hỗ trợ thông qua controller
+        controller.openHoTro();
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {

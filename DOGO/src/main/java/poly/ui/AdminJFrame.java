@@ -6,6 +6,7 @@ package poly.ui;
 
 import java.awt.CardLayout;
 import poly.ui.manager.Doimatkhaudialog;
+import poly.controller.AdminJFrameController;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,12 +17,18 @@ import java.awt.event.MouseEvent;
  */
 public class AdminJFrame extends javax.swing.JFrame {
 
+    private AdminJFrameController controller;
+
     /**
      * Creates new form AdminJFrame
      */
     public AdminJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        // Khởi tạo controller
+        controller = new AdminJFrameController(this);
+        
         // Thêm hiệu ứng hover cho màu chữ các nút
         addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
@@ -266,10 +273,8 @@ public class AdminJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // Mở màn hình phân quyền
-        poly.ui.manager.PhanQuyen_nghia phanQuyen = new poly.ui.manager.PhanQuyen_nghia(this, true);
-        phanQuyen.setLocationRelativeTo(this);
-        phanQuyen.setVisible(true);
+        // Mở màn hình phân quyền thông qua controller
+        controller.openPhanQuyen();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -318,17 +323,13 @@ public class AdminJFrame extends javax.swing.JFrame {
 
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // Mở màn hình cài đặt chung
-        poly.ui.manager.CaiDatChung caidat = new poly.ui.manager.CaiDatChung(this, true);
-        caidat.setLocationRelativeTo(this);
-        caidat.setVisible(true);
+        // Mở màn hình cài đặt chung thông qua controller
+        controller.openCaiDatChung();
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // Mở màn hình quản lý nhà cung cấp
-        poly.ui.manager.QLNhaCungCap1 qlncc = new poly.ui.manager.QLNhaCungCap1(this, true);
-        qlncc.setLocationRelativeTo(this);
-        qlncc.setVisible(true);
+        // Mở màn hình quản lý nhà cung cấp thông qua controller
+        controller.openQLNhaCungCap();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
@@ -339,10 +340,8 @@ public class AdminJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // Mở màn hình mã giảm giá
-        poly.ui.manager.MaGiamGia1 magiamgia = new poly.ui.manager.MaGiamGia1(this, true);
-        magiamgia.setLocationRelativeTo(this);
-        magiamgia.setVisible(true);
+        // Mở màn hình mã giảm giá thông qua controller
+        controller.openMaGiamGia();
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
