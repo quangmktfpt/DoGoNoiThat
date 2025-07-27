@@ -30,6 +30,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         controller = new AdminJFrameController(this);
         
         // Thêm hiệu ứng hover cho màu chữ các nút
+        addHoverTextEffect(jButton2); // Nút đăng xuất
         addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
@@ -41,6 +42,9 @@ public class AdminJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton11);
         addHoverTextEffect(jButton12);
         addHoverTextEffect(jButton13);
+        
+        // Cấu hình nút đăng xuất
+        setupLogoutButton();
     }
 
     /**
@@ -54,6 +58,7 @@ public class AdminJFrame extends javax.swing.JFrame {
 
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         sidebarPanel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -69,18 +74,29 @@ public class AdminJFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         headerPanel.setBackground(new java.awt.Color(204, 204, 255));
-        headerPanel.setLayout(new java.awt.BorderLayout());
+        headerPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setBackground(new java.awt.Color(204, 204, 255));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 0, 51));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("FURNITURE STORE");
-        headerPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
+        headerPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 50));
 
-        getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
+        jButton2.setBackground(new java.awt.Color(204, 204, 255));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout (1) (1) (1).png"))); // NOI18N
+        jButton2.setText("Đăng xuất");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        headerPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 0, 140, 50));
+
+        getContentPane().add(headerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 70));
 
         sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
         sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
@@ -191,11 +207,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
         jButton3.setFocusPainted(false);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
         sidebarPanel.add(jButton3);
 
         jButton11.setBackground(new java.awt.Color(204, 204, 255));
@@ -242,32 +253,10 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton12);
 
-        getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(sidebarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 52, -1, 520));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
-        getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
-
-        // Tạo JMenuBar và thêm nút đăng xuất
-        jMenuBar1 = new javax.swing.JMenuBar();
-        
-        // Thêm nút đăng xuất bên phải
-        javax.swing.JButton logoutButton = new javax.swing.JButton();
-        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout.jpg")));
-        logoutButton.setToolTipText("Đăng xuất");
-        logoutButton.setBorder(null);
-        logoutButton.setContentAreaFilled(false);
-        logoutButton.setFocusPainted(false);
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
-            }
-        });
-        
-        // Thêm glue để đẩy nút logout sang phải
-        jMenuBar1.add(javax.swing.Box.createHorizontalGlue());
-        jMenuBar1.add(logoutButton);
-
-        setJMenuBar(jMenuBar1);
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(156, 62, 784, 480));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -344,7 +333,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         controller.openMaGiamGia();
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Xác nhận đăng xuất
         int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
             "Bạn có chắc chắn muốn đăng xuất?", 
@@ -360,8 +349,20 @@ public class AdminJFrame extends javax.swing.JFrame {
             loginDialog.setLocationRelativeTo(null);
             loginDialog.setVisible(true);
         }
-    }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
+
+
+    // Cấu hình nút đăng xuất
+    private void setupLogoutButton() {
+        // Đặt style cho nút đăng xuất
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setFocusPainted(false);
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        jButton2.setForeground(new Color(153, 0, 51)); // Màu đỏ đậm
+    }
+    
     // Hiệu ứng hover cho màu chữ JButton
     private void addHoverTextEffect(javax.swing.JButton button) {
         Color originalFg = button.getForeground();
@@ -419,6 +420,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -428,7 +430,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }

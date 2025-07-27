@@ -27,6 +27,8 @@ public class KhachJFrame extends javax.swing.JFrame {
         // Khởi tạo controller
         controller = new KhachJFrameController(this);
         
+        // Thêm hiệu ứng hover cho các nút
+        addHoverTextEffect(jButton2); // Nút đăng xuất
         addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
@@ -34,6 +36,9 @@ public class KhachJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton8);
         addHoverTextEffect(jButton9);
         addHoverTextEffect(jButton10);
+        
+        // Cấu hình nút đăng xuất
+        setupLogoutButton();
     }
 
     /**
@@ -48,6 +53,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         sidebarPanel = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -66,13 +72,23 @@ public class KhachJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         headerPanel.setBackground(new java.awt.Color(204, 204, 255));
-        headerPanel.setLayout(new java.awt.BorderLayout());
+        headerPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 51, 0));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("FURNITURE STORE");
-        headerPanel.add(jLabel1, java.awt.BorderLayout.CENTER);
+        headerPanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 928, 70));
+
+        jButton2.setBackground(new java.awt.Color(204, 204, 255));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout (1) (1) (1).png"))); // NOI18N
+        jButton2.setText("Đăng xuất");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        headerPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, 140, 50));
 
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -189,23 +205,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         jMenu3.setText("Edit");
         jMenuBar1.add(jMenu3);
 
-        // Thêm nút đăng xuất bên phải
-        javax.swing.JButton logoutButton = new javax.swing.JButton();
-        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout.jpg")));
-        logoutButton.setToolTipText("Đăng xuất");
-        logoutButton.setBorder(null);
-        logoutButton.setContentAreaFilled(false);
-        logoutButton.setFocusPainted(false);
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
-            }
-        });
-        
-        // Thêm glue để đẩy nút logout sang phải
-        jMenuBar1.add(javax.swing.Box.createHorizontalGlue());
-        jMenuBar1.add(logoutButton);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -253,11 +252,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         controller.openHoTro();
     }//GEN-LAST:event_jButton10ActionPerformed
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
-      
-    }
-
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Xác nhận đăng xuất
         int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
             "Bạn có chắc chắn muốn đăng xuất?", 
@@ -273,7 +268,13 @@ public class KhachJFrame extends javax.swing.JFrame {
             loginDialog.setLocationRelativeTo(null);
             loginDialog.setVisible(true);
         }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {
+      
     }
+
+
 
     // Kiểm tra và mở dialog đánh giá
     private void checkAndOpenDanhGia() {
@@ -292,9 +293,10 @@ public class KhachJFrame extends javax.swing.JFrame {
             java.util.List<poly.entity.Order> allUserOrders = orderDAO.selectByUserId(currentUserId);
             java.util.List<poly.entity.Order> receivedOrders = new java.util.ArrayList<>();
             
-            // Lọc đơn hàng có trạng thái "Đã nhận"
+            // Lọc đơn hàng có trạng thái cho phép đánh giá
             for (poly.entity.Order order : allUserOrders) {
-                if ("Đã nhận".equals(order.getOrderStatus())) {
+                String status = order.getOrderStatus();
+                if ("Đã nhận".equals(status) || "Completed".equalsIgnoreCase(status) || "Shipped".equalsIgnoreCase(status)) {
                     receivedOrders.add(order);
                 }
             }
@@ -361,15 +363,33 @@ public class KhachJFrame extends javax.swing.JFrame {
                 poly.dao.impl.ProductDAOImpl productDAO = new poly.dao.impl.ProductDAOImpl();
                 poly.entity.Product product = productDAO.selectById(detail.getProductId());
                 if (product != null && product.getProductName().equals(selectedProduct)) {
+                    // Lấy userId hiện tại
+                    Integer currentUserId = poly.util.CurrentUserUtil.getCurrentUserId();
+                    if (currentUserId == null) {
+                        javax.swing.JOptionPane.showMessageDialog(this, 
+                            "Không xác định được người dùng!", 
+                            "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     // Mở dialog đánh giá với thông tin sản phẩm thực tế
                     javax.swing.ImageIcon productImage = new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
-                    controller.openDanhGia(product.getProductName(), productImage, true);
+                    controller.openDanhGia(product.getProductId(), currentUserId, product.getProductName(), productImage, true);
                     return;
                 }
             }
         }
     }
 
+    // Cấu hình nút đăng xuất
+    private void setupLogoutButton() {
+        // Đặt style cho nút đăng xuất
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setFocusPainted(false);
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        jButton2.setForeground(new Color(153, 0, 51)); // Màu đỏ đậm
+    }
+    
     // Hiệu ứng hover cho màu chữ JButton
     private void addHoverTextEffect(javax.swing.JButton button) {
         Color originalFg = button.getForeground();
@@ -424,6 +444,7 @@ public class KhachJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;

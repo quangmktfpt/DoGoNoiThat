@@ -74,12 +74,14 @@ public class KhachJFrameController {
 
     /**
      * Mở dialog đánh giá sản phẩm
+     * @param productId mã sản phẩm
+     * @param userId mã user
      * @param tenSanPham tên sản phẩm
      * @param hinhAnh icon sản phẩm
      * @param daMua true nếu khách đã mua sản phẩm
      */
-    public void openDanhGia(String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
-        DanhGiaJDialog1 dlg = new DanhGiaJDialog1(view, tenSanPham, hinhAnh, daMua);
+    public void openDanhGia(String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
+        DanhGiaJDialog1 dlg = new DanhGiaJDialog1(view, productId, userId, tenSanPham, hinhAnh, daMua);
         dlg.setVisible(true);
     }
 } 

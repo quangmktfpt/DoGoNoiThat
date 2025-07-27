@@ -6,6 +6,8 @@ package poly.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -13,18 +15,24 @@ import java.awt.*;
  */
 public class DanhGiaJDialog1 extends javax.swing.JDialog {
     private boolean daMua;
+    private String productId;
+    private int userId;
+    private int selectedRating = 0;
 
-    public DanhGiaJDialog1(Frame parent, String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
+    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
         super(parent, "Đánh giá sản phẩm", true);
         this.daMua = daMua;
+        this.productId = productId;
+        this.userId = userId;
         initComponents();
         setupComponents(tenSanPham, hinhAnh);
+        setupStarEffects();
         setLocationRelativeTo(parent);
         pack(); // Tự động điều chỉnh theo content
-        setResizable(true);
-        // Đảm bảo dialog không quá nhỏ
-        if (getWidth() < 600) setSize(600, getHeight());
-        if (getHeight() < 400) setSize(getWidth(), 400);
+        setResizable(false); // Không cho phép resize để giữ giao diện đẹp
+        // Đảm bảo dialog có kích thước phù hợp với layout mới
+        if (getWidth() < 700) setSize(700, getHeight());
+        if (getHeight() < 500) setSize(getWidth(), 500);
     }
 
     /**
@@ -44,15 +52,24 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         starButtons3 = new javax.swing.JRadioButton();
         starButtons4 = new javax.swing.JRadioButton();
         starButtons5 = new javax.swing.JRadioButton();
+        btnGuiDanhGia = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        btnGuiDanhGia = new javax.swing.JButton();
 
         starGroup.add(starButtons1);
+        starButtons1.setText("★");
+        starButtons1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                starButtons1ActionPerformed(evt);
+            }
+        });
 
         starGroup.add(starButtons2);
+        starButtons2.setText("★★");
 
         starGroup.add(starButtons3);
+        starButtons3.setText("★★★");
         starButtons3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 starButtons3ActionPerformed(evt);
@@ -60,73 +77,97 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         });
 
         starGroup.add(starButtons4);
+        starButtons4.setText("★★★★");
 
         starGroup.add(starButtons5);
+        starButtons5.setText("★★★★★");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        btnGuiDanhGia.setText("Gửi");
+        btnGuiDanhGia.setText("Gửi đánh giá");
+        btnGuiDanhGia.setBackground(new Color(51, 153, 255));
+        btnGuiDanhGia.setForeground(Color.WHITE);
+        btnGuiDanhGia.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnGuiDanhGia.setBorderPainted(false);
+        btnGuiDanhGia.setFocusPainted(false);
         btnGuiDanhGia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuiDanhGiaActionPerformed(evt);
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bình luận", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(241, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(106, 106, 106)
+                    .addComponent(lblTenSanPham, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblHinhAnh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(93, 93, 93))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(starButtons1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(starButtons2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(starButtons3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(starButtons4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(starButtons5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(110, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnGuiDanhGia)
-                .addGap(283, 283, 283))
+                        .addComponent(starButtons5)
+                        .addGap(56, 56, 56))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnGuiDanhGia)
+                        .addGap(387, 387, 387))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(starButtons1)
-                                .addComponent(starButtons2)
-                                .addComponent(starButtons3, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(145, 145, 145)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(starButtons4)
-                            .addComponent(starButtons5))
-                        .addGap(41, 41, 41)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(43, 43, 43)
-                .addComponent(btnGuiDanhGia)
-                .addContainerGap(90, Short.MAX_VALUE))
+                            .addComponent(starButtons5)
+                            .addComponent(starButtons3)
+                            .addComponent(starButtons2)
+                            .addComponent(starButtons1))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnGuiDanhGia))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
 
         pack();
@@ -136,26 +177,56 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         // Thiết lập tên sản phẩm
         lblTenSanPham.setText(tenSanPham);
         lblTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTenSanPham.setForeground(new Color(51, 153, 255));
+        lblTenSanPham.setHorizontalAlignment(JLabel.CENTER);
         
-        // Thiết lập hình ảnh
-        lblHinhAnh.setIcon(hinhAnh);
+        // Đảm bảo tên sản phẩm có kích thước phù hợp với layout mới
+        lblTenSanPham.setPreferredSize(new Dimension(263, 30));
+        
+        // Thiết lập hình ảnh với border đẹp
+        if (hinhAnh != null) {
+            lblHinhAnh.setIcon(hinhAnh);
+        } else {
+            // Nếu không có hình, hiển thị placeholder hoặc ảnh mặc định
+            try {
+                // Thử lấy ảnh mặc định từ thư mục icon
+                ImageIcon defaultIcon = new ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
+                lblHinhAnh.setIcon(defaultIcon);
+            } catch (Exception e) {
+                // Nếu không có ảnh mặc định, hiển thị text
+                lblHinhAnh.setText("Không có hình");
+                lblHinhAnh.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+                lblHinhAnh.setForeground(Color.GRAY);
+            }
+        }
         lblHinhAnh.setHorizontalAlignment(JLabel.CENTER);
+        lblHinhAnh.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 2));
         
-        // Thiết lập text cho radio buttons (ngôi sao)
-        starButtons1.setText("★");
-        starButtons1.setActionCommand("1");
-        starButtons2.setText("★★");
-        starButtons2.setActionCommand("2");
-        starButtons3.setText("★★★");
-        starButtons3.setActionCommand("3");
-        starButtons4.setText("★★★★");
-        starButtons4.setActionCommand("4");
-        starButtons5.setText("★★★★★");
-        starButtons5.setActionCommand("5");
+        // Đảm bảo hình ảnh có kích thước phù hợp với layout mới
+        lblHinhAnh.setPreferredSize(new Dimension(256, 256));
+        
+        // Thiết lập text cho radio buttons (ngôi sao) với màu vàng
+        // Sử dụng ký tự Unicode ngôi sao đặc biệt
+        setupStarButton(starButtons1, "★", "1");
+        setupStarButton(starButtons2, "★★", "2");
+        setupStarButton(starButtons3, "★★★", "3");
+        setupStarButton(starButtons4, "★★★★", "4");
+        setupStarButton(starButtons5, "★★★★★", "5");
+        
+        // Nếu ngôi sao không hiển thị đúng, thử các ký tự Unicode khác
+        // setupStarButton(starButtons1, "⭐", "1");
+        // setupStarButton(starButtons2, "⭐⭐", "2");
+        // setupStarButton(starButtons3, "⭐⭐⭐", "3");
+        // setupStarButton(starButtons4, "⭐⭐⭐⭐", "4");
+        // setupStarButton(starButtons5, "⭐⭐⭐⭐⭐", "5");
         
         // Thiết lập text area
         jTextArea1.setLineWrap(true);
         jTextArea1.setWrapStyleWord(true);
+        jTextArea1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        
+        // Thêm placeholder text
+        setupPlaceholderText();
         
         // Chỉ cho phép đánh giá nếu đã mua
         if (!daMua) {
@@ -170,8 +241,112 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
             // Thêm thông báo
             JLabel lblThongBao = new JLabel("Chỉ khách đã mua sản phẩm mới được đánh giá!");
             lblThongBao.setForeground(Color.RED);
+            lblThongBao.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            lblThongBao.setHorizontalAlignment(JLabel.CENTER);
             getContentPane().add(lblThongBao, java.awt.BorderLayout.SOUTH);
         }
+    }
+    
+    private void setupStarButton(JRadioButton button, String text, String actionCommand) {
+        button.setText(text);
+        button.setActionCommand(actionCommand);
+        // Sử dụng font Unicode để hiển thị ngôi sao đúng
+        button.setFont(new Font("Segoe UI Symbol", Font.BOLD, 24));
+        button.setForeground(new Color(255, 193, 7)); // Màu vàng đẹp
+        button.setBackground(getContentPane().getBackground());
+        button.setFocusPainted(false);
+    }
+    
+    private void setupStarEffects() {
+        // Thêm hiệu ứng hover cho các nút sao
+        JRadioButton[] starButtons = {starButtons1, starButtons2, starButtons3, starButtons4, starButtons5};
+        
+        for (int i = 0; i < starButtons.length; i++) {
+            final int rating = i + 1;
+            final JRadioButton button = starButtons[i];
+            
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Highlight tất cả sao từ 1 đến rating hiện tại
+                    for (int j = 0; j < rating; j++) {
+                        starButtons[j].setForeground(new Color(255, 215, 0)); // Màu vàng sáng
+                    }
+                }
+                
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Trở về màu bình thường nếu chưa chọn
+                    if (selectedRating == 0) {
+                        for (JRadioButton starButton : starButtons) {
+                            starButton.setForeground(new Color(255, 193, 7));
+                        }
+                    } else {
+                        // Highlight theo rating đã chọn
+                        for (int j = 0; j < selectedRating; j++) {
+                            starButtons[j].setForeground(new Color(255, 215, 0));
+                        }
+                        for (int j = selectedRating; j < starButtons.length; j++) {
+                            starButtons[j].setForeground(new Color(255, 193, 7));
+                        }
+                    }
+                }
+            });
+            
+            // Thêm action listener để cập nhật selectedRating
+            button.addActionListener(e -> {
+                selectedRating = rating;
+                updateStarDisplay();
+            });
+        }
+    }
+    
+    private void updateStarDisplay() {
+        JRadioButton[] starButtons = {starButtons1, starButtons2, starButtons3, starButtons4, starButtons5};
+        
+        for (int i = 0; i < starButtons.length; i++) {
+            if (i < selectedRating) {
+                starButtons[i].setForeground(new Color(255, 215, 0)); // Màu vàng sáng
+            } else {
+                starButtons[i].setForeground(new Color(255, 193, 7)); // Màu vàng bình thường
+            }
+        }
+    }
+    
+    private void setupPlaceholderText() {
+        // Đặt placeholder text
+        jTextArea1.setText("Hãy chia sẻ đánh giá của bạn");
+        jTextArea1.setForeground(Color.GRAY);
+        
+        // Thêm focus listener để xử lý placeholder
+        jTextArea1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (jTextArea1.getText().equals("Hãy chia sẻ đánh giá của bạn")) {
+                    jTextArea1.setText("");
+                    jTextArea1.setForeground(Color.BLACK);
+                }
+            }
+            
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (jTextArea1.getText().trim().isEmpty()) {
+                    jTextArea1.setText("Hãy chia sẻ đánh giá của bạn");
+                    jTextArea1.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
+        // Thêm key listener để xử lý khi người dùng bắt đầu nhập
+        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if (jTextArea1.getText().equals("Hãy chia sẻ đánh giá của bạn")) {
+                    jTextArea1.setText("");
+                    jTextArea1.setForeground(Color.BLACK);
+                }
+            }
+        });
     }
 
     private void starButtons3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButtons3ActionPerformed
@@ -182,24 +357,76 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         guiDanhGia();
     }//GEN-LAST:event_btnGuiDanhGiaActionPerformed
 
+    private void starButtons1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starButtons1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_starButtons1ActionPerformed
+
     private void guiDanhGia() {
         String soSao = starGroup.getSelection() != null ? starGroup.getSelection().getActionCommand() : null;
         String binhLuan = jTextArea1.getText().trim();
+        
+        // Kiểm tra nếu bình luận là placeholder text
+        if (binhLuan.equals("Hãy chia sẻ đánh giá của bạn")) {
+            binhLuan = "";
+        }
+        
+        // Validation
         if (soSao == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn số sao!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn số sao đánh giá!", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
         if (binhLuan.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập bình luận!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập bình luận!", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // TODO: Lưu đánh giá vào database hoặc xử lý theo yêu cầu
-        JOptionPane.showMessageDialog(this, "Cảm ơn bạn đã đánh giá!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        dispose();
+        
+        if (binhLuan.length() < 10) {
+            JOptionPane.showMessageDialog(this, 
+                "Bình luận phải có ít nhất 10 ký tự!", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Xác nhận trước khi gửi
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Bạn có chắc chắn muốn gửi đánh giá này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+            
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        // Lưu đánh giá vào database
+        try {
+            String sql = "INSERT INTO ProductReviews (ProductID, UserID, Rating, Comment, ReviewDate) VALUES (?, ?, ?, ?, GETDATE())";
+            poly.util.XJdbc.executeUpdate(sql, productId, userId, Integer.parseInt(soSao), binhLuan);
+            
+            JOptionPane.showMessageDialog(this, 
+                "Cảm ơn bạn đã đánh giá sản phẩm!\nĐánh giá của bạn đã được lưu thành công.", 
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Lỗi khi lưu đánh giá: " + ex.getMessage(), 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuiDanhGia;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblHinhAnh;
@@ -245,9 +472,21 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                 tempFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 // tempFrame.setVisible(true); // Không hiện JFrame tạm
                 
-                // Test với dữ liệu mẫu
-                ImageIcon testIcon = new ImageIcon(DanhGiaJDialog1.class.getResource("/poly/icon/lounge.jpg"));
-                DanhGiaJDialog1 dialog = new DanhGiaJDialog1(tempFrame, "Sofa Gỗ Đẹp", testIcon, true);
+                // Ví dụ: productId và userId thực tế (bạn có thể lấy từ database hoặc code)
+                String productId = "PROD003"; // Sản phẩm thực tế đã đặt hàng
+                int userId = 2; // ID user thực tế đã đăng nhập
+                String tenSanPham = "Sofa Gỗ Đẹp";
+                
+                // Lấy ảnh sản phẩm từ thư mục icon (trong thực tế sẽ lấy từ database)
+                ImageIcon productImage = null;
+                try {
+                    productImage = new ImageIcon(DanhGiaJDialog1.class.getResource("/poly/icon/AnhNenGo.png"));
+                } catch (Exception e) {
+                    // Nếu không tìm thấy ảnh, để null để hiển thị ảnh mặc định
+                    productImage = null;
+                }
+                
+                DanhGiaJDialog1 dialog = new DanhGiaJDialog1(tempFrame, productId, userId, tenSanPham, productImage, true);
                 dialog.setVisible(true);
                 
                 // Đóng JFrame tạm khi dialog đóng
