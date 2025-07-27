@@ -4,18 +4,37 @@
  */
 package poly.ui;
 
+import poly.dao.OrderRequestDAO;
+import poly.dao.impl.OrderRequestDAOImpl;
+import poly.entity.OrderRequest;
+import poly.entity.OrderRequestItem;
+import poly.entity.User;
+import poly.util.CurrentUserUtil;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  *
  * @author Nghia
  */
 public class DatHangJDialog extends javax.swing.JDialog {
 
+    private OrderRequestDAO orderRequestDAO = new OrderRequestDAOImpl();
+    private OrderRequest currentOrder = new OrderRequest();
+    private List<OrderRequestItem> orderItems = new ArrayList<>();
+    private User currentUser;
+    
     /**
      * Creates new form DatHangJDialog
      */
     public DatHangJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        initializeForm();
+        setupEventHandlers();
     }
 
     /**
@@ -29,16 +48,18 @@ public class DatHangJDialog extends javax.swing.JDialog {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        jLabel15 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
         jRadioButton3 = new javax.swing.JRadioButton();
+        jLabel16 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -48,44 +69,58 @@ public class DatHangJDialog extends javax.swing.JDialog {
         jLabel11 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        Country = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        City = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("ĐẶT HÀNG");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Địa Chỉ Giao Hàng");
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setText("Số điện thoại:");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Hình Thức Thanh Toán");
+        jRadioButton3.setText("Thanh toán khi nhận hàng");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Ví điện tử");
-
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Thẻ tín dụng");
-
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setText("Tiền Mặt");
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel16.setText("Họ và tên:");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Ảnh", "Tên Sản Phẩm", "Số Lượng", "Đơn giá", "Thành Tiền"
+                "Tên Sản Phẩm", "Số Lượng", "Đơn giá", "Thành Tiền", "Thành phố", "Quốc gia", "Họ và Tên", "Số nhà", "Số điện thoại", "Thanh toán"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel17.setText("Mã giảm giá:");
+
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Tổng Tạm Tính");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 0, 51));
         jLabel5.setText("jLabel5");
+
+        jButton3.setText("Áp dụng thông tin");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Phí Vận Chuyển");
@@ -93,123 +128,204 @@ public class DatHangJDialog extends javax.swing.JDialog {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Khuyến Mãi");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 0, 0));
         jLabel8.setText("jLabel8");
 
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 0, 0));
         jLabel9.setText("jLabel9");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel10.setText("Tổng Cộng");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 0, 0));
         jLabel11.setText(".....");
 
         jButton1.setText("Quay Lại");
 
         jButton2.setText("Xác Nhận Đơn Hàng");
 
+        Country.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CountryActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setText("Số nhà:");
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel13.setText("Thông tin thanh toán:");
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setText("Thành phố:");
+
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel18.setText("ĐẶT HÀNG");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Quốc gia:");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText("Hình Thức Thanh Toán");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(184, 184, 184)
-                                .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(184, 184, 184)
-                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(262, 262, 262)
-                                .addComponent(jLabel1)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28))
-                    .addComponent(jSeparator1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
-                        .addGap(33, 33, 33))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(174, 174, 174)
-                .addComponent(jButton1)
-                .addGap(61, 61, 61)
-                .addComponent(jButton2)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(262, 262, 262)
+                .addComponent(jLabel1)
+                .addContainerGap(425, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(262, 262, 262)
+                            .addComponent(jLabel18)
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jSeparator1)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel6)
+                                .addComponent(jLabel7))
+                            .addGap(562, 562, 562)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel10)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jRadioButton3))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(City, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(Country, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel12)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel13)
+                                    .addGap(173, 173, 173)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel17)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel16)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jTextField3))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel15)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(45, 45, 45)
+                                    .addComponent(jButton3))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel11)
+                                    .addGap(146, 146, 146))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(174, 174, 174)
+                            .addComponent(jButton1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2)
+                            .addGap(99, 99, 99)))
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jRadioButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                .addContainerGap(614, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel18)
+                    .addGap(21, 21, 21)
+                    .addComponent(jLabel13)
+                    .addGap(40, 40, 40)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel14)
+                        .addComponent(City, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(Country, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel16)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel15)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(31, 31, 31)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jRadioButton3)
+                        .addComponent(jLabel17)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton3))
+                    .addGap(18, 18, 18)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel5))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel8))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel9))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(33, 33, 33)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel10)
+                        .addComponent(jLabel11))
+                    .addGap(51, 51, 51)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2))
+                    .addContainerGap()))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        if (jRadioButton3.isSelected()) {
+            currentOrder.setPaymentMethod("Thanh toán khi nhận hàng");
+        }
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void CountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CountryActionPerformed
+        updateShippingFee();
+    }//GEN-LAST:event_CountryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,12 +370,23 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> City;
+    private javax.swing.JComboBox<String> Country;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -268,12 +395,902 @@ public class DatHangJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+    
+    // Custom methods
+    private void initializeForm() {
+        // Lấy thông tin user hiện tại từ CurrentUserUtil
+        Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+        String currentUsername = CurrentUserUtil.getCurrentUsername();
+        
+        if (currentUserId != null && currentUsername != null) {
+            // Lấy thông tin đầy đủ của user từ database
+            try {
+                poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
+                currentUser = userDAO.selectById(currentUserId);
+                
+                if (currentUser != null) {
+                    // Điền thông tin vào form
+                    jTextField3.setText(currentUser.getFullName());
+                    jTextField2.setText(currentUser.getPhone());
+                    currentOrder.setUserId(currentUser.getUserId());
+                    
+                    // Nếu user có địa chỉ, điền vào trường địa chỉ
+                    if (currentUser.getAddress() != null && !currentUser.getAddress().trim().isEmpty()) {
+                        jTextField1.setText(currentUser.getAddress());
+                    }
+                } else {
+                    // Nếu không có user, điền thông tin mẫu
+                    jTextField3.setText("John Doe");
+                    jTextField2.setText("0901234567");
+                    jTextField1.setText("456 Elm Street, Townsville");
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tải thông tin người dùng: " + e.getMessage(), 
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng đăng nhập để sử dụng chức năng đặt hàng!", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        // Load cities and countries
+        loadCities();
+        loadCountries();
+        loadCoupons();
+        
+        // Initialize table
+        initializeTable();
+        
+        // Set default values
+        jRadioButton3.setSelected(true);
+        currentOrder.setPaymentMethod("Thanh toán khi nhận hàng");
+        
+        // Load data from actual cart
+        loadCartData();
+        updateTotals();
+        
+        // Tự động áp dụng mã giảm giá CP20 để demo
+        applyCoupon();
+    }
+    
+    private void setupEventHandlers() {
+        // Apply coupon button
+        jButton3.addActionListener(e -> applyCustomerInfo());
+        
+        // Confirm order button
+        jButton2.addActionListener(e -> confirmOrder());
+        
+        // Back button
+        jButton1.addActionListener(e -> dispose());
+        
+        // City selection
+        City.addActionListener(e -> updateShippingFee());
+        
+        // Country selection - cập nhật thành phố theo quốc gia
+        Country.addActionListener(e -> updateCitiesByCountry());
+        
+        // Coupon selection - hiển thị thông tin khi chọn mã giảm giá
+        jComboBox1.addActionListener(e -> {
+            String selectedCoupon = (String) jComboBox1.getSelectedItem();
+            if (selectedCoupon != null && !selectedCoupon.equals("-- Chọn mã giảm giá --")) {
+                displayCouponInfo(selectedCoupon);
+            }
+        });
+        
+        // Table selection - tính tổng tiền của sản phẩm được chọn
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                calculateSelectedProductTotal();
+            }
+        });
+        
+        // Double click để reset về tính tổng tất cả
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    // Double click để tính tổng tất cả sản phẩm
+                    updateTotals();
+                    System.out.println("✓ Double click - Tính tổng tất cả sản phẩm");
+                }
+            }
+        });
+    }
+    
+    private void loadCities() {
+        // Gọi phương thức cập nhật thành phố theo quốc gia hiện tại
+        updateCitiesByCountry();
+    }
+    
+    private void loadCountries() {
+        Country.removeAllItems();
+        // Thêm các quốc gia
+        String[] countries = {"Việt Nam", "Lào", "Campuchia", "Thái Lan", "Singapore", "Malaysia"};
+        for (String country : countries) {
+            Country.addItem(country);
+        }
+        // Mặc định chọn Việt Nam
+        Country.setSelectedItem("Việt Nam");
+    }
+    
+    private void updateCitiesByCountry() {
+        String selectedCountry = (String) Country.getSelectedItem();
+        if (selectedCountry == null) return;
+        
+        City.removeAllItems();
+        
+        switch (selectedCountry) {
+            case "Việt Nam":
+                String[] vietnamCities = {"Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ", "Nha Trang", "Huế", "Vũng Tàu", "Đà Lạt", "Quy Nhơn", "Hạ Long", "Phú Quốc"};
+                for (String city : vietnamCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Hà Nội");
+                break;
+                
+            case "Lào":
+                String[] laosCities = {"Vientiane", "Luang Prabang", "Savannakhet", "Pakse", "Thakhek", "Oudomxay"};
+                for (String city : laosCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Vientiane");
+                break;
+                
+            case "Campuchia":
+                String[] cambodiaCities = {"Phnom Penh", "Siem Reap", "Battambang", "Sihanoukville", "Kampot", "Kep"};
+                for (String city : cambodiaCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Phnom Penh");
+                break;
+                
+            case "Thái Lan":
+                String[] thailandCities = {"Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Krabi", "Ayutthaya", "Hua Hin", "Koh Samui"};
+                for (String city : thailandCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Bangkok");
+                break;
+                
+            case "Singapore":
+                String[] singaporeCities = {"Singapore"};
+                for (String city : singaporeCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Singapore");
+                break;
+                
+            case "Malaysia":
+                String[] malaysiaCities = {"Kuala Lumpur", "Penang", "Malacca", "Johor Bahru", "Kuching", "Kota Kinabalu", "Ipoh", "Alor Setar"};
+                for (String city : malaysiaCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Kuala Lumpur");
+                break;
+                
+            default:
+                // Fallback
+                String[] defaultCities = {"Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng"};
+                for (String city : defaultCities) {
+                    City.addItem(city);
+                }
+                City.setSelectedItem("Hà Nội");
+                break;
+        }
+        
+        // Cập nhật phí vận chuyển sau khi thay đổi thành phố
+        updateShippingFee();
+        
+        // Hiển thị thông tin trong console
+        System.out.println("✓ Đã cập nhật thành phố theo quốc gia:");
+        System.out.println("  - Quốc gia: " + selectedCountry);
+        System.out.println("  - Thành phố được chọn: " + City.getSelectedItem());
+        System.out.println("  - Số thành phố có sẵn: " + City.getItemCount());
+    }
+    
+    private void loadCoupons() {
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("-- Chọn mã giảm giá --");
+        
+        try {
+            // Lấy mã giảm giá từ database Storedogo2
+            String sql = "SELECT CouponID, Description, DiscountType, DiscountValue FROM Coupons WHERE GETDATE() BETWEEN StartDate AND EndDate ORDER BY CouponID";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql);
+            
+            while (rs.next()) {
+                String couponId = rs.getString("CouponID");
+                String description = rs.getString("Description");
+                String discountType = rs.getString("DiscountType");
+                BigDecimal discountValue = rs.getBigDecimal("DiscountValue");
+                
+                // Tạo mô tả chi tiết
+                String displayText = couponId + " - " + description;
+                if ("Percent".equals(discountType)) {
+                    displayText += " (" + discountValue + "%)";
+                } else {
+                    displayText += " (" + formatCurrency(discountValue) + ")";
+                }
+                
+                jComboBox1.addItem(displayText);
+            }
+            
+            System.out.println("✓ Đã load " + (jComboBox1.getItemCount() - 1) + " mã giảm giá từ database Storedogo2");
+            
+        } catch (Exception e) {
+            System.err.println("✗ Lỗi khi load mã giảm giá từ database: " + e.getMessage());
+            
+            // Fallback: sử dụng mã giảm giá mẫu
+            String[] coupons = {"CP10 - 10% off on all items (10%)", "CP50 - 50 VND off orders over 500 (50 ₫)"};
+            for (String coupon : coupons) {
+                jComboBox1.addItem(coupon);
+            }
+        }
+        
+        // Tự động chọn CP10 để demo và hiển thị mô tả
+        if (jComboBox1.getItemCount() > 1) {
+            jComboBox1.setSelectedIndex(1); // Chọn item đầu tiên sau "-- Chọn mã giảm giá --"
+            
+            // Hiển thị thông tin mã giảm giá đã chọn
+            String selectedCoupon = (String) jComboBox1.getSelectedItem();
+            if (selectedCoupon != null && !selectedCoupon.equals("-- Chọn mã giảm giá --")) {
+                displayCouponInfo(selectedCoupon);
+            }
+        }
+    }
+    
+    private void initializeTable() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Tên Sản Phẩm");
+        model.addColumn("Số Lượng");
+        model.addColumn("Đơn giá");
+        model.addColumn("Thành Tiền");
+        model.addColumn("Thành phố");
+        model.addColumn("Quốc gia");
+        model.addColumn("Họ và Tên");
+        model.addColumn("Số nhà");
+        model.addColumn("Số điện thoại");
+        model.addColumn("Thanh toán");
+        
+        jTable1.setModel(model);
+    }
+    
+    private void loadCartData() {
+        orderItems.clear();
+        
+        // Lấy thông tin từ form
+        String customerName = jTextField3.getText();
+        String address = jTextField1.getText();
+        String phone = jTextField2.getText();
+        String paymentMethod = "Thanh toán khi nhận hàng";
+        
+        // Nếu chưa có thông tin user, sử dụng thông tin mặc định
+        if (customerName == null || customerName.trim().isEmpty()) {
+            customerName = "Khách hàng";
+        }
+        if (address == null || address.trim().isEmpty()) {
+            address = "Chưa có địa chỉ";
+        }
+        if (phone == null || phone.trim().isEmpty()) {
+            phone = "Chưa có số điện thoại";
+        }
+        
+        // Load dữ liệu từ giỏ hàng thực tế
+        if (currentUser != null) {
+            try {
+                poly.dao.ShoppingCartDAO cartDAO = new poly.dao.impl.ShoppingCartDAOImpl();
+                poly.entity.ShoppingCart cart = cartDAO.findByUserId(currentUser.getUserId());
+                
+                if (cart != null) {
+                    List<poly.entity.CartItem> cartItems = cartDAO.findCartItemsByCartId(cart.getCartId());
+                    poly.dao.ProductDAO productDAO = new poly.dao.impl.ProductDAOImpl();
+                    
+                                        for (poly.entity.CartItem cartItem : cartItems) {
+                        if (cartItem != null && cartItem.getProductId() != null) {
+                            poly.entity.Product product = productDAO.selectById(cartItem.getProductId());
+                            if (product != null) {
+                                // Debug: In thông tin sản phẩm từ database Storedogo2
+                                System.out.println("✓ Loading from DB Storedogo2: " + product.getProductId() + 
+                                    " - " + product.getProductName() + 
+                                    " - Price: " + formatCurrency(product.getUnitPrice()) + 
+                                    " - Quantity: " + cartItem.getQuantity());
+                                
+                                OrderRequestItem orderItem = new OrderRequestItem();
+                                orderItem.setProductId(product.getProductId()); // Thêm ProductID
+                                orderItem.setProductName(product.getProductName());
+                                orderItem.setQuantity(cartItem.getQuantity());
+                                orderItem.setUnitPrice(product.getUnitPrice());
+                                orderItem.calculateTotalPrice();
+                                orderItem.setCity((String) City.getSelectedItem()); // Lấy từ form
+                                orderItem.setCountry((String) Country.getSelectedItem()); // Lấy từ form
+                                orderItem.setCustomerName(customerName);
+                                orderItem.setAddress(address);
+                                orderItem.setPhone(phone);
+                                orderItem.setPaymentMethod(paymentMethod);
+                                orderItems.add(orderItem);
+                                
+                                // Debug: In thông tin order item
+                                System.out.println("✓ Created order item: " + orderItem.getProductName() + 
+                                    " - Total: " + formatCurrency(orderItem.getTotalPrice()));
+                            } else {
+                                System.err.println("✗ Không tìm thấy sản phẩm với ID: " + cartItem.getProductId() + " trong database Storedogo2");
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tải dữ liệu giỏ hàng: " + e.getMessage(), 
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        // Nếu không có dữ liệu từ giỏ hàng, load dữ liệu mẫu để demo
+        if (orderItems.isEmpty()) {
+            loadSampleData();
+        }
+        
+        updateTable();
+    }
+    
+    private void updateTable() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        for (OrderRequestItem item : orderItems) {
+            model.addRow(new Object[]{
+                item.getProductName() != null ? item.getProductName() : "N/A",
+                item.getQuantity() != null ? item.getQuantity() : 0,
+                formatCurrency(item.getUnitPrice()),
+                formatCurrency(item.getTotalPrice()),
+                item.getCity() != null ? item.getCity() : "N/A",
+                item.getCountry() != null ? item.getCountry() : "N/A",
+                item.getCustomerName() != null ? item.getCustomerName() : "N/A",
+                item.getAddress() != null ? item.getAddress() : "N/A",
+                item.getPhone() != null ? item.getPhone() : "N/A",
+                item.getPaymentMethod() != null ? item.getPaymentMethod() : "N/A"
+            });
+        }
+        
+        // Hiển thị thông tin trong console
+        System.out.println("✓ Bảng đã được cập nhật:");
+        for (OrderRequestItem item : orderItems) {
+            String customerInfo = "Chưa cập nhật";
+            if (item.getCustomerName() != null && !item.getCustomerName().equals("N/A")) {
+                customerInfo = item.getCustomerName() + " - " + item.getPhone() + " - " + 
+                    item.getAddress() + ", " + item.getCity() + ", " + item.getCountry();
+            }
+            System.out.println("  - " + item.getProductName() + ": " + customerInfo);
+        }
+    }
+    
+    private void updateTotals() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (OrderRequestItem item : orderItems) {
+            if (item.getTotalPrice() != null) {
+                subtotal = subtotal.add(item.getTotalPrice());
+            }
+        }
+        
+        currentOrder.setSubtotal(subtotal);
+        jLabel5.setText(formatCurrency(subtotal));
+        
+        // Hiển thị thông tin trong console
+        System.out.println("✓ Tính tổng tất cả sản phẩm:");
+        System.out.println("  - Tổng tạm tính: " + formatCurrency(subtotal));
+        System.out.println("  - Số sản phẩm: " + orderItems.size());
+        
+        updateShippingFee();
+    }
+    
+    private void updateShippingFee() {
+        String selectedCity = (String) City.getSelectedItem();
+        String selectedCountry = (String) Country.getSelectedItem();
+        
+        if (selectedCity != null && selectedCountry != null) {
+            BigDecimal shippingFee = calculateShippingFee(selectedCity, selectedCountry);
+            currentOrder.setShippingFee(shippingFee);
+            jLabel8.setText(formatCurrency(shippingFee));
+            
+            updateTotalAmount();
+        }
+    }
+    
+    private BigDecimal calculateShippingFee(String city, String country) {
+        // Tính phí vận chuyển dựa trên thành phố và quốc gia
+        if ("Việt Nam".equals(country)) {
+            if ("Hà Nội".equals(city) || "TP. Hồ Chí Minh".equals(city)) {
+                return new BigDecimal("15000"); // 15,000 ₫ cho Hà Nội và TP.HCM
+            } else {
+                return new BigDecimal("25000"); // 25,000 ₫ cho các tỉnh khác
+            }
+        } else if ("Lào".equals(country) || "Campuchia".equals(country)) {
+            return new BigDecimal("80000"); // 80,000 ₫ cho Lào và Campuchia
+        } else if ("Thái Lan".equals(country)) {
+            return new BigDecimal("120000"); // 120,000 ₫ cho Thái Lan
+        } else if ("Singapore".equals(country)) {
+            return new BigDecimal("150000"); // 150,000 ₫ cho Singapore
+        } else if ("Malaysia".equals(country)) {
+            return new BigDecimal("130000"); // 130,000 ₫ cho Malaysia
+        } else {
+            return new BigDecimal("200000"); // 200,000 ₫ cho các quốc gia khác
+        }
+    }
+    
+    private void updateTotalAmount() {
+        BigDecimal total = currentOrder.getSubtotal();
+        if (total == null) {
+            total = BigDecimal.ZERO;
+        }
+        
+        if (currentOrder.getShippingFee() != null) {
+            total = total.add(currentOrder.getShippingFee());
+        }
+        if (currentOrder.getDiscount() != null) {
+            total = total.subtract(currentOrder.getDiscount());
+        }
+        
+        currentOrder.setTotalAmount(total);
+        jLabel11.setText(formatCurrency(total));
+    }
+    
+    private void applyCustomerInfo() {
+        // Kiểm tra có sản phẩm nào được chọn không
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow < 0 || selectedRow >= orderItems.size()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm trong bảng để cập nhật thông tin!");
+            return;
+        }
+        
+        // Lấy thông tin từ form
+        String customerName = jTextField3.getText().trim();
+        String phone = jTextField2.getText().trim();
+        String address = jTextField1.getText().trim();
+        String city = (String) City.getSelectedItem();
+        String country = (String) Country.getSelectedItem();
+        
+        // Validate thông tin
+        if (customerName.isEmpty() || phone.isEmpty() || address.isEmpty() || city == null || country == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin khách hàng!");
+            return;
+        }
+        
+        // Chỉ cập nhật thông tin cho sản phẩm được chọn
+        OrderRequestItem selectedItem = orderItems.get(selectedRow);
+        selectedItem.setCustomerName(customerName);
+        selectedItem.setPhone(phone);
+        selectedItem.setAddress(address);
+        selectedItem.setCity(city);
+        selectedItem.setCountry(country);
+        
+        // Cập nhật bảng
+        updateTable();
+        
+        // Hiển thị thông báo thành công
+        System.out.println("✓ Áp dụng thông tin khách hàng thành công!");
+        System.out.println("  - Sản phẩm được chọn: " + selectedItem.getProductName());
+        System.out.println("  - Họ và tên: " + customerName);
+        System.out.println("  - Số điện thoại: " + phone);
+        System.out.println("  - Địa chỉ: " + address);
+        System.out.println("  - Thành phố: " + city);
+        System.out.println("  - Quốc gia: " + country);
+        
+        JOptionPane.showMessageDialog(this, 
+            "Áp dụng thông tin khách hàng thành công!\n" +
+            "Đã cập nhật cho sản phẩm: " + selectedItem.getProductName(),
+            "Thành công", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void applyCoupon() {
+        String selectedCoupon = (String) jComboBox1.getSelectedItem();
+        if (selectedCoupon != null && !selectedCoupon.equals("-- Chọn mã giảm giá --")) {
+            // Trích xuất CouponID từ text hiển thị (ví dụ: "CP10 - 10% off on all items (10%)" -> "CP10")
+            String couponId = selectedCoupon.split(" - ")[0];
+            
+            try {
+                // Lấy thông tin mã giảm giá từ database
+                String sql = "SELECT DiscountType, DiscountValue, Description FROM Coupons WHERE CouponID = ? AND GETDATE() BETWEEN StartDate AND EndDate";
+                java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, couponId);
+                
+                if (rs.next()) {
+                    String discountType = rs.getString("DiscountType");
+                    BigDecimal discountValue = rs.getBigDecimal("DiscountValue");
+                    String description = rs.getString("Description");
+                    
+                    // Tính toán giảm giá
+                    BigDecimal discount = BigDecimal.ZERO;
+                    if ("Percent".equals(discountType)) {
+                        discount = currentOrder.getSubtotal().multiply(discountValue).divide(new BigDecimal("100"));
+                    } else {
+                        discount = discountValue;
+                    }
+                    
+                    currentOrder.setDiscount(discount);
+                    currentOrder.setCouponId(couponId);
+                    jLabel9.setText(formatCurrency(discount));
+                    
+                    updateTotalAmount();
+                    
+                    // Hiển thị thông báo thành công trong console
+                    System.out.println("✓ Áp dụng mã giảm giá thành công!");
+                    System.out.println("  - Mã: " + couponId);
+                    System.out.println("  - Mô tả: " + description);
+                    System.out.println("  - Giảm giá: " + formatCurrency(discount));
+                    System.out.println("  - Tổng cộng sau giảm giá: " + formatCurrency(currentOrder.getTotalAmount()));
+                        
+                } else {
+                    JOptionPane.showMessageDialog(this, "Mã giảm giá không hợp lệ hoặc đã hết hạn!");
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Lỗi khi áp dụng mã giảm giá: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Lỗi khi áp dụng mã giảm giá!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn mã giảm giá!");
+        }
+    }
+    
+    private BigDecimal calculateDiscount(String couponId, BigDecimal subtotal) {
+        if (couponId == null || couponId.trim().isEmpty() || subtotal == null) {
+            return BigDecimal.ZERO;
+        }
+        
+        try {
+            // Lấy thông tin mã giảm giá từ database
+            String sql = "SELECT DiscountType, DiscountValue FROM Coupons WHERE CouponID = ? AND GETDATE() BETWEEN StartDate AND EndDate";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, couponId);
+            
+            if (rs.next()) {
+                String discountType = rs.getString("DiscountType");
+                BigDecimal discountValue = rs.getBigDecimal("DiscountValue");
+                
+                if ("Percent".equals(discountType)) {
+                    return subtotal.multiply(discountValue).divide(new BigDecimal("100"));
+                } else {
+                    return discountValue;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi tính giảm giá cho mã " + couponId + ": " + e.getMessage());
+        }
+        
+        return BigDecimal.ZERO;
+    }
+    
+    private void confirmOrder() {
+        // Validate form
+        if (!validateForm()) {
+            return;
+        }
+        
+        // Update order information
+        updateOrderFromForm();
+        
+        // Hiển thị thông tin đơn hàng
+        StringBuilder orderInfo = new StringBuilder();
+        orderInfo.append("=== THÔNG TIN ĐƠN HÀNG ===\n");
+        orderInfo.append("Khách hàng: ").append(currentOrder.getCustomerName()).append("\n");
+        orderInfo.append("Số điện thoại: ").append(currentOrder.getPhone()).append("\n");
+        orderInfo.append("Địa chỉ: ").append(currentOrder.getAddress()).append("\n");
+        orderInfo.append("Thành phố: ").append(currentOrder.getCity()).append("\n");
+        orderInfo.append("Quốc gia: ").append(currentOrder.getCountry()).append("\n");
+        orderInfo.append("Phương thức thanh toán: ").append(currentOrder.getPaymentMethod()).append("\n");
+        orderInfo.append("Tổng tiền: ").append(formatCurrency(currentOrder.getTotalAmount())).append("\n");
+        orderInfo.append("Số sản phẩm: ").append(orderItems.size()).append("\n\n");
+        
+        orderInfo.append("=== CHI TIẾT SẢN PHẨM ===\n");
+        for (OrderRequestItem item : orderItems) {
+            orderInfo.append("- ").append(item.getProductName())
+                    .append(" (x").append(item.getQuantity()).append("): ")
+                    .append(formatCurrency(item.getTotalPrice())).append("\n");
+        }
+        
+        int choice = JOptionPane.showConfirmDialog(this, 
+            orderInfo.toString(), 
+            "Xác nhận đơn hàng", 
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.INFORMATION_MESSAGE);
+            
+        if (choice == JOptionPane.OK_OPTION) {
+            // Process order
+            try {
+                orderRequestDAO.insert(currentOrder);
+                JOptionPane.showMessageDialog(this, 
+                    "Đặt hàng thành công!\nMã đơn hàng: " + currentOrder.getOrderId() + 
+                    "\nTổng tiền: " + formatCurrency(currentOrder.getTotalAmount()),
+                    "Thành công", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, 
+                    "Có lỗi xảy ra khi đặt hàng!\nVui lòng thử lại.\nLỗi: " + e.getMessage(),
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private boolean validateForm() {
+        if (jTextField3.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập họ và tên!");
+            return false;
+        }
+        
+        if (jTextField2.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại!");
+            return false;
+        }
+        
+        if (jTextField1.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ!");
+            return false;
+        }
+        
+        if (City.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn thành phố!");
+            return false;
+        }
+        
+        if (Country.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn quốc gia!");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void updateOrderFromForm() {
+        currentOrder.setCustomerName(jTextField3.getText().trim());
+        currentOrder.setPhone(jTextField2.getText().trim());
+        currentOrder.setAddress(jTextField1.getText().trim());
+        currentOrder.setCity((String) City.getSelectedItem());
+        currentOrder.setCountry((String) Country.getSelectedItem());
+        
+        // Cập nhật thông tin địa chỉ cho các item
+        String selectedCity = (String) City.getSelectedItem();
+        String selectedCountry = (String) Country.getSelectedItem();
+        
+        for (OrderRequestItem item : orderItems) {
+            item.setCustomerName(currentOrder.getCustomerName());
+            item.setPhone(currentOrder.getPhone());
+            item.setAddress(currentOrder.getAddress());
+            if (selectedCity != null) item.setCity(selectedCity);
+            if (selectedCountry != null) item.setCountry(selectedCountry);
+        }
+        
+        currentOrder.setItems(orderItems);
+    }
+    
+    private String formatCurrency(BigDecimal amount) {
+        if (amount == null) return "0 ₫";
+        try {
+            return String.format("%,.2f ₫", amount);
+        } catch (Exception e) {
+            return "0 ₫";
+        }
+    }
+    
+    private void displayCouponInfo(String selectedCoupon) {
+        try {
+            // Trích xuất CouponID từ text hiển thị
+            String couponId = selectedCoupon.split(" - ")[0];
+            
+            // Lấy thông tin mã giảm giá từ database
+            String sql = "SELECT Description, DiscountType, DiscountValue FROM Coupons WHERE CouponID = ? AND GETDATE() BETWEEN StartDate AND EndDate";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, couponId);
+            
+            if (rs.next()) {
+                String description = rs.getString("Description");
+                String discountType = rs.getString("DiscountType");
+                BigDecimal discountValue = rs.getBigDecimal("DiscountValue");
+                
+                // Tính toán giảm giá dự kiến
+                BigDecimal expectedDiscount = BigDecimal.ZERO;
+                if (currentOrder.getSubtotal() != null) {
+                    if ("Percent".equals(discountType)) {
+                        expectedDiscount = currentOrder.getSubtotal().multiply(discountValue).divide(new BigDecimal("100"));
+                    } else {
+                        expectedDiscount = discountValue;
+                    }
+                }
+                
+                // Hiển thị thông tin trong console
+                System.out.println("✓ Mã giảm giá được chọn:");
+                System.out.println("  - Mã: " + couponId);
+                System.out.println("  - Mô tả: " + description);
+                System.out.println("  - Loại: " + discountType);
+                System.out.println("  - Giá trị: " + (discountType.equals("Percent") ? discountValue + "%" : formatCurrency(discountValue)));
+                System.out.println("  - Giảm giá dự kiến: " + formatCurrency(expectedDiscount));
+                
+                // Có thể thêm tooltip hoặc label để hiển thị thông tin trên giao diện
+                String tooltipText = "Mã: " + couponId + "\n" +
+                                   "Mô tả: " + description + "\n" +
+                                   "Giảm giá: " + (discountType.equals("Percent") ? discountValue + "%" : formatCurrency(discountValue)) + "\n" +
+                                   "Dự kiến tiết kiệm: " + formatCurrency(expectedDiscount);
+                
+                jComboBox1.setToolTipText(tooltipText);
+                
+            } else {
+                System.err.println("✗ Không tìm thấy thông tin mã giảm giá: " + couponId);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("✗ Lỗi khi hiển thị thông tin mã giảm giá: " + e.getMessage());
+        }
+    }
+    
+    private void calculateSelectedProductTotal() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0 && selectedRow < orderItems.size()) {
+            OrderRequestItem selectedItem = orderItems.get(selectedRow);
+            
+            if (selectedItem != null && selectedItem.getTotalPrice() != null) {
+                // Tính tổng tiền chỉ của sản phẩm được chọn
+                BigDecimal selectedTotal = selectedItem.getTotalPrice();
+                
+                // Hiển thị vào JLabel5
+                jLabel5.setText(formatCurrency(selectedTotal));
+                
+                // Cập nhật subtotal cho order
+                currentOrder.setSubtotal(selectedTotal);
+                
+                // Hiển thị thông tin trong console
+                System.out.println("✓ Sản phẩm được chọn:");
+                System.out.println("  - Tên: " + selectedItem.getProductName());
+                System.out.println("  - Số lượng: " + selectedItem.getQuantity());
+                System.out.println("  - Đơn giá: " + formatCurrency(selectedItem.getUnitPrice()));
+                System.out.println("  - Thành tiền: " + formatCurrency(selectedTotal));
+                
+                // Cập nhật phí vận chuyển và tổng cộng
+                updateShippingFee();
+                
+            } else {
+                System.err.println("✗ Không thể tính tổng tiền cho sản phẩm được chọn");
+                jLabel5.setText("0 ₫");
+            }
+        } else {
+            // Nếu không có dòng nào được chọn, hiển thị tổng tất cả
+            updateTotals();
+        }
+    }
+    
+    private void loadSampleData() {
+        // Lấy dữ liệu từ database Storedogo2
+        String customerName = jTextField3.getText();
+        String address = jTextField1.getText();
+        String phone = jTextField2.getText();
+        String paymentMethod = "Thanh toán khi nhận hàng";
+        String selectedCity = (String) City.getSelectedItem();
+        String selectedCountry = (String) Country.getSelectedItem();
+        
+        try {
+            // Lấy sản phẩm từ database Storedogo2
+            poly.dao.ProductDAO productDAO = new poly.dao.impl.ProductDAOImpl();
+            
+            // Sản phẩm 1: PROD001 - Classic Wooden Chair (49.99)
+            poly.entity.Product product1 = productDAO.selectById("PROD001");
+            if (product1 != null) {
+                OrderRequestItem item1 = new OrderRequestItem();
+                item1.setProductId(product1.getProductId()); // Thêm ProductID
+                item1.setProductName(product1.getProductName());
+                item1.setQuantity(2);
+                item1.setUnitPrice(product1.getUnitPrice());
+                item1.calculateTotalPrice();
+                item1.setCity(selectedCity != null ? selectedCity : "Hà Nội");
+                item1.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
+                item1.setCustomerName(customerName != null ? customerName : "John Doe");
+                item1.setAddress(address != null ? address : "456 Elm Street, Townsville");
+                item1.setPhone(phone != null ? phone : "0901234567");
+                item1.setPaymentMethod(paymentMethod);
+                orderItems.add(item1);
+                
+                System.out.println("✓ Loaded from DB Storedogo2: " + product1.getProductName() + 
+                    " - Price: " + formatCurrency(product1.getUnitPrice()) + 
+                    " - Quantity: 2 - Total: " + formatCurrency(item1.getTotalPrice()));
+            } else {
+                System.err.println("✗ Không tìm thấy sản phẩm PROD001 trong database");
+            }
+            
+            // Sản phẩm 2: PROD003 - Comfort Sofa (499.99)
+            poly.entity.Product product2 = productDAO.selectById("PROD003");
+            if (product2 != null) {
+                OrderRequestItem item2 = new OrderRequestItem();
+                item2.setProductId(product2.getProductId()); // Thêm ProductID
+                item2.setProductName(product2.getProductName());
+                item2.setQuantity(1);
+                item2.setUnitPrice(product2.getUnitPrice());
+                item2.calculateTotalPrice();
+                item2.setCity(selectedCity != null ? selectedCity : "Hà Nội");
+                item2.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
+                item2.setCustomerName(customerName != null ? customerName : "John Doe");
+                item2.setAddress(address != null ? address : "456 Elm Street, Townsville");
+                item2.setPhone(phone != null ? phone : "0901234567");
+                item2.setPaymentMethod(paymentMethod);
+                orderItems.add(item2);
+                
+                System.out.println("✓ Loaded from DB Storedogo2: " + product2.getProductName() + 
+                    " - Price: " + formatCurrency(product2.getUnitPrice()) + 
+                    " - Quantity: 1 - Total: " + formatCurrency(item2.getTotalPrice()));
+            } else {
+                System.err.println("✗ Không tìm thấy sản phẩm PROD003 trong database");
+            }
+            
+            // Tính tổng để kiểm tra
+            BigDecimal totalSubtotal = BigDecimal.ZERO;
+            for (OrderRequestItem item : orderItems) {
+                if (item.getTotalPrice() != null) {
+                    totalSubtotal = totalSubtotal.add(item.getTotalPrice());
+                }
+            }
+            
+            System.out.println("✓ Đã load " + orderItems.size() + " sản phẩm từ database Storedogo2");
+            System.out.println("✓ Tổng tạm tính: " + formatCurrency(totalSubtotal));
+            
+            // Tính toán dự kiến:
+            // PROD001: 49.99 * 2 = 99.98
+            // PROD003: 499.99 * 1 = 499.99
+            // Tổng: 99.98 + 499.99 = 599.97
+            
+        } catch (Exception e) {
+            System.err.println("✗ Lỗi khi load sản phẩm từ database Storedogo2: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Fallback: sử dụng dữ liệu mẫu nếu không kết nối được database
+            loadFallbackData();
+        }
+    }
+    
+    private void loadFallbackData() {
+        // Dữ liệu fallback khi không kết nối được database
+        String customerName = jTextField3.getText();
+        String address = jTextField1.getText();
+        String phone = jTextField2.getText();
+        String paymentMethod = "Thanh toán khi nhận hàng";
+        String selectedCity = (String) City.getSelectedItem();
+        String selectedCountry = (String) Country.getSelectedItem();
+        
+        // Sản phẩm 1: Classic Wooden Chair
+        OrderRequestItem item1 = new OrderRequestItem();
+        item1.setProductId("PROD001"); // Thêm ProductID
+        item1.setProductName("Classic Wooden Chair");
+        item1.setQuantity(2);
+        item1.setUnitPrice(new BigDecimal("49.99"));
+        item1.calculateTotalPrice();
+        item1.setCity(selectedCity != null ? selectedCity : "Hà Nội");
+        item1.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
+        item1.setCustomerName(customerName != null ? customerName : "John Doe");
+        item1.setAddress(address != null ? address : "456 Elm Street, Townsville");
+        item1.setPhone(phone != null ? phone : "0901234567");
+        item1.setPaymentMethod(paymentMethod);
+        orderItems.add(item1);
+        
+        // Sản phẩm 2: Comfort Sofa
+        OrderRequestItem item2 = new OrderRequestItem();
+        item2.setProductId("PROD003"); // Thêm ProductID
+        item2.setProductName("Comfort Sofa");
+        item2.setQuantity(1);
+        item2.setUnitPrice(new BigDecimal("499.99"));
+        item2.calculateTotalPrice();
+        item2.setCity(selectedCity != null ? selectedCity : "Hà Nội");
+        item2.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
+        item2.setCustomerName(customerName != null ? customerName : "John Doe");
+        item2.setAddress(address != null ? address : "456 Elm Street, Townsville");
+        item2.setPhone(phone != null ? phone : "0901234567");
+        item2.setPaymentMethod(paymentMethod);
+        orderItems.add(item2);
+        
+        System.out.println("Đã load dữ liệu fallback với " + orderItems.size() + " sản phẩm");
+    }
 }

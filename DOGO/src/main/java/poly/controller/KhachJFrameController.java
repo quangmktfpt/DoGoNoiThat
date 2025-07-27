@@ -3,10 +3,12 @@ package poly.controller;
 import poly.ui.KhachJFrame;
 import poly.ui.DatHangJDialog;
 import poly.ui.HoSoJDialog;
+import poly.ui.HoSoJDialog1;
 import poly.ui.HoTroJDialog;
 import poly.ui.DanhGiaJDialog1;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  * Controller cho KhachJFrame
@@ -33,9 +35,32 @@ public class KhachJFrameController {
      * Mở màn hình hồ sơ
      */
     public void openHoSo() {
-        HoSoJDialog hoSo = new HoSoJDialog(view, true);
-        hoSo.setLocationRelativeTo(view);
-        hoSo.setVisible(true);
+        // Lấy username từ CurrentUserUtil hoặc từ view
+        String username = getCurrentUsername();
+        if (username != null && !username.trim().isEmpty()) {
+            HoSoJDialog1 hoSo = new HoSoJDialog1(view, true, username);
+            hoSo.setLocationRelativeTo(view);
+            hoSo.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(view, 
+                "Không thể xác định người dùng hiện tại!", 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Lấy username của người dùng hiện tại
+     */
+    private String getCurrentUsername() {
+        try {
+            // Thử lấy từ CurrentUserUtil trước
+            return poly.util.CurrentUserUtil.getCurrentUsername();
+        } catch (Exception e) {
+            // Nếu không có, có thể lấy từ view hoặc database
+            System.err.println("Không thể lấy username từ CurrentUserUtil: " + e.getMessage());
+            return null;
+        }
     }
     
     /**

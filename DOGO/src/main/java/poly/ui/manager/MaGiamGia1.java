@@ -24,7 +24,7 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         fillDiscountTypeComboBox();
         fillToTable();
-        addEventHandlers();
+       
     }
 
     /**
@@ -104,14 +104,34 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTable1);
 
         jButton6.setText("Chọn mục");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Xóa mục đã chọn");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton8.setText("Bỏ chọn mục");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Tìm kiếm:");
 
         jButton1.setText("Tìm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -173,12 +193,32 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton4.setText("Xóa");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Làm mới");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Thêm");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Cập nhật");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -288,12 +328,140 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
+        private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // Chỉ xử lý khi double-click (nhấn 2 lần)
         if (evt.getClickCount() == 2) {
-            jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab chi tiết
+            int row = jTable1.getSelectedRow();
+            if (row >= 0 && row < couponList.size()) {
+                String id = (String) jTable1.getValueAt(row, 0);
+                Coupon c = couponDAO.selectById(id);
+                if (c != null) {
+                    setForm(c);
+                    currentRow = row;
+                    
+                    // Chuyển sang tab "Chỉnh sửa" để hiển thị thông tin
+                    jTabbedPane1.setSelectedIndex(1);
+                    
+                    // Hiển thị thông báo
+                    System.out.println("Double-click: Đã chọn mã giảm giá: " + c.getCouponId() + " - " + c.getDescription());
+                    JOptionPane.showMessageDialog(this, 
+                        "Đã chọn mã giảm giá: " + c.getCouponId() + "\nMô tả: " + c.getDescription(), 
+                        "Thông tin mã giảm giá", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
         }
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        selectAllItems();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+              try {
+                Coupon c = getForm();
+                if (couponDAO.selectById(c.getCouponId()) != null) {
+                    JOptionPane.showMessageDialog(this, "CouponID đã tồn tại!");
+                    return;
+                }
+                couponDAO.insert(c);
+                fillToTable();
+                clearForm();
+                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi thêm: " + ex.getMessage());
+            }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+                Coupon c = getForm();
+                if (couponDAO.selectById(c.getCouponId()) == null) {
+                    JOptionPane.showMessageDialog(this, "CouponID không tồn tại!");
+                    return;
+                }
+                 couponDAO.update(c);
+                fillToTable();
+                clearForm();
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi cập nhật: " + ex.getMessage());
+            }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+      int row = jTable1.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(this, "Chọn dòng để xóa!");
+                return;
+            }
+            String id = (String) jTable1.getValueAt(row, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận xóa CouponID: " + id + "?", "Xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    couponDAO.delete(id);
+                    fillToTable();
+                    clearForm();
+                    JOptionPane.showMessageDialog(this, "Xóa thành công!");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Lỗi xóa: " + ex.getMessage());
+                }
+            }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+       clearForm();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        deleteSelectedItems();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+       deselectAllItems();
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String keyword = jTextField3.getText().trim().toLowerCase();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        if (keyword.isEmpty()) {
+            // Nếu từ khóa rỗng, hiển thị tất cả
+            fillToTable();
+            return;
+        }
+        
+        int foundCount = 0;
+        for (Coupon c : couponDAO.selectAll()) {
+            if (c.getCouponId().toLowerCase().contains(keyword) ||
+                (c.getDescription() != null && c.getDescription().toLowerCase().contains(keyword))) {
+                model.addRow(new Object[] {
+                    c.getCouponId(),
+                    c.getDescription(),
+                    c.getDiscountType(),
+                    c.getDiscountValue(),
+                    c.getStartDate(),
+                    c.getEndDate(),
+                    false
+                });
+                foundCount++;
+            }
+        }
+        
+        // Hiển thị kết quả tìm kiếm
+        if (foundCount > 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Tìm thấy " + foundCount + " kết quả cho từ khóa: '" + keyword + "'", 
+                "Kết quả tìm kiếm", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Không tìm thấy kết quả nào cho từ khóa: '" + keyword + "'", 
+                "Kết quả tìm kiếm", 
+                JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -420,93 +588,154 @@ private void fillDiscountTypeComboBox() {
         jTextField5.setText(c.getStartDate() != null ? c.getStartDate().toString() : "");
         jTextField6.setText(c.getEndDate() != null ? c.getEndDate().toString() : "");
     }
-        private void addEventHandlers() {
-        // Thêm
-        jButton2.addActionListener(e -> {
-            try {
-                Coupon c = getForm();
-                if (couponDAO.selectById(c.getCouponId()) != null) {
-                    JOptionPane.showMessageDialog(this, "CouponID đã tồn tại!");
-                    return;
-                }
-                couponDAO.insert(c);
-                fillToTable();
-                clearForm();
-                JOptionPane.showMessageDialog(this, "Thêm thành công!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Lỗi thêm: " + ex.getMessage());
-            }
-        });
-        // Cập nhật
-        jButton3.addActionListener(e -> {
-            try {
-                Coupon c = getForm();
-                if (couponDAO.selectById(c.getCouponId()) == null) {
-                    JOptionPane.showMessageDialog(this, "CouponID không tồn tại!");
-                    return;
-                }
-                 couponDAO.update(c);
-                fillToTable();
-                clearForm();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Lỗi cập nhật: " + ex.getMessage());
-            }
-        });
-        // Xóa
-        jButton4.addActionListener(e -> {
-            int row = jTable1.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(this, "Chọn dòng để xóa!");
+     
+        
+        /**
+         * Chọn tất cả các mục trong bảng
+         */
+        private void selectAllItems() {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            
+            if (rowCount == 0) {
+                JOptionPane.showMessageDialog(this, "Bảng không có dữ liệu để chọn!");
                 return;
             }
-            String id = (String) jTable1.getValueAt(row, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận xóa CouponID: " + id + "?", "Xóa", JOptionPane.YES_NO_OPTION);
+            
+            // Chọn tất cả các checkbox
+            for (int i = 0; i < rowCount; i++) {
+                model.setValueAt(true, i, 6); // Cột 6 là checkbox
+            }
+            
+            // Đếm số mục đã chọn
+            int selectedCount = countSelectedItems();
+            JOptionPane.showMessageDialog(this, 
+                "Đã chọn " + selectedCount + " mục!", 
+                "Thông báo", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        /**
+         * Bỏ chọn tất cả các mục trong bảng
+         */
+        private void deselectAllItems() {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            
+            if (rowCount == 0) {
+                JOptionPane.showMessageDialog(this, "Bảng không có dữ liệu!");
+                return;
+            }
+            
+            // Bỏ chọn tất cả các checkbox
+            for (int i = 0; i < rowCount; i++) {
+                model.setValueAt(false, i, 6); // Cột 6 là checkbox
+            }
+            
+            JOptionPane.showMessageDialog(this, 
+                "Đã bỏ chọn tất cả mục!", 
+                "Thông báo", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        /**
+         * Xóa các mục đã được chọn
+         */
+        private void deleteSelectedItems() {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            
+            if (rowCount == 0) {
+                JOptionPane.showMessageDialog(this, "Bảng không có dữ liệu!");
+                return;
+            }
+            
+            // Đếm số mục đã chọn
+            int selectedCount = countSelectedItems();
+            
+            if (selectedCount == 0) {
+                JOptionPane.showMessageDialog(this, "Không có mục nào được chọn để xóa!");
+                return;
+            }
+            
+            // Xác nhận xóa
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Bạn có chắc chắn muốn xóa " + selectedCount + " mục đã chọn?", 
+                "Xác nhận xóa", 
+                JOptionPane.YES_NO_OPTION);
+                
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
-                    couponDAO.delete(id);
+                    int deletedCount = 0;
+                    
+                    // Xóa từ cuối lên để tránh lỗi index
+                    for (int i = rowCount - 1; i >= 0; i--) {
+                        Boolean isSelected = (Boolean) model.getValueAt(i, 6);
+                        if (isSelected != null && isSelected) {
+                            String couponId = (String) model.getValueAt(i, 0);
+                            try {
+                                couponDAO.delete(couponId);
+                                deletedCount++;
+                            } catch (Exception ex) {
+                                System.err.println("Lỗi xóa coupon " + couponId + ": " + ex.getMessage());
+                            }
+                        }
+                    }
+                    
+                    // Refresh bảng
                     fillToTable();
                     clearForm();
-                    JOptionPane.showMessageDialog(this, "Xóa thành công!");
+                    
+                    JOptionPane.showMessageDialog(this, 
+                        "Đã xóa thành công " + deletedCount + " mục!", 
+                        "Thông báo", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                        
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi xóa: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(this, 
+                        "Lỗi khi xóa: " + ex.getMessage(), 
+                        "Lỗi", 
+                        JOptionPane.ERROR_MESSAGE);
                 }
             }
-        });
-        // Làm mới
-        jButton5.addActionListener(e -> clearForm());
-        // Tìm kiếm
-        jButton1.addActionListener(e -> {
-            String keyword = jTextField3.getText().trim().toLowerCase();
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0);
-            for (Coupon c : couponDAO.selectAll()) {
-                if (c.getCouponId().toLowerCase().contains(keyword) ||
-                    (c.getDescription() != null && c.getDescription().toLowerCase().contains(keyword))) {
-                    model.addRow(new Object[] {
-                        c.getCouponId(),
-                        c.getDescription(),
-                        c.getDiscountType(),
-                        c.getDiscountValue(),
-                        c.getStartDate(),
-                        c.getEndDate(),
-                        false
-                    });
-                }
-            }
-        });
-         // Click bảng để set form
-        jTable1.getSelectionModel().addListSelectionListener(e -> {
-            int row = jTable1.getSelectedRow();
-            if (row >= 0 && row < couponList.size()) {
-                String id = (String) jTable1.getValueAt(row, 0);
-                Coupon c = couponDAO.selectById(id);
-                if (c != null) setForm(c);
-                currentRow = row;
-            }
-        });
-    }
+        }
         
+        /**
+         * Đếm số mục đã được chọn
+         */
+        private int countSelectedItems() {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            int count = 0;
+            
+            for (int i = 0; i < rowCount; i++) {
+                Boolean isSelected = (Boolean) model.getValueAt(i, 6);
+                if (isSelected != null && isSelected) {
+                    count++;
+                }
+            }
+            
+            return count;
+        }
+        
+        /**
+         * Lấy danh sách các mục đã được chọn
+         */
+        private java.util.List<String> getSelectedCouponIds() {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            java.util.List<String> selectedIds = new java.util.ArrayList<>();
+            
+            for (int i = 0; i < rowCount; i++) {
+                Boolean isSelected = (Boolean) model.getValueAt(i, 6);
+                if (isSelected != null && isSelected) {
+                    String couponId = (String) model.getValueAt(i, 0);
+                    selectedIds.add(couponId);
+                }
+            }
+            
+            return selectedIds;
+        }
         
 
 }
