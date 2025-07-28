@@ -114,23 +114,44 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
             CartItem selectedItem = cartItems.get(selectedRow);
             String productId = selectedItem.getProductId();
             
+            // Kiểm tra số lượng tồn kho hiện tại
+            Product currentProduct = productDAO.selectById(productId);
+            if (currentProduct == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin sản phẩm!", 
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int currentStock = currentProduct.getQuantity() != null ? currentProduct.getQuantity() : 0;
+            int currentQuantity = selectedItem.getQuantity();
+            
             String quantityStr = JOptionPane.showInputDialog(this, 
-                "Nhập số lượng mới:", "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE);
+                "Nhập số lượng mới (Trong kho hiện tại: " + currentStock + "):", 
+                "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE);
             
             if (quantityStr != null && !quantityStr.trim().isEmpty()) {
                 try {
                     int newQuantity = Integer.parseInt(quantityStr.trim());
-                    if (newQuantity > 0) {
-                        // Cập nhật trực tiếp CartItem
-                        selectedItem.setQuantity(newQuantity);
-                        updateCartItem(selectedItem);
-                        loadCartData(); // Reload dữ liệu
-                        JOptionPane.showMessageDialog(this, "Cập nhật thành công!", 
-                            "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
+                    if (newQuantity <= 0) {
                         JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", 
                             "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
+                    
+                    // Kiểm tra số lượng tồn kho
+                    if (newQuantity > currentStock) {
+                        JOptionPane.showMessageDialog(this, 
+                            "Số lượng vượt quá trong kho sẵn có! (Trong kho: " + currentStock + ")", 
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    // Cập nhật trực tiếp CartItem
+                    selectedItem.setQuantity(newQuantity);
+                    updateCartItem(selectedItem);
+                    loadCartData(); // Reload dữ liệu
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công!", 
+                        "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", 
                         "Lỗi", JOptionPane.ERROR_MESSAGE);
