@@ -314,13 +314,7 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
         });
 
         // Nút thanh toán (chưa implement)
-        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JOptionPane.showMessageDialog(GioHangJDialog.this, 
-                    "Chức năng thanh toán sẽ được phát triển sau!", 
-                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+       
     }
 
     /**
@@ -373,6 +367,11 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
         btnXoa.setText("Xoá khỏi giỏ");
 
         btnThanhToan.setText("Thanh Toán");
+        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThanhToanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -420,6 +419,28 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
     private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
         edit();
     }//GEN-LAST:event_btnCapNhatActionPerformed
+
+    private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
+        // Kiểm tra đăng nhập
+        Integer userId = CurrentUserUtil.getCurrentUserId();
+        if (userId == null) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa đăng nhập! Vui lòng đăng nhập để thanh toán.", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Mở màn hình Đặt Hàng
+        try {
+            DatHangJDialog datHangDialog = new DatHangJDialog((java.awt.Frame) this.getOwner(), true);
+            datHangDialog.setVisible(true);
+            
+            // Sau khi đóng màn hình đặt hàng, reload lại giỏ hàng
+            loadCartData();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi mở màn hình đặt hàng: " + e.getMessage(), 
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnThanhToanActionPerformed
 
     /**
      * @param args the command line arguments

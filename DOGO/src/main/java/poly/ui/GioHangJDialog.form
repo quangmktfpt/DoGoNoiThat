@@ -140,6 +140,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Thanh To&#xe1;n"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThanhToanActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
