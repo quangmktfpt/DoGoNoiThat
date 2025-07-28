@@ -21,6 +21,7 @@ public class Order {
     private String orderStatus;
     private Boolean isActive;
     private Integer deliveryAddressId;
+    private String returnReason; // Thêm trường lý do đổi trả
 
     public Order() {
     }
@@ -107,5 +108,13 @@ public class Order {
 
     public void setDeliveryAddressId(Integer deliveryAddressId) {
         this.deliveryAddressId = deliveryAddressId;
+    }
+
+    public String getReturnReason() {
+        return returnReason;
+    }
+
+    public void setReturnReason(String returnReason) {
+        this.returnReason = returnReason;
     }
 }

@@ -24,6 +24,7 @@ public class OrderDAOImpl implements OrderDAO {
     private final String SELECT_BY_PAYMENT_SQL = "SELECT * FROM Orders WHERE PaymentMethod=? ORDER BY OrderDate DESC";
     private final String SEARCH_BY_KEYWORD_SQL = "SELECT * FROM Orders WHERE CAST(OrderID AS VARCHAR) LIKE ? OR CAST(UserID AS VARCHAR) LIKE ? OR PaymentMethod LIKE ? ORDER BY OrderDate DESC";
     private final String UPDATE_STATUS_SQL = "UPDATE Orders SET OrderStatus=? WHERE OrderID=?";
+    private final String UPDATE_STATUS_WITH_REASON_SQL = "UPDATE Orders SET OrderStatus=?, ReturnReason=? WHERE OrderID=?";
     private final String GET_TOTAL_REVENUE_SQL = "SELECT SUM(TotalAmount) FROM Orders WHERE OrderDate BETWEEN ? AND ? AND OrderStatus='Completed'";
     private final String GET_ORDER_COUNT_SQL = "SELECT COUNT(*) FROM Orders WHERE OrderStatus=?";
     private final String SELECT_WITH_CUSTOMER_SQL = "SELECT o.*, u.FullName, u.Phone, u.Email FROM Orders o LEFT JOIN Users u ON o.UserID = u.UserID ORDER BY o.OrderDate DESC";
@@ -104,6 +105,10 @@ public class OrderDAOImpl implements OrderDAO {
         XJdbc.executeUpdate(UPDATE_STATUS_SQL, status, orderId);
     }
 
+    public void updateOrderStatusWithReason(Integer orderId, String status, String returnReason) {
+        XJdbc.executeUpdate(UPDATE_STATUS_WITH_REASON_SQL, status, returnReason, orderId);
+    }
+
     @Override
     public BigDecimal getTotalRevenue(LocalDateTime startDate, LocalDateTime endDate) {
         try {
@@ -170,6 +175,7 @@ public class OrderDAOImpl implements OrderDAO {
                 order.setOrderStatus(rs.getString("OrderStatus"));
                 order.setIsActive(rs.getObject("IsActive") != null ? rs.getBoolean("IsActive") : null);
                 order.setDeliveryAddressId(rs.getObject("DeliveryAddressID") != null ? rs.getInt("DeliveryAddressID") : null);
+                order.setReturnReason(rs.getString("ReturnReason"));
                 list.add(order);
             }
             rs.getStatement().getConnection().close();
