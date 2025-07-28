@@ -516,6 +516,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private UserDAOImpl userDAO = new UserDAOImpl();
     private ProductDAOImpl productDAO = new ProductDAOImpl();
     private Order currentOrder = null;
+    private boolean isProcessingOrder = false; // Flag để tránh xử lý nhiều lần
 
     @Override
     public void open() {
@@ -912,6 +913,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     }
 
     private void requestReturn() {
+        if (isProcessingOrder) {
+            return; // Tránh xử lý nhiều lần
+        }
+        
         edit();
         if (currentOrder == null) {
             XDialog.alert("Vui lòng chọn đơn hàng để yêu cầu đổi trả!");
@@ -934,14 +939,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         if (returnReason != null && !returnReason.trim().isEmpty()) {
             if (XDialog.confirm("Bạn có chắc muốn yêu cầu đổi trả đơn hàng này?")) {
                 try {
-                    // Sử dụng method mới để lưu cả trạng thái và lý do
+                    isProcessingOrder = true; // Set flag
+                    
+                    // Sử dụng method mới để lưu cả trạng thái, lý do và cập nhật tồn kho
                     // Thêm prefix để admin phân biệt được
                     String reasonWithPrefix = "[ĐỔI TRẢ] " + returnReason.trim();
-                    ((OrderDAOImpl) orderDAO).updateOrderStatusWithReason(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
-                    XDialog.alert("Đã gửi yêu cầu đổi trả thành công!");
+                    orderDAO.updateOrderStatusWithReasonAndInventory(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
+                    XDialog.alert("Đã gửi yêu cầu đổi trả thành công và cập nhật tồn kho!");
                     fillToTable();
                 } catch (Exception e) {
                     XDialog.alert("Lỗi gửi yêu cầu: " + e.getMessage());
+                } finally {
+                    isProcessingOrder = false; // Reset flag
                 }
             }
         } else if (returnReason != null) {
@@ -950,6 +959,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     }
 
     private void cancelOrder() {
+        if (isProcessingOrder) {
+            return; // Tránh xử lý nhiều lần
+        }
+        
         edit();
         if (currentOrder == null) {
             XDialog.alert("Vui lòng chọn đơn hàng để huỷ!");
@@ -972,14 +985,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         if (cancelReason != null && !cancelReason.trim().isEmpty()) {
             if (XDialog.confirm("Bạn có chắc muốn huỷ đơn hàng này?")) {
                 try {
-                    // Sử dụng method mới để lưu cả trạng thái và lý do
+                    isProcessingOrder = true; // Set flag
+                    
+                    // Sử dụng method mới để lưu cả trạng thái, lý do và cập nhật tồn kho
                     // Thêm prefix để admin phân biệt được
                     String reasonWithPrefix = "[HUỶ] " + cancelReason.trim();
-                    ((OrderDAOImpl) orderDAO).updateOrderStatusWithReason(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
-                    XDialog.alert("Đã huỷ đơn hàng thành công!");
+                    orderDAO.updateOrderStatusWithReasonAndInventory(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
+                    XDialog.alert("Đã huỷ đơn hàng thành công và cập nhật tồn kho!");
                     fillToTable();
                 } catch (Exception e) {
                     XDialog.alert("Lỗi huỷ đơn hàng: " + e.getMessage());
+                } finally {
+                    isProcessingOrder = false; // Reset flag
                 }
             }
         } else if (cancelReason != null) {

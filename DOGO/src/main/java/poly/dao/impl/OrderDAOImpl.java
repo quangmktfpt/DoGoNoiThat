@@ -110,6 +110,78 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
+    public void updateOrderStatusWithReasonAndInventory(Integer orderId, String status, String returnReason) {
+        try {
+            System.out.println("=== DEBUG: Bắt đầu xử lý đơn hàng " + orderId + " ===");
+            
+            // Kiểm tra trạng thái hiện tại để tránh cập nhật nhiều lần
+            Order currentOrder = selectById(orderId);
+            if (currentOrder == null) {
+                throw new RuntimeException("Không tìm thấy đơn hàng với ID: " + orderId);
+            }
+            
+            System.out.println("DEBUG: Trạng thái hiện tại: " + currentOrder.getOrderStatus());
+            System.out.println("DEBUG: Lý do hiện tại: " + currentOrder.getReturnReason());
+            
+            // Chỉ cập nhật nếu trạng thái hiện tại chưa phải là Cancelled
+            // Và kiểm tra xem đã có lý do đổi trả/huỷ chưa để tránh xử lý nhiều lần
+            if (!"Cancelled".equals(currentOrder.getOrderStatus()) || 
+                (currentOrder.getReturnReason() == null || currentOrder.getReturnReason().trim().isEmpty())) {
+                System.out.println("DEBUG: Bắt đầu cập nhật trạng thái và tồn kho");
+                
+                // Cập nhật trạng thái đơn hàng
+                updateOrderStatusWithReason(orderId, status, returnReason);
+                
+                // Lấy chi tiết đơn hàng để cập nhật tồn kho
+                List<OrderDetail> orderDetails = getOrderDetails(orderId);
+                System.out.println("DEBUG: Số lượng sản phẩm trong đơn hàng: " + orderDetails.size());
+                
+                // Cập nhật tồn kho cho từng sản phẩm
+                for (OrderDetail detail : orderDetails) {
+                    // Debug: In ra thông tin để kiểm tra
+                    System.out.println("DEBUG: Cập nhật tồn kho - ProductID: " + detail.getProductId() + 
+                                     ", Quantity: " + detail.getQuantity() + 
+                                     ", OrderID: " + orderId);
+                    
+                    // Kiểm tra tồn kho hiện tại trước khi cập nhật
+                    String checkInventorySQL = "SELECT Quantity FROM Products WHERE ProductID = ?";
+                    java.sql.ResultSet rs = XJdbc.executeQuery(checkInventorySQL, detail.getProductId());
+                    int currentQuantity = 0;
+                    if (rs.next()) {
+                        currentQuantity = rs.getInt("Quantity");
+                    }
+                    System.out.println("DEBUG: Tồn kho hiện tại của " + detail.getProductId() + ": " + currentQuantity);
+                    
+                    String updateInventorySQL = "UPDATE Products SET Quantity = Quantity + ? WHERE ProductID = ?";
+                    XJdbc.executeUpdate(updateInventorySQL, detail.getQuantity(), detail.getProductId());
+                    
+                    // Kiểm tra tồn kho sau khi cập nhật
+                    rs = XJdbc.executeQuery(checkInventorySQL, detail.getProductId());
+                    int newQuantity = 0;
+                    if (rs.next()) {
+                        newQuantity = rs.getInt("Quantity");
+                    }
+                    System.out.println("DEBUG: Tồn kho sau khi cập nhật của " + detail.getProductId() + ": " + newQuantity);
+                    
+                    // Ghi log giao dịch tồn kho
+                    String insertTransactionSQL = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes) VALUES (?, ?, ?, ?, ?)";
+                    String transactionType = "Adjustment"; // Hoặc có thể dùng 'ReturnIn' nếu muốn
+                    String referenceID = "ORDER-" + orderId;
+                    String notes = "Hoàn trả sản phẩm từ đơn hàng " + orderId + " - " + returnReason;
+                    XJdbc.executeUpdate(insertTransactionSQL, detail.getProductId(), transactionType, detail.getQuantity(), referenceID, notes);
+                }
+                
+                System.out.println("DEBUG: Hoàn thành cập nhật đơn hàng " + orderId);
+            } else {
+                System.out.println("DEBUG: Bỏ qua cập nhật vì đơn hàng đã được xử lý");
+            }
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi cập nhật đơn hàng và tồn kho: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public BigDecimal getTotalRevenue(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             ResultSet rs = XJdbc.executeQuery(GET_TOTAL_REVENUE_SQL, startDate, endDate);
