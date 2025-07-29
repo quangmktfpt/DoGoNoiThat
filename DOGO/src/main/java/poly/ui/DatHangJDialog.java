@@ -1101,11 +1101,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 item.getQuantity() != null ? item.getQuantity() : 0,
                 formatCurrency(item.getUnitPrice()),
                 formatCurrency(item.getTotalPrice()),
-                item.getCity() != null ? item.getCity() : "N/A",
-                item.getCountry() != null ? item.getCountry() : "N/A",
-                item.getCustomerName() != null ? item.getCustomerName() : "N/A",
-                item.getAddress() != null ? item.getAddress() : "N/A",
-                item.getPhone() != null ? item.getPhone() : "N/A",
+                "", // Thành phố - để trống cho đến khi cập nhật
+                "", // Quốc gia - để trống cho đến khi cập nhật
+                "", // Họ và Tên - để trống cho đến khi cập nhật
+                "", // Số nhà - để trống cho đến khi cập nhật
+                "", // Số điện thoại - để trống cho đến khi cập nhật
                 item.getPaymentMethod() != null ? item.getPaymentMethod() : "N/A"
             });
         }
@@ -2206,11 +2206,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 item1.setQuantity(2);
                 item1.setUnitPrice(product1.getUnitPrice());
                 item1.calculateTotalPrice();
-                item1.setCity(selectedCity != null ? selectedCity : "Hà Nội");
-                item1.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
-                item1.setCustomerName(customerName != null && !customerName.trim().isEmpty() ? customerName : "");
-                item1.setAddress(address != null && !address.trim().isEmpty() ? address : "");
-                item1.setPhone(phone != null && !phone.trim().isEmpty() ? phone : "");
+                // Không set thông tin khách hàng mặc định - để trống cho đến khi cập nhật
                 item1.setPaymentMethod(paymentMethod);
                 orderItems.add(item1);
                 
@@ -2230,11 +2226,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 item2.setQuantity(1);
                 item2.setUnitPrice(product2.getUnitPrice());
                 item2.calculateTotalPrice();
-                item2.setCity(selectedCity != null ? selectedCity : "Hà Nội");
-                item2.setCountry(selectedCountry != null ? selectedCountry : "Việt Nam");
-                item2.setCustomerName(customerName != null && !customerName.trim().isEmpty() ? customerName : "");
-                item2.setAddress(address != null && !address.trim().isEmpty() ? address : "");
-                item2.setPhone(phone != null && !phone.trim().isEmpty() ? phone : "");
+                // Không set thông tin khách hàng mặc định - để trống cho đến khi cập nhật
                 item2.setPaymentMethod(paymentMethod);
                 orderItems.add(item2);
                 
