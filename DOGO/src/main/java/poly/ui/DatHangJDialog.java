@@ -1097,11 +1097,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 item.getQuantity() != null ? item.getQuantity() : 0,
                 formatCurrency(item.getUnitPrice()),
                 formatCurrency(item.getTotalPrice()),
-                "", // Thành phố - để trống cho đến khi cập nhật
-                "", // Quốc gia - để trống cho đến khi cập nhật
-                "", // Họ và Tên - để trống cho đến khi cập nhật
-                "", // Số nhà - để trống cho đến khi cập nhật
-                "", // Số điện thoại - để trống cho đến khi cập nhật
+                item.getCity() != null ? item.getCity() : "", // Thành phố
+                item.getCountry() != null ? item.getCountry() : "", // Quốc gia
+                item.getCustomerName() != null ? item.getCustomerName() : "", // Họ và Tên
+                item.getAddress() != null ? item.getAddress() : "", // Số nhà
+                item.getPhone() != null ? item.getPhone() : "", // Số điện thoại
                 item.getPaymentMethod() != null ? item.getPaymentMethod() : "N/A"
             });
         }
@@ -1457,13 +1457,6 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private void applyCustomerInfo() {
-        // Kiểm tra có sản phẩm nào được chọn không
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow < 0 || selectedRow >= orderItems.size()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm trong bảng để cập nhật thông tin!");
-            return;
-        }
-        
         // Lấy thông tin từ form
         String customerName = jTextField3.getText().trim();
         String phone = jTextField2.getText().trim();
@@ -1477,24 +1470,61 @@ public class DatHangJDialog extends javax.swing.JDialog {
             return;
         }
         
-        // Chỉ cập nhật thông tin cho sản phẩm được chọn
-        OrderRequestItem selectedItem = orderItems.get(selectedRow);
-        selectedItem.setCustomerName(customerName);
-        selectedItem.setPhone(phone);
-        selectedItem.setAddress(address);
-        selectedItem.setCity(city);
-        selectedItem.setCountry(country);
+        // Kiểm tra có dòng nào được chọn không
+        int selectedRow = jTable1.getSelectedRow();
         
-        // Cập nhật bảng
-        updateTable();
-        
-        // Áp dụng thông tin khách hàng thành công
-        
-        JOptionPane.showMessageDialog(this, 
-            "Áp dụng thông tin khách hàng thành công!\n" +
-            "Đã cập nhật cho sản phẩm: " + selectedItem.getProductName(),
-            "Thành công", 
-            JOptionPane.INFORMATION_MESSAGE);
+        if (selectedRow >= 0 && selectedRow < orderItems.size()) {
+            // Có chọn dòng → chỉ cập nhật cho sản phẩm được chọn
+            OrderRequestItem selectedItem = orderItems.get(selectedRow);
+            selectedItem.setCustomerName(customerName);
+            selectedItem.setPhone(phone);
+            selectedItem.setAddress(address);
+            selectedItem.setCity(city);
+            selectedItem.setCountry(country);
+            
+            // Cập nhật bảng
+            updateTable();
+            
+            // Áp dụng thông tin khách hàng thành công
+            JOptionPane.showMessageDialog(this, 
+                "✓ Áp dụng thông tin khách hàng thành công!\n\n" +
+                "📋 Thông tin đã cập nhật cho sản phẩm:\n" +
+                "• " + selectedItem.getProductName() + "\n" +
+                "• Họ và tên: " + customerName + "\n" +
+                "• Số điện thoại: " + phone + "\n" +
+                "• Số nhà: " + address + "\n" +
+                "• Thành phố: " + city + "\n" +
+                "• Quốc gia: " + country,
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Không chọn dòng → cập nhật cho tất cả sản phẩm
+            int updatedCount = 0;
+            for (OrderRequestItem item : orderItems) {
+                item.setCustomerName(customerName);
+                item.setPhone(phone);
+                item.setAddress(address);
+                item.setCity(city);
+                item.setCountry(country);
+                updatedCount++;
+            }
+            
+            // Cập nhật bảng
+            updateTable();
+            
+            // Áp dụng thông tin khách hàng thành công
+            JOptionPane.showMessageDialog(this, 
+                "✓ Áp dụng thông tin khách hàng thành công!\n\n" +
+                "📋 Thông tin đã cập nhật cho tất cả sản phẩm:\n" +
+                "• Họ và tên: " + customerName + "\n" +
+                "• Số điện thoại: " + phone + "\n" +
+                "• Số nhà: " + address + "\n" +
+                "• Thành phố: " + city + "\n" +
+                "• Quốc gia: " + country + "\n\n" +
+                "📦 Đã cập nhật cho " + updatedCount + " sản phẩm",
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     
     private void applyCouponFromTextField() {
@@ -1503,12 +1533,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         if (couponCode == null) {
             JOptionPane.showMessageDialog(this, 
-                "❌ Không có mã giảm giá khả dụng!\n\n" +
-                "📋 Thông tin mã giảm giá:\n" +
-                "• CP10: 10% off (hợp lệ)\n" +
-                "• CP50: 50 VND off (hợp lệ)\n" +
-                "• CP111: 12% off (đã hết hạn - EndDate: 2016-12-12)\n\n" +
-                "💡 Chỉ có mã hợp lệ mới được sử dụng.", 
+                "❌ Bạn đã dùng hết mã hoặc không còn mã để áp dụng!", 
                 "Thông báo", 
                 JOptionPane.WARNING_MESSAGE);
             return;
@@ -1643,16 +1668,6 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private void updateSelectedRowData() {
-        // Kiểm tra có dòng nào được chọn không
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow < 0 || selectedRow >= orderItems.size()) {
-            JOptionPane.showMessageDialog(this, 
-                "❌ Vui lòng chọn một dòng trong bảng để cập nhật!", 
-                "Thông báo", 
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
         // Lấy thông tin từ form
         String customerName = jTextField3.getText().trim();
         String phone = jTextField2.getText().trim();
@@ -1675,34 +1690,71 @@ public class DatHangJDialog extends javax.swing.JDialog {
             return;
         }
         
-        // Cập nhật thông tin cho item được chọn
-        OrderRequestItem selectedItem = orderItems.get(selectedRow);
-        selectedItem.setCustomerName(customerName);
-        selectedItem.setPhone(phone);
-        selectedItem.setAddress(address);
-        selectedItem.setCity(city);
-        selectedItem.setCountry(country);
-        selectedItem.setPaymentMethod(paymentMethod);
+        // Kiểm tra có dòng nào được chọn không
+        int selectedRow = jTable1.getSelectedRow();
         
-        // Cập nhật bảng
-        updateTable();
-        
-        // Hiển thị thông báo thành công
-        StringBuilder message = new StringBuilder();
-        message.append("✓ Cập nhật thông tin thành công!\n\n");
-        message.append("Sản phẩm: ").append(selectedItem.getProductName()).append("\n");
-        message.append("Họ và tên: ").append(customerName).append("\n");
-        message.append("Số điện thoại: ").append(phone).append("\n");
-        message.append("Số nhà: ").append(address).append("\n");
-        message.append("Thành phố: ").append(city).append("\n");
-        message.append("Quốc gia: ").append(country).append("\n");
-        message.append("Hình thức thanh toán: ").append(paymentMethod);
-        
-        JOptionPane.showMessageDialog(this, 
-            message.toString(),
-            "Thành công", 
-            JOptionPane.INFORMATION_MESSAGE);
-        // Đã cập nhật thông tin cho dòng
+        if (selectedRow >= 0 && selectedRow < orderItems.size()) {
+            // Có chọn dòng → chỉ cập nhật cho sản phẩm được chọn
+            OrderRequestItem selectedItem = orderItems.get(selectedRow);
+            selectedItem.setCustomerName(customerName);
+            selectedItem.setPhone(phone);
+            selectedItem.setAddress(address);
+            selectedItem.setCity(city);
+            selectedItem.setCountry(country);
+            selectedItem.setPaymentMethod(paymentMethod);
+            
+            // Cập nhật bảng
+            updateTable();
+            
+            // Hiển thị thông báo thành công
+            StringBuilder message = new StringBuilder();
+            message.append("✓ Cập nhật thông tin thành công!\n\n");
+            message.append("📋 Thông tin đã cập nhật cho sản phẩm:\n");
+            message.append("• " + selectedItem.getProductName() + "\n");
+            message.append("• Họ và tên: ").append(customerName).append("\n");
+            message.append("• Số điện thoại: ").append(phone).append("\n");
+            message.append("• Số nhà: ").append(address).append("\n");
+            message.append("• Thành phố: ").append(city).append("\n");
+            message.append("• Quốc gia: ").append(country).append("\n");
+            message.append("• Hình thức thanh toán: ").append(paymentMethod);
+            
+            JOptionPane.showMessageDialog(this, 
+                message.toString(),
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Không chọn dòng → cập nhật cho tất cả sản phẩm
+            int updatedCount = 0;
+            for (OrderRequestItem item : orderItems) {
+                item.setCustomerName(customerName);
+                item.setPhone(phone);
+                item.setAddress(address);
+                item.setCity(city);
+                item.setCountry(country);
+                item.setPaymentMethod(paymentMethod);
+                updatedCount++;
+            }
+            
+            // Cập nhật bảng
+            updateTable();
+            
+            // Hiển thị thông báo thành công
+            StringBuilder message = new StringBuilder();
+            message.append("✓ Cập nhật thông tin thành công!\n\n");
+            message.append("📋 Thông tin đã cập nhật cho tất cả sản phẩm:\n");
+            message.append("• Họ và tên: ").append(customerName).append("\n");
+            message.append("• Số điện thoại: ").append(phone).append("\n");
+            message.append("• Số nhà: ").append(address).append("\n");
+            message.append("• Thành phố: ").append(city).append("\n");
+            message.append("• Quốc gia: ").append(country).append("\n");
+            message.append("• Hình thức thanh toán: ").append(paymentMethod).append("\n\n");
+            message.append("📦 Đã cập nhật cho ").append(updatedCount).append(" sản phẩm");
+            
+            JOptionPane.showMessageDialog(this, 
+                message.toString(),
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     
     private void clearCoupon() {
