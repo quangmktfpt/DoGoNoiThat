@@ -225,17 +225,17 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Mã giao dịch", "Loại Giao Dịch", "Tên Sản Phẩm", "Mã Sản Phẩm", "Danh Mục", "Người Thực Hiện", "Thời Gian", "Ghi Chú"
+                "Mã giao dịch", "Loại Giao Dịch", "Danh Mục", "Mã Sản Phẩm", "Tên Sản Phẩm", "Người Thực Hiện", "Số lượng", "Giá trị", "Thời Gian", "Ghi Chú"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false, false, true, true
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -872,13 +872,38 @@ checkAndFillProductName();        // TODO add your handling code here:
             // Username: lấy từ DB nếu có, nếu không thì để rỗng
             String username = "";
             try {
-                // Lấy username từ DB nếu có (InventoryDAOImpl đã JOIN Users và có thể set vào notes hoặc mở rộng entity)
-                // Nếu cần, có thể mở rộng InventoryTransaction để có trường username
-                // Ở đây tạm thời để rỗng hoặc lấy từ CurrentUserUtil nếu userId trùng
                 if (it.getUserId() != null && it.getUserId().equals(poly.util.CurrentUserUtil.getCurrentUserId())) {
                     username = poly.util.CurrentUserUtil.getCurrentUsername();
                 }
             } catch (Exception e) {}
+            // Số lượng: có dấu + hoặc -
+            String soLuongStr = "";
+            if ("PurchaseIn".equals(it.getTransactionType())) {
+                soLuongStr = "+" + it.getQuantityChange();
+            } else if ("Adjustment".equals(it.getTransactionType()) || "SaleOut".equals(it.getTransactionType())) {
+                soLuongStr = "-" + Math.abs(it.getQuantityChange());
+            } else {
+                soLuongStr = String.valueOf(it.getQuantityChange());
+            }
+            // Giá trị: dựa vào gianhap (nhập kho) hoặc unitPrice (xuất kho)
+            String giaTriStr = "";
+            try {
+                java.math.BigDecimal giaTri = java.math.BigDecimal.ZERO;
+                if (p != null && it.getQuantityChange() != null) {
+                    if ("PurchaseIn".equals(it.getTransactionType())) {
+                        if (p.getGianhap() != null) {
+                            giaTri = p.getGianhap().multiply(new java.math.BigDecimal(Math.abs(it.getQuantityChange())));
+                        }
+                    } else if ("Adjustment".equals(it.getTransactionType()) || "SaleOut".equals(it.getTransactionType())) {
+                        if (p.getUnitPrice() != null) {
+                            giaTri = p.getUnitPrice().multiply(new java.math.BigDecimal(Math.abs(it.getQuantityChange())));
+                        }
+                    }
+                }
+                giaTriStr = giaTri.toString();
+            } catch (Exception e) {
+                giaTriStr = "";
+            }
             // Ghi chú: nếu là xuất kho theo hóa đơn
             String note = it.getNotes();
             if ("SaleOut".equals(it.getTransactionType()) && it.getReferenceId() != null && !it.getReferenceId().isEmpty()) {
@@ -887,10 +912,12 @@ checkAndFillProductName();        // TODO add your handling code here:
             model.addRow(new Object[]{
                 it.getTransactionId(),
                 getTransactionTypeVN(it.getTransactionType()),
-                p != null ? p.getProductName() : productId,
-                productId,
                 categoryName,
+                productId,
+                p != null ? p.getProductName() : productId,
                 username,
+                soLuongStr,
+                giaTriStr,
                 it.getTransactionDate(),
                 note
             });
