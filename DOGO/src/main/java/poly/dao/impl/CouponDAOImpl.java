@@ -85,6 +85,34 @@ public class CouponDAOImpl implements CouponDAO {
     }
 
     @Override
+    public void markCouponAsUsed(String couponId) {
+        // Không làm gì - không dùng IsUsed nữa
+    }
+
+    @Override
+    public boolean isCouponUsed(String couponId) {
+        // Luôn trả về false - không kiểm tra IsUsed
+        return false;
+    }
+
+    @Override
+    public int getDailyUsageCount(String couponId) {
+        // Luôn trả về 0 - không giới hạn số lần sử dụng
+        return 0;
+    }
+
+    @Override
+    public boolean canUseCouponToday(String couponId, int maxDailyUsage) {
+        // Luôn trả về true - không giới hạn
+        return true;
+    }
+
+    @Override
+    public void incrementDailyUsage(String couponId) {
+        // Không làm gì - không theo dõi số lần sử dụng
+    }
+
+    @Override
     public List<Coupon> selectBySql(String sql, Object... args) {
         List<Coupon> list = new ArrayList<>();
         try {
@@ -97,6 +125,8 @@ public class CouponDAOImpl implements CouponDAO {
                 coupon.setDiscountValue(rs.getBigDecimal("DiscountValue"));
                 coupon.setStartDate(rs.getDate("StartDate") != null ? rs.getDate("StartDate").toLocalDate() : null);
                 coupon.setEndDate(rs.getDate("EndDate") != null ? rs.getDate("EndDate").toLocalDate() : null);
+                
+                // Không đọc các trường IsUsed và MaxDailyUsage nữa
                 list.add(coupon);
             }
             rs.getStatement().getConnection().close();

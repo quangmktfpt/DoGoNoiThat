@@ -17,4 +17,11 @@ public interface CouponDAO extends CrudDAO<Coupon, String> {
     
     // Lấy mã giảm giá theo ID
     Coupon selectById(String couponId);
+    
+    // Các phương thức này không còn được sử dụng (để tương thích)
+    void markCouponAsUsed(String couponId);
+    boolean isCouponUsed(String couponId);
+    int getDailyUsageCount(String couponId);
+    boolean canUseCouponToday(String couponId, int maxDailyUsage);
+    void incrementDailyUsage(String couponId);
 } 

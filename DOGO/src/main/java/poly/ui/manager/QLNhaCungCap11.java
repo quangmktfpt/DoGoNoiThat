@@ -8,6 +8,7 @@ import poly.dao.impl.SupplierDAOImpl;
 import poly.entity.Supplier;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JOptionPane;
 
 public class QLNhaCungCap11 extends javax.swing.JDialog {
@@ -16,10 +17,11 @@ private SupplierDAO supplierDAO = new SupplierDAOImpl();
 private List<Supplier> supplierList;
 private int currentRow = -1;
 
- public QLNhaCungCap11(java.awt.Frame parent, boolean modal) {
+     public QLNhaCungCap11(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
     setLocationRelativeTo(null);
+    setupTableColumns();
     fillToTable();
     addEventHandlers();
 }
@@ -37,15 +39,15 @@ private int currentRow = -1;
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtTimKiem = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        Search = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnSelectAll = new javax.swing.JButton();
         btnDelSelectedAll = new javax.swing.JButton();
         btnRemoveSelectedAll = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnLamMoi = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         Id = new javax.swing.JTextField();
@@ -68,10 +70,14 @@ private int currentRow = -1;
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Quản lí nhà cung cấp");
+        jLabel1.setForeground(new java.awt.Color(44, 62, 80));
 
         jLabel2.setText("Tìm kiếm:");
 
-        jButton1.setText("Tìm");
+        Search.setText("Tìm");
+        Search.setBackground(new java.awt.Color(70, 130, 180));
+        Search.setForeground(java.awt.Color.WHITE);
+        Search.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,31 +112,43 @@ private int currentRow = -1;
         });
         jScrollPane1.setViewportView(jTable1);
 
-        btnSelectAll.setText("Chọn tất cả mục");
+        btnSelectAll.setText("Chọn tất cả");
+        btnSelectAll.setBackground(new java.awt.Color(52, 152, 219));
+        btnSelectAll.setForeground(java.awt.Color.WHITE);
+        btnSelectAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
         btnSelectAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelectAllActionPerformed(evt);
             }
         });
 
-        btnDelSelectedAll.setText("Xóa mục đã chọn");
+        btnDelSelectedAll.setText("Xóa đã chọn");
+        btnDelSelectedAll.setBackground(new java.awt.Color(231, 76, 60));
+        btnDelSelectedAll.setForeground(java.awt.Color.WHITE);
+        btnDelSelectedAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
         btnDelSelectedAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelSelectedAllActionPerformed(evt);
             }
         });
 
-        btnRemoveSelectedAll.setText("Bỏ chọn mục");
+        btnRemoveSelectedAll.setText("Bỏ chọn");
+        btnRemoveSelectedAll.setBackground(new java.awt.Color(155, 89, 182));
+        btnRemoveSelectedAll.setForeground(java.awt.Color.WHITE);
+        btnRemoveSelectedAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
         btnRemoveSelectedAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveSelectedAllActionPerformed(evt);
             }
         });
 
-        jButton9.setText("Refesh");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnLamMoi.setText("Làm mới");
+        btnLamMoi.setBackground(new java.awt.Color(46, 204, 113));
+        btnLamMoi.setForeground(java.awt.Color.WHITE);
+        btnLamMoi.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        btnLamMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnLamMoiActionPerformed(evt);
             }
         });
 
@@ -144,13 +162,13 @@ private int currentRow = -1;
                         .addGap(122, 122, 122)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(Search)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton9))
+                        .addComponent(btnLamMoi))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 803, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -170,10 +188,10 @@ private int currentRow = -1;
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton1)
-                    .addComponent(jButton9))
+                    .addComponent(Search)
+                    .addComponent(btnLamMoi))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -195,6 +213,9 @@ private int currentRow = -1;
         jLabel10.setText("Tên nhà cung cấp");
 
         Add.setText("Thêm");
+        Add.setBackground(new java.awt.Color(46, 204, 113));
+        Add.setForeground(java.awt.Color.WHITE);
+        Add.setFont(new java.awt.Font("Segoe UI", 1, 12));
         Add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddActionPerformed(evt);
@@ -202,10 +223,19 @@ private int currentRow = -1;
         });
 
         Update.setText("Cập nhật");
+        Update.setBackground(new java.awt.Color(52, 152, 219));
+        Update.setForeground(java.awt.Color.WHITE);
+        Update.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         Delete.setText("Xóa");
+        Delete.setBackground(new java.awt.Color(231, 76, 60));
+        Delete.setForeground(java.awt.Color.WHITE);
+        Delete.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         Refesh.setText("Làm mới");
+        Refesh.setBackground(new java.awt.Color(155, 89, 182));
+        Refesh.setForeground(java.awt.Color.WHITE);
+        Refesh.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         jLabel11.setText("Số điện thoại:");
 
@@ -327,10 +357,10 @@ private int currentRow = -1;
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
         // TODO add your handling code here:
         fillToTable();
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_btnLamMoiActionPerformed
 
     private void btnSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectAllActionPerformed
        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -464,12 +494,12 @@ private int currentRow = -1;
     private javax.swing.JTextField Name;
     private javax.swing.JTextField Phone;
     private javax.swing.JButton Refesh;
+    private javax.swing.JButton Search;
     private javax.swing.JButton Update;
     private javax.swing.JButton btnDelSelectedAll;
+    private javax.swing.JButton btnLamMoi;
     private javax.swing.JButton btnRemoveSelectedAll;
     private javax.swing.JButton btnSelectAll;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -484,13 +514,85 @@ private int currentRow = -1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 
+    private void setupTableColumns() {
+        // Thiết lập chiều rộng cột cho bảng đẹp hơn
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(120); // Mã nhà cung cấp
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(180); // Tên nhà cung cấp
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(130); // Số điện thoại
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(200); // Email
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(250); // Địa chỉ
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(50);  // Checkbox
+        
+        // Cho phép scroll ngang
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        
+        // Thiết lập màu sắc và font cho bảng
+        jTable1.setRowHeight(28);
+        jTable1.setGridColor(new java.awt.Color(189, 195, 199));
+        jTable1.setSelectionBackground(new java.awt.Color(52, 152, 219));
+        jTable1.setSelectionForeground(java.awt.Color.WHITE);
+        jTable1.setBackground(new java.awt.Color(248, 249, 250));
+        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 12));
+        
+        // Thiết lập header đẹp hơn với gradient
+        jTable1.getTableHeader().setBackground(new java.awt.Color(44, 62, 80));
+        jTable1.getTableHeader().setForeground(new java.awt.Color(236, 240, 241));
+        jTable1.getTableHeader().setFont(new java.awt.Font("Segoe UI", 1, 12));
+        jTable1.getTableHeader().setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        
+        // Tạo renderer tùy chỉnh cho header với gradient
+        jTable1.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setBackground(new java.awt.Color(44, 62, 80));
+                setForeground(new java.awt.Color(236, 240, 241));
+                setFont(new java.awt.Font("Segoe UI", 1, 12));
+                setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                    javax.swing.BorderFactory.createEtchedBorder(),
+                    javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                ));
+                return c;
+            }
+        });
+        
+        // Thiết lập renderer cho tất cả các ô với alternating colors
+        jTable1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                // Alternating row colors
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        setBackground(new java.awt.Color(255, 255, 255));
+                    } else {
+                        setBackground(new java.awt.Color(245, 245, 245));
+                    }
+                }
+                
+                // Tooltip cho cột địa chỉ
+                if (column == 4 && value != null) {
+                    setToolTipText(value.toString());
+                } else {
+                    setToolTipText(null);
+                }
+                
+                setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 5, 2, 5));
+                return c;
+            }
+        });
+    }
+    
     private void fillToTable() {
     supplierList = supplierDAO.selectAll();
     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     model.setRowCount(0);
+    
     for (Supplier s : supplierList) {
         model.addRow(new Object[]{
             s.getSupplierId(),
@@ -501,6 +603,8 @@ private int currentRow = -1;
             false
         });
     }
+    
+    setupTableColumns();
     currentRow = -1;
 }
     
@@ -579,8 +683,8 @@ private void addEventHandlers() {
     });
   
     Refesh.addActionListener(e -> clearForm());
-    jButton1.addActionListener(e -> {
-        String keyword = jTextField1.getText().trim().toLowerCase();
+    Search.addActionListener(e -> {
+        String keyword = txtTimKiem.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (Supplier s : supplierDAO.searchByKeyword(keyword)) {
@@ -593,6 +697,7 @@ private void addEventHandlers() {
                 false
             });
         }
+        setupTableColumns();
     });
    
     jTable1.getSelectionModel().addListSelectionListener(e -> {
