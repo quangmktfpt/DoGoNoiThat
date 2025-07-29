@@ -372,7 +372,15 @@ public class KhachJFrame extends javax.swing.JFrame {
                         return;
                     }
                     // Mở dialog đánh giá với thông tin sản phẩm thực tế
-                    javax.swing.ImageIcon productImage = new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
+                    javax.swing.ImageIcon productImage = null;
+                    try {
+                        productImage = new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
+                        if (productImage.getImage() == null) {
+                            productImage = null; // Nếu không load được ảnh, set null
+                        }
+                    } catch (Exception e) {
+                        productImage = null; // Nếu có lỗi, set null
+                    }
                     controller.openDanhGia(product.getProductId(), currentUserId, product.getProductName(), productImage, true);
                     return;
                 }

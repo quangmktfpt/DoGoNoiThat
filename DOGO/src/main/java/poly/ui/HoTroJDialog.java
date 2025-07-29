@@ -16,6 +16,7 @@ public class HoTroJDialog extends javax.swing.JDialog {
     public HoTroJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        initData();
     }
 
     /**
@@ -40,6 +41,7 @@ public class HoTroJDialog extends javax.swing.JDialog {
         jTextField1 = new javax.swing.JTextField();
         jTextArea1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -49,11 +51,11 @@ public class HoTroJDialog extends javax.swing.JDialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel2.setText("Thông Tin Liên Hệ");
 
-        jLabel3.setText("jLabel3@gmail.com");
+        jLabel3.setText("📧 Email: jLabel3@gmail.com");
 
-        jLabel4.setText("0123456789");
+        jLabel4.setText("📞 Số điện thoại: 0123456789");
 
-        jLabel5.setText("Khu Công Nghiệp Tư Bản");
+        jLabel5.setText("📍Địa chỉ: Khu Công Nghiệp Tư Bản");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel6.setText("Chủ Đề Hỗ Trợ");
@@ -69,6 +71,8 @@ public class HoTroJDialog extends javax.swing.JDialog {
         jTextArea1.setWrapStyleWord(true);
 
         jButton1.setText("Gửi Yêu Cầu");
+
+        jButton2.setText("Refresh");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,30 +95,34 @@ public class HoTroJDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addComponent(jLabel6)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(105, 127, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addComponent(jButton1)))
+                        .addGap(109, 109, 109)
+                        .addComponent(jButton1)
+                        .addGap(72, 72, 72)
+                        .addComponent(jButton2)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -145,7 +153,9 @@ public class HoTroJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -196,6 +206,7 @@ public class HoTroJDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -209,4 +220,203 @@ public class HoTroJDialog extends javax.swing.JDialog {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+    
+    // Thêm các biến cho logic xử lý
+    private poly.dao.ContactMessageDAO contactMessageDAO;
+    private poly.entity.User currentUser;
+    
+    // Thêm các biến cho giao diện
+    private javax.swing.JLabel jLabel9; // Icon email
+    private javax.swing.JLabel jLabel10; // Icon phone
+    private javax.swing.JLabel jLabel11; // Icon address
+    
+    /**
+     * Khởi tạo dữ liệu
+     */
+    private void initData() {
+        contactMessageDAO = new poly.dao.impl.ContactMessageDAOImpl();
+        currentUser = getCurrentUser();
+        
+        // Cập nhật thông tin liên hệ với icon
+        jLabel3.setText("📧 dogonoithat@gmail.com");
+        jLabel4.setText("📞 0123456789");
+        jLabel5.setText("📍 Khu Công Nghiệp Tư Bản");
+        
+        // Cập nhật màu sắc và font
+        jLabel1.setForeground(new java.awt.Color(0, 123, 255)); // Màu xanh dương
+        jLabel2.setForeground(new java.awt.Color(0, 123, 255));
+        jLabel6.setForeground(new java.awt.Color(0, 123, 255));
+        
+        // Thêm placeholder cho các ô nhập liệu
+        jTextField1.setText("Ví dụ: Không đăng nhập được");
+        jTextField1.setForeground(java.awt.Color.GRAY);
+        jTextArea1.setText("Mô tả chi tiết vấn đề bạn đang gặp phải...");
+        jTextArea1.setForeground(java.awt.Color.GRAY);
+        
+        // Thêm sự kiện cho các ô nhập liệu
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().equals("Ví dụ: Không đăng nhập được")) {
+                    jTextField1.setText("");
+                    jTextField1.setForeground(java.awt.Color.BLACK);
+                }
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().isEmpty()) {
+                    jTextField1.setText("Ví dụ: Không đăng nhập được");
+                    jTextField1.setForeground(java.awt.Color.GRAY);
+                }
+            }
+        });
+        
+        jTextArea1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (jTextArea1.getText().equals("Mô tả chi tiết vấn đề bạn đang gặp phải...")) {
+                    jTextArea1.setText("");
+                    jTextArea1.setForeground(java.awt.Color.BLACK);
+                }
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextArea1.getText().isEmpty()) {
+                    jTextArea1.setText("Mô tả chi tiết vấn đề bạn đang gặp phải...");
+                    jTextArea1.setForeground(java.awt.Color.GRAY);
+                }
+            }
+        });
+        
+        // Thêm sự kiện cho nút gửi
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessage();
+            }
+        });
+        
+        // Thêm sự kiện cho nút reset
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetForm();
+            }
+        });
+        
+        // Thêm hiệu ứng hover cho các nút
+        addHoverEffect(jButton1);
+        addHoverEffect(jButton2);
+    }
+    
+    /**
+     * Lấy thông tin user hiện tại
+     */
+    private poly.entity.User getCurrentUser() {
+        try {
+            Integer userId = poly.util.CurrentUserUtil.getCurrentUserId();
+            if (userId != null) {
+                poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
+                return userDAO.selectById(userId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * Gửi tin nhắn liên hệ
+     */
+    private void sendMessage() {
+        // Validate dữ liệu
+        String subject = jTextField1.getText().trim();
+        String message = jTextArea1.getText().trim();
+        
+        // Kiểm tra placeholder
+        if (subject.isEmpty() || subject.equals("Ví dụ: Không đăng nhập được")) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập chủ đề!", 
+                "Thông báo", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            jTextField1.requestFocus();
+            return;
+        }
+        
+        if (message.isEmpty() || message.equals("Mô tả chi tiết vấn đề bạn đang gặp phải...")) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập nội dung tin nhắn!", 
+                "Thông báo", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            jTextArea1.requestFocus();
+            return;
+        }
+        
+        if (currentUser == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Không thể xác định người dùng hiện tại!", 
+                "Lỗi", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            // Tạo tin nhắn mới
+            poly.entity.ContactMessage contactMessage = new poly.entity.ContactMessage();
+            contactMessage.setUserId(currentUser.getUserId());
+            contactMessage.setCustomerName(currentUser.getFullName());
+            contactMessage.setCustomerEmail(currentUser.getEmail());
+            contactMessage.setCustomerPhone(currentUser.getPhone());
+            contactMessage.setSubject(subject);
+            contactMessage.setMessage(message);
+            
+            // Lưu vào database
+            contactMessageDAO.insert(contactMessage);
+            
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Tin nhắn đã được gửi thành công!\nChúng tôi sẽ phản hồi sớm nhất có thể.", 
+                "Thành công", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+            // Xóa form
+            clearForm();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Lỗi khi gửi tin nhắn: " + e.getMessage(), 
+                "Lỗi", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Xóa form
+     */
+    private void clearForm() {
+        resetForm();
+    }
+    
+    /**
+     * Reset form về trạng thái ban đầu
+     */
+    private void resetForm() {
+        jTextField1.setText("Ví dụ: Không đăng nhập được");
+        jTextField1.setForeground(java.awt.Color.GRAY);
+        jTextArea1.setText("Mô tả chi tiết vấn đề bạn đang gặp phải...");
+        jTextArea1.setForeground(java.awt.Color.GRAY);
+    }
+    
+    /**
+     * Thêm hiệu ứng hover cho button
+     */
+    private void addHoverEffect(javax.swing.JButton button) {
+        java.awt.Color originalColor = button.getBackground();
+        java.awt.Color hoverColor = new java.awt.Color(0, 123, 255);
+        
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+                button.setForeground(java.awt.Color.WHITE);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(originalColor);
+                button.setForeground(java.awt.Color.BLACK);
+            }
+        });
+    }
 }

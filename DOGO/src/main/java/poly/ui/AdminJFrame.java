@@ -42,6 +42,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton11);
         addHoverTextEffect(jButton12);
         addHoverTextEffect(jButton13);
+        addHoverTextEffect(jButton14);
         
         // Cấu hình nút đăng xuất
         setupLogoutButton();
@@ -71,6 +72,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -99,7 +101,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         getContentPane().add(headerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, 70));
 
         sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
-        sidebarPanel.setLayout(new java.awt.GridLayout(11, 1, 0, 5));
+        sidebarPanel.setLayout(new java.awt.GridLayout(12, 1, 0, 5));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -207,6 +209,11 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
         jButton3.setFocusPainted(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         sidebarPanel.add(jButton3);
 
         jButton11.setBackground(new java.awt.Color(204, 204, 255));
@@ -252,6 +259,20 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
         sidebarPanel.add(jButton12);
+
+        jButton14.setBackground(new java.awt.Color(204, 204, 255));
+        jButton14.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jButton14.setText("QL Tin Nhắn Liên Hệ");
+        jButton14.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButton14.setBorderPainted(false);
+        jButton14.setContentAreaFilled(false);
+        jButton14.setFocusPainted(false);
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
+        sidebarPanel.add(jButton14);
 
         getContentPane().add(sidebarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 52, -1, 520));
 
@@ -333,6 +354,13 @@ public class AdminJFrame extends javax.swing.JFrame {
         controller.openMaGiamGia();
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        // Mở màn hình quản lý tin nhắn liên hệ
+        poly.ui.manager.QLTinNhanLienHe qltnlh = new poly.ui.manager.QLTinNhanLienHe(this, true);
+        qltnlh.setLocationRelativeTo(this);
+        qltnlh.setVisible(true);
+    }//GEN-LAST:event_jButton14ActionPerformed
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Xác nhận đăng xuất
         int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
@@ -350,6 +378,8 @@ public class AdminJFrame extends javax.swing.JFrame {
             loginDialog.setVisible(true);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+
 
 
 
@@ -420,6 +450,7 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
