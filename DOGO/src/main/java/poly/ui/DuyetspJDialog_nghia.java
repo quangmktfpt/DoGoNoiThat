@@ -732,6 +732,11 @@ public class DuyetspJDialog_nghia extends javax.swing.JDialog implements Product
             txtAreaMoTa.setText(entity.getDescription() != null ? entity.getDescription().toString() : "");
             txtKichThuoc.setText(entity.getKichThuoc() != null ? entity.getKichThuoc().toString() : "");
             
+            // Debug log để kiểm tra dữ liệu
+            System.out.println("DEBUG DUYET SP: ProductID=" + entity.getProductId() + 
+                             ", Quantity=" + entity.getQuantity() + 
+                             ", ProductName=" + entity.getProductName());
+            
             // Hiển thị ảnh sản phẩm
             if (entity.getImagePath() != null && !entity.getImagePath().isEmpty()) {
                 ImageIcon icon = getProductImage(entity.getImagePath());

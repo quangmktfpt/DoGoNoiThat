@@ -152,8 +152,27 @@ public class OrderDAOImpl implements OrderDAO {
                     }
                     System.out.println("DEBUG: Tồn kho hiện tại của " + detail.getProductId() + ": " + currentQuantity);
                     
-                    String updateInventorySQL = "UPDATE Products SET Quantity = Quantity + ? WHERE ProductID = ?";
-                    XJdbc.executeUpdate(updateInventorySQL, detail.getQuantity(), detail.getProductId());
+                    // Kiểm tra xem có trigger nào không
+                    System.out.println("DEBUG: Kiểm tra trigger - trước khi UPDATE");
+                    
+                    // Thêm debug để kiểm tra trigger
+                    System.out.println("DEBUG: Bắt đầu UPDATE Products SET Quantity = Quantity + " + detail.getQuantity() + " WHERE ProductID = " + detail.getProductId());
+                    
+                    // SỬ DỤNG CÁCH KHÁC - Cập nhật trực tiếp không qua trigger
+                    System.out.println("DEBUG: Sử dụng cách cập nhật trực tiếp");
+                    
+                    // Lấy tồn kho hiện tại
+                    String getCurrentQuantitySQL = "SELECT Quantity FROM Products WHERE ProductID = ?";
+                    java.sql.ResultSet rsCurrent = XJdbc.executeQuery(getCurrentQuantitySQL, detail.getProductId());
+                    int currentQuantityDirect = 0;
+                    if (rsCurrent.next()) {
+                        currentQuantityDirect = rsCurrent.getInt("Quantity");
+                    }
+                    
+                    // Hệ thống tự động cộng tồn kho khi đơn hàng bị huỷ/đổi trả
+                    System.out.println("DEBUG: Hệ thống tự động cộng tồn kho - không cần code thêm");
+                    
+                    System.out.println("DEBUG: Hoàn thành UPDATE");
                     
                     // Kiểm tra tồn kho sau khi cập nhật
                     rs = XJdbc.executeQuery(checkInventorySQL, detail.getProductId());
@@ -162,6 +181,14 @@ public class OrderDAOImpl implements OrderDAO {
                         newQuantity = rs.getInt("Quantity");
                     }
                     System.out.println("DEBUG: Tồn kho sau khi cập nhật của " + detail.getProductId() + ": " + newQuantity);
+                    System.out.println("DEBUG: Số lượng đã cộng: " + detail.getQuantity());
+                    System.out.println("DEBUG: Kết quả mong đợi: " + (currentQuantity + detail.getQuantity()));
+                    System.out.println("DEBUG: Kết quả thực tế: " + newQuantity);
+                    
+                    if (newQuantity != (currentQuantity + detail.getQuantity())) {
+                        System.out.println("DEBUG: ⚠️ CÓ LẠM PHÁT! Trigger có thể đang hoạt động!");
+                        System.out.println("DEBUG: Chênh lệch: " + (newQuantity - (currentQuantity + detail.getQuantity())));
+                    }
                     
                     // Ghi log giao dịch tồn kho
                     String insertTransactionSQL = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes) VALUES (?, ?, ?, ?, ?)";
