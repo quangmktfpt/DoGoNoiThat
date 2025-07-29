@@ -41,29 +41,29 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jTextField3 = new javax.swing.JTextField();
+        btnSelect = new javax.swing.JButton();
+        btnDeleteSelected = new javax.swing.JButton();
+        btnRemoveSelected = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtDesc = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtDiscVaule = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtStartDate = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txtEndDate = new javax.swing.JTextField();
+        jComboDisCType = new javax.swing.JComboBox<>();
+        btnDellete = new javax.swing.JButton();
+        btnRefesh = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -103,35 +103,30 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jButton6.setText("Chọn mục");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnSelect.setText("Chọn mục");
+        btnSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnSelectActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Xóa mục đã chọn");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnDeleteSelected.setText("Xóa mục đã chọn");
+        btnDeleteSelected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnDeleteSelectedActionPerformed(evt);
             }
         });
 
-        jButton8.setText("Bỏ chọn mục");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        btnRemoveSelected.setText("Bỏ chọn mục");
+        btnRemoveSelected.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                btnRemoveSelectedActionPerformed(evt);
             }
         });
 
         jLabel8.setText("Tìm kiếm:");
 
-        jButton1.setText("Tìm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        btnSearch.setText("Tìm");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,11 +134,11 @@ public class MaGiamGia1 extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton6)
+                .addComponent(btnSelect)
                 .addGap(36, 36, 36)
-                .addComponent(jButton7)
+                .addComponent(btnDeleteSelected)
                 .addGap(27, 27, 27)
-                .addComponent(jButton8)
+                .addComponent(btnRemoveSelected)
                 .addGap(29, 29, 29))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -153,9 +148,9 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                 .addGap(128, 128, 128)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btnSearch)
                 .addContainerGap(214, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -163,16 +158,16 @@ public class MaGiamGia1 extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jButton1))
+                    .addComponent(btnSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7)
-                    .addComponent(jButton8))
+                    .addComponent(btnSelect)
+                    .addComponent(btnDeleteSelected)
+                    .addComponent(btnRemoveSelected))
                 .addGap(41, 41, 41))
         );
 
@@ -190,33 +185,33 @@ public class MaGiamGia1 extends javax.swing.JDialog {
 
         jLabel7.setText("EndDate");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboDisCType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton4.setText("Xóa");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnDellete.setText("Xóa");
+        btnDellete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnDelleteActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Làm mới");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnRefesh.setText("Làm mới");
+        btnRefesh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnRefeshActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Thêm");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setText("Thêm");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnAddActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Cập nhật");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.setText("Cập nhật");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
@@ -232,15 +227,15 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jComboDisCType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField2))
+                                .addComponent(txtDesc))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(5, 5, 5)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(64, 64, 64)
@@ -248,25 +243,25 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtDiscVaule, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel6)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(72, 72, 72)
                                 .addComponent(jLabel7)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(167, 167, 167)
-                        .addComponent(jButton2)
+                        .addComponent(btnAdd)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                        .addComponent(btnUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4)
+                        .addComponent(btnDellete)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton5)))
+                        .addComponent(btnRefesh)))
                 .addContainerGap(156, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -275,28 +270,28 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                 .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDiscVaule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboDisCType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel7)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(81, 81, 81)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(btnAdd)
+                    .addComponent(btnUpdate)
+                    .addComponent(btnDellete)
+                    .addComponent(btnRefesh))
                 .addContainerGap(207, Short.MAX_VALUE))
         );
 
@@ -353,11 +348,11 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
         selectAllItems();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_btnSelectActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
               try {
                 Coupon c = getForm();
                 if (couponDAO.selectById(c.getCouponId()) != null) {
@@ -371,9 +366,9 @@ public class MaGiamGia1 extends javax.swing.JDialog {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi thêm: " + ex.getMessage());
             }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnAddActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
                 Coupon c = getForm();
                 if (couponDAO.selectById(c.getCouponId()) == null) {
@@ -387,9 +382,9 @@ public class MaGiamGia1 extends javax.swing.JDialog {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Lỗi cập nhật: " + ex.getMessage());
             }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnDelleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelleteActionPerformed
       int row = jTable1.getSelectedRow();
             if (row < 0) {
                 JOptionPane.showMessageDialog(this, "Chọn dòng để xóa!");
@@ -407,22 +402,22 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Lỗi xóa: " + ex.getMessage());
                 }
             }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnDelleteActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnRefeshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefeshActionPerformed
        clearForm();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnRefeshActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void btnDeleteSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteSelectedActionPerformed
         deleteSelectedItems();
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_btnDeleteSelectedActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void btnRemoveSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveSelectedActionPerformed
        deselectAllItems();
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_btnRemoveSelectedActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String keyword = jTextField3.getText().trim().toLowerCase();
+        String keyword = txtSearch.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         
@@ -507,15 +502,15 @@ public class MaGiamGia1 extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDeleteSelected;
+    private javax.swing.JButton btnDellete;
+    private javax.swing.JButton btnRefesh;
+    private javax.swing.JButton btnRemoveSelected;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnSelect;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> jComboDisCType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -529,17 +524,17 @@ public class MaGiamGia1 extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField txtDesc;
+    private javax.swing.JTextField txtDiscVaule;
+    private javax.swing.JTextField txtEndDate;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtSearch;
+    private javax.swing.JTextField txtStartDate;
     // End of variables declaration//GEN-END:variables
 private void fillDiscountTypeComboBox() {
-        jComboBox1.removeAllItems();
-        jComboBox1.addItem("Percent");
-        jComboBox1.addItem("Fixed");
+        jComboDisCType.removeAllItems();
+        jComboDisCType.addItem("Percent");
+        jComboDisCType.addItem("Fixed");
     }
    private void fillToTable() {
         couponList = couponDAO.selectAll();
@@ -559,34 +554,34 @@ private void fillDiscountTypeComboBox() {
         currentRow = -1;
     }
     private void clearForm() {
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jComboBox1.setSelectedIndex(0);
-        jTextField4.setText("");
-        jTextField5.setText("");
-        jTextField6.setText("");
+        txtId.setText("");
+        txtDesc.setText("");
+        jComboDisCType.setSelectedIndex(0);
+        txtDiscVaule.setText("");
+        txtStartDate.setText("");
+        txtEndDate.setText("");
         currentRow = -1;
         jTable1.clearSelection();
     }
         private Coupon getForm() {
-        String id = jTextField1.getText().trim();
-        String desc = jTextField2.getText().trim();
-        String type = (String) jComboBox1.getSelectedItem();
-        String valueStr = jTextField4.getText().trim();
-        String startStr = jTextField5.getText().trim();
-        String endStr = jTextField6.getText().trim();
+        String id = txtId.getText().trim();
+        String desc = txtDesc.getText().trim();
+        String type = (String) jComboDisCType.getSelectedItem();
+        String valueStr = txtDiscVaule.getText().trim();
+        String startStr = txtStartDate.getText().trim();
+        String endStr = txtEndDate.getText().trim();
         BigDecimal value = valueStr.isEmpty() ? BigDecimal.ZERO : new BigDecimal(valueStr);
         LocalDate start = startStr.isEmpty() ? null : LocalDate.parse(startStr);
         LocalDate end = endStr.isEmpty() ? null : LocalDate.parse(endStr);
         return new Coupon(id, desc, type, value, start, end);
     }
           private void setForm(Coupon c) {
-        jTextField1.setText(c.getCouponId());
-        jTextField2.setText(c.getDescription());
-        jComboBox1.setSelectedItem(c.getDiscountType());
-        jTextField4.setText(c.getDiscountValue() != null ? c.getDiscountValue().toString() : "");
-        jTextField5.setText(c.getStartDate() != null ? c.getStartDate().toString() : "");
-        jTextField6.setText(c.getEndDate() != null ? c.getEndDate().toString() : "");
+        txtId.setText(c.getCouponId());
+        txtDesc.setText(c.getDescription());
+        jComboDisCType.setSelectedItem(c.getDiscountType());
+        txtDiscVaule.setText(c.getDiscountValue() != null ? c.getDiscountValue().toString() : "");
+        txtStartDate.setText(c.getStartDate() != null ? c.getStartDate().toString() : "");
+        txtEndDate.setText(c.getEndDate() != null ? c.getEndDate().toString() : "");
     }
      
         

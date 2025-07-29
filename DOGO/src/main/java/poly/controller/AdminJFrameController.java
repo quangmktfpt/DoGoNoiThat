@@ -5,6 +5,7 @@ import poly.ui.manager.PhanQuyen_nghia;
 import poly.ui.manager.QLNhaCungCap1;
 import poly.ui.manager.CaiDatChung;
 import poly.ui.manager.MaGiamGia1;
+import poly.ui.manager.QLNhaCungCap11;
 
 /**
  * Controller cho AdminJFrame
@@ -31,7 +32,7 @@ public class AdminJFrameController {
      * Mở màn hình quản lý nhà cung cấp
      */
     public void openQLNhaCungCap() {
-        QLNhaCungCap1 qlncc = new QLNhaCungCap1(view, true);
+        QLNhaCungCap11 qlncc = new QLNhaCungCap11(view, true);
         qlncc.setLocationRelativeTo(view);
         qlncc.setVisible(true);
     }

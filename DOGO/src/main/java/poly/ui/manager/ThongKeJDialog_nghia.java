@@ -1105,35 +1105,46 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         java.time.format.DateTimeFormatter fmtThang = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
 
         if (forceByDay || days <= 7) { // Theo ngày
+            java.util.Map<java.time.LocalDate, Number> tempMap = new java.util.TreeMap<>();
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
                 Number tongTien = (Number) row[2];
+                tempMap.put(date, tongTien);
+            }
+            for (java.time.LocalDate date : tempMap.keySet()) {
                 String key = date.format(fmtNgay);
-                result.put(key, tongTien);
+                result.put(key, tempMap.get(date));
             }
         } else if (days <= 31) { // Theo tuần (hiển thị Tuần X - MM/yyyy)
             java.util.Map<String, Number> weekMap = new java.util.LinkedHashMap<>();
+            java.util.Map<java.time.LocalDate, Number> tempMap = new java.util.TreeMap<>();
             java.time.format.DateTimeFormatter fmtThangNam = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
+                Number tongTien = (Number) row[2];
+                tempMap.put(date, tempMap.getOrDefault(date, 0).doubleValue() + tongTien.doubleValue());
+            }
+            for (java.time.LocalDate date : tempMap.keySet()) {
                 int weekOfMonth = date.get(java.time.temporal.WeekFields.ISO.weekOfMonth());
                 String thangNam = date.format(fmtThangNam);
                 String key = "Tuần " + weekOfMonth + " - " + thangNam;
-                Number tongTien = (Number) row[2];
-                weekMap.put(key, weekMap.getOrDefault(key, 0).doubleValue() + tongTien.doubleValue());
+                weekMap.put(key, weekMap.getOrDefault(key, 0).doubleValue() + tempMap.get(date).doubleValue());
             }
             for (String key : weekMap.keySet()) {
                 result.put(key, weekMap.get(key));
             }
         } else { // Theo tháng
-            java.util.Map<String, Number> monthMap = new java.util.LinkedHashMap<>();
+            java.util.Map<java.time.YearMonth, Number> monthMap = new java.util.TreeMap<>();
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
-                String thang = date.format(fmtThang);
+                java.time.YearMonth yearMonth = java.time.YearMonth.from(date);
                 Number tongTien = (Number) row[2];
-                monthMap.put(thang, monthMap.getOrDefault(thang, 0).doubleValue() + tongTien.doubleValue());
+                monthMap.put(yearMonth, monthMap.getOrDefault(yearMonth, 0).doubleValue() + tongTien.doubleValue());
             }
-            result.putAll(monthMap);
+            for (java.time.YearMonth yearMonth : monthMap.keySet()) {
+                String thang = yearMonth.format(java.time.format.DateTimeFormatter.ofPattern("MM/yyyy"));
+                result.put(thang, monthMap.get(yearMonth));
+            }
         }
         return result;
     }
@@ -1147,35 +1158,46 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         java.time.format.DateTimeFormatter fmtThang = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
 
         if (forceByDay || days <= 7) { // Theo ngày
+            java.util.Map<java.time.LocalDate, Number> tempMap = new java.util.TreeMap<>();
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
                 Number loiNhuan = (Number) row[2];
+                tempMap.put(date, loiNhuan);
+            }
+            for (java.time.LocalDate date : tempMap.keySet()) {
                 String key = date.format(fmtNgay);
-                result.put(key, loiNhuan);
+                result.put(key, tempMap.get(date));
             }
         } else if (days <= 31) { // Theo tuần (hiển thị Tuần X - MM/yyyy)
             java.util.Map<String, Number> weekMap = new java.util.LinkedHashMap<>();
+            java.util.Map<java.time.LocalDate, Number> tempMap = new java.util.TreeMap<>();
             java.time.format.DateTimeFormatter fmtThangNam = java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
+                Number loiNhuan = (Number) row[2];
+                tempMap.put(date, tempMap.getOrDefault(date, 0).doubleValue() + loiNhuan.doubleValue());
+            }
+            for (java.time.LocalDate date : tempMap.keySet()) {
                 int weekOfMonth = date.get(java.time.temporal.WeekFields.ISO.weekOfMonth());
                 String thangNam = date.format(fmtThangNam);
                 String key = "Tuần " + weekOfMonth + " - " + thangNam;
-                Number loiNhuan = (Number) row[2];
-                weekMap.put(key, weekMap.getOrDefault(key, 0).doubleValue() + loiNhuan.doubleValue());
+                weekMap.put(key, weekMap.getOrDefault(key, 0).doubleValue() + tempMap.get(date).doubleValue());
             }
             for (String key : weekMap.keySet()) {
                 result.put(key, weekMap.get(key));
             }
         } else { // Theo tháng
-            java.util.Map<String, Number> monthMap = new java.util.LinkedHashMap<>();
+            java.util.Map<java.time.YearMonth, Number> monthMap = new java.util.TreeMap<>();
             for (Object[] row : data) {
                 java.time.LocalDate date = (java.time.LocalDate) row[0];
-                String thang = date.format(fmtThang);
+                java.time.YearMonth yearMonth = java.time.YearMonth.from(date);
                 Number loiNhuan = (Number) row[2];
-                monthMap.put(thang, monthMap.getOrDefault(thang, 0).doubleValue() + loiNhuan.doubleValue());
+                monthMap.put(yearMonth, monthMap.getOrDefault(yearMonth, 0).doubleValue() + loiNhuan.doubleValue());
             }
-            result.putAll(monthMap);
+            for (java.time.YearMonth yearMonth : monthMap.keySet()) {
+                String thang = yearMonth.format(java.time.format.DateTimeFormatter.ofPattern("MM/yyyy"));
+                result.put(thang, monthMap.get(yearMonth));
+            }
         }
         return result;
     }

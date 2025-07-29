@@ -43,4 +43,7 @@ public interface OrderDAO extends CrudDAO<Order, Integer> {
     
     // Lấy thông tin đơn hàng với thông tin khách hàng
     List<Order> selectOrdersWithCustomerInfo();
+    
+    // Cập nhật trạng thái đơn hàng với lý do và cập nhật tồn kho
+    void updateOrderStatusWithReasonAndInventory(Integer orderId, String status, String returnReason);
 } 
