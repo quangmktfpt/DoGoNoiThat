@@ -346,7 +346,6 @@ public class DatHangJDialog extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Đóng dialog khi nhấn nút "Quay Lại"
         dispose();
-        System.out.println("✓ Dialog đặt hàng đã đóng do user nhấn 'Quay Lại'");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -485,9 +484,6 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         // Hiển thị thông tin API status
         showAPIStatus();
-        
-        // Hiển thị thống kê tỉnh thành Việt Nam
-        showVietnamProvincesInfo();
         
         // Thiết lập placeholder cho JTextField4
         jTextField4.setText("");
@@ -1917,8 +1913,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
             return false;
         }
         
-        if (jTextField2.getText().trim().isEmpty()) {
+        String phoneNumber = jTextField2.getText().trim();
+        if (phoneNumber.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại!");
+            return false;
+        }
+        
+        // Validate Vietnamese phone number format
+        if (!isValidVietnamesePhoneNumber(phoneNumber)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam đúng định dạng (VD: 0123456789, 0987654321)");
             return false;
         }
         
@@ -1938,6 +1941,33 @@ public class DatHangJDialog extends javax.swing.JDialog {
         }
         
         return true;
+    }
+    
+    /**
+     * Validate Vietnamese phone number format
+     * Supports formats: 0123456789, 0987654321, +84123456789, 84123456789
+     */
+    private boolean isValidVietnamesePhoneNumber(String phoneNumber) {
+        // Remove all non-digit characters except +
+        String cleaned = phoneNumber.replaceAll("[^0-9+]", "");
+        
+        // Check if it starts with +84 or 84 (Vietnam country code)
+        if (cleaned.startsWith("+84")) {
+            cleaned = cleaned.substring(3); // Remove +84
+        } else if (cleaned.startsWith("84")) {
+            cleaned = cleaned.substring(2); // Remove 84
+        }
+        
+        // Vietnamese mobile numbers start with 03, 05, 07, 08, 09
+        // Vietnamese landline numbers start with 02, 03, 04, 05, 06, 07, 08
+        // Total length should be 10 digits
+        if (cleaned.length() != 10) {
+            return false;
+        }
+        
+        // Check if it starts with valid Vietnamese prefixes
+        String firstTwoDigits = cleaned.substring(0, 2);
+        return firstTwoDigits.matches("(03|05|07|08|09|02|04|06)");
     }
     
     private void updateOrderFromForm() {

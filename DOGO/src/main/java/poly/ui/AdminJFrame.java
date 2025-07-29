@@ -247,28 +247,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
         getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
 
-        // Tạo JMenuBar và thêm nút đăng xuất
-        jMenuBar1 = new javax.swing.JMenuBar();
-        
-        // Thêm nút đăng xuất bên phải
-        javax.swing.JButton logoutButton = new javax.swing.JButton();
-        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/logout.jpg")));
-        logoutButton.setToolTipText("Đăng xuất");
-        logoutButton.setBorder(null);
-        logoutButton.setContentAreaFilled(false);
-        logoutButton.setFocusPainted(false);
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
-            }
-        });
-        
-        // Thêm glue để đẩy nút logout sang phải
-        jMenuBar1.add(javax.swing.Box.createHorizontalGlue());
-        jMenuBar1.add(logoutButton);
-
-        setJMenuBar(jMenuBar1);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -428,7 +406,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }
