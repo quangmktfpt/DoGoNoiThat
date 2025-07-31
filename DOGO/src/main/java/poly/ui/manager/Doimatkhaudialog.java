@@ -4,6 +4,10 @@
  */
 package poly.ui.manager;
 
+import poly.util.CurrentUserUtil;
+import poly.util.PasswordUtil;
+import poly.util.XDialog;
+
 /**
  *
  * @author quang
@@ -16,45 +20,90 @@ public class Doimatkhaudialog extends javax.swing.JDialog {
     public Doimatkhaudialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Tự động load thông tin user đăng nhập khi mở dialog
+        loadCurrentUser();
     }
-public void changepass(){
-    String username = jTextField1.getText().trim();
-    String oldPass = new String(jPasswordField1.getPassword());
-    String newPass = new String(jPasswordField2.getPassword());
-    String confirmPass = new String(jPasswordField3.getPassword());
+    
+    /**
+     * Load thông tin user hiện tại vào form
+     */
+    private void loadCurrentUser() {
+        String currentUsername = CurrentUserUtil.getCurrentUsername();
+        if (currentUsername != null && !currentUsername.trim().isEmpty()) {
+            jTextField1.setText(currentUsername);
+            jTextField1.setEnabled(false); // Không cho phép sửa username
+        } else {
+            XDialog.alert("Không tìm thấy thông tin user đăng nhập!");
+        }
+    }
+    
+    /**
+     * Xử lý đổi mật khẩu
+     */
+    public void changepass(){
+        String username = jTextField1.getText().trim();
+        String oldPass = new String(jPasswordField1.getPassword());
+        String newPass = new String(jPasswordField2.getPassword());
+        String confirmPass = new String(jPasswordField3.getPassword());
 
-    // 1. Check trống
-    if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ các trường!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
+        // 1. Kiểm tra trống
+        if (username.isEmpty()) {
+            XDialog.alert("Vui lòng nhập tên đăng nhập!");
+            return;
+        }
+        
+        if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
+            XDialog.alert("Vui lòng nhập đầy đủ các trường!");
+            return;
+        }
+        
+        // 2. Kiểm tra độ dài mật khẩu mới
+        if (newPass.length() < 6) {
+            XDialog.alert("Mật khẩu mới phải có ít nhất 6 ký tự!");
+            return;
+        }
+        
+        // 3. Kiểm tra 2 mật khẩu mới trùng nhau
+        if (!newPass.equals(confirmPass)) {
+            XDialog.alert("Mật khẩu mới và xác nhận không khớp!");
+            return;
+        }
+        
+        // 4. Kiểm tra mật khẩu cũ có đúng không
+        poly.dao.impl.UserDAOImpl userDAO = new poly.dao.impl.UserDAOImpl();
+        poly.entity.User user = userDAO.selectByUsername(username);
+        if (user == null) {
+            XDialog.alert("Không tìm thấy user!");
+            return;
+        }
+        
+        // So sánh trực tiếp mật khẩu
+        if (!oldPass.equals(user.getPasswordHash())) {
+            XDialog.alert("Mật khẩu cũ không đúng!");
+            return;
+        }
+        
+        // 5. Cập nhật mật khẩu mới (không hash)
+        try {
+            user.setPasswordHash(newPass);
+            userDAO.update(user);
+            
+            XDialog.alert("Đổi mật khẩu thành công!");
+            clearForm();
+        } catch (Exception ex) {
+            XDialog.alert("Đổi mật khẩu thất bại: " + ex.getMessage());
+        }
     }
-    // 2. Check mật khẩu cũ đúng không
-    poly.dao.impl.UserDAOImpl userDAO = new poly.dao.impl.UserDAOImpl();
-    poly.entity.User user = userDAO.login(username, oldPass);
-    if (user == null) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Mật khẩu cũ không đúng!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
+    
+    /**
+     * Xóa trắng form
+     */
+    private void clearForm() {
+        jPasswordField1.setText("");
+        jPasswordField2.setText("");
+        jPasswordField3.setText("");
     }
-    // 3. Check 2 mật khẩu mới trùng nhau
-    if (!newPass.equals(confirmPass)) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Mật khẩu mới và xác nhận không khớp!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    // 4. Update mật khẩu mới
-    user.setPasswordHash(newPass); // Nếu có hash thì hash ở đây
-    try {
-        userDAO.update(user);
-        javax.swing.JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        this.dispose();
-    } catch (Exception ex) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-}
 
-public void getuser(){
-    String username = poly.util.CurrentUserUtil.getCurrentUsername();
-    jTextField1.setText(username != null ? username : "");
-}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,6 +127,11 @@ public void getuser(){
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Tên đăng nhập");
 
@@ -184,6 +238,11 @@ public void getuser(){
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // Tự động load thông tin user khi mở dialog
+        loadCurrentUser();
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -243,9 +302,7 @@ public void getuser(){
     // End of variables declaration//GEN-END:variables
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jPasswordField1.setText("");
-        jPasswordField2.setText("");
-        jPasswordField3.setText("");
+        clearForm();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -253,6 +310,6 @@ public void getuser(){
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-changepass();        // TODO add your handling code here:
+        changepass();
     }//GEN-LAST:event_jButton1ActionPerformed
 }

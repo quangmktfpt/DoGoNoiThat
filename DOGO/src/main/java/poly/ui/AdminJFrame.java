@@ -31,7 +31,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         
         // Thêm hiệu ứng hover cho màu chữ các nút
         addHoverTextEffect(jButton2); // Nút đăng xuất
-        addHoverTextEffect(jButton4);
+     //   addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
         addHoverTextEffect(jButton7);

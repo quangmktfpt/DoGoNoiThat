@@ -3,6 +3,7 @@ package poly.dao.impl;
 import poly.dao.UserDAO;
 import poly.entity.User;
 import poly.util.XJdbc;
+import poly.util.PasswordUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User login(String username, String password) {
-        // Lưu ý: password nên hash trước khi so sánh nếu dùng hash
+        // So sánh trực tiếp password với database
         String sql = "SELECT * FROM Users WHERE Username=? AND PasswordHash=? AND IsActive=1";
         List<User> list = selectBySql(sql, username, password);
         return list.isEmpty() ? null : list.get(0);

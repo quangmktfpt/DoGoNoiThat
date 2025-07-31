@@ -241,7 +241,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     @Override
     public void login() {
         String username = txtUsername.getText().trim();
-        String password = txtPassword.getText().trim();
+        String password = new String(txtPassword.getPassword());
 
         // 1. Validate
         if (username.isEmpty() || password.isEmpty()) {
