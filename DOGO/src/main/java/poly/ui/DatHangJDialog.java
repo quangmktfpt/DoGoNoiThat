@@ -15,17 +15,9 @@ import javax.swing.table.DefaultTableModel;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.sql.ResultSet;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import poly.util.XJdbc;
 import poly.util.InventoryUpdateUtil;
 import poly.dao.CouponDAO;
@@ -43,10 +35,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
     private List<OrderRequestItem> orderItems = new ArrayList<>();
     private User currentUser;
     
-    // Dữ liệu từ API
+    // Dữ liệu thành phố Việt Nam
     private Map<String, List<String>> citiesByCountry = new HashMap<>();
     private List<String> countries = new ArrayList<>();
-    private HttpClient httpClient = HttpClient.newHttpClient();
     
     /**
      * Creates new form DatHangJDialog
@@ -568,12 +559,12 @@ public class DatHangJDialog extends javax.swing.JDialog {
             }
         });
         
-        // Double click vào Country để refresh API data
+        // Double click vào Country để hiển thị thông tin Việt Nam
         Country.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    refreshAPIData();
+                    showVietnamProvincesInfo();
                 }
             }
         });
@@ -587,14 +578,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
     private void loadCountries() {
         Country.removeAllItems();
         
-        // Thử lấy dữ liệu từ API trước
-        if (loadCountriesFromAPI()) {
-            // Đã tải quốc gia từ API
-        } else {
-            // Fallback: sử dụng dữ liệu cứng
-            // Không thể kết nối API, sử dụng dữ liệu cứng
-            loadFallbackCountries();
-        }
+        // Chỉ giữ lại Việt Nam
+        countries.clear();
+        countries.add("Việt Nam");
         
         // Thêm quốc gia vào ComboBox
         for (String country : countries) {
@@ -605,92 +591,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         Country.setSelectedItem("Việt Nam");
     }
     
-    private boolean loadCountriesFromAPI() {
-        try {
-            // Sử dụng API miễn phí để lấy danh sách quốc gia
-            String apiUrl = "https://restcountries.com/v3.1/all?fields=name,capital,region";
-            
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl))
-                .header("Accept", "application/json")
-                .GET()
-                .build();
-            
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            
-            if (response.statusCode() == 200) {
-                JSONArray jsonArray = new JSONArray(response.body());
-                
-                // Lọc các quốc gia châu Á
-                Set<String> asianCountries = new HashSet<>();
-                asianCountries.add("Vietnam");
-                asianCountries.add("Laos");
-                asianCountries.add("Cambodia");
-                asianCountries.add("Thailand");
-                asianCountries.add("Singapore");
-                asianCountries.add("Malaysia");
-                asianCountries.add("Indonesia");
-                asianCountries.add("Philippines");
-                asianCountries.add("Myanmar");
-                asianCountries.add("Brunei");
-                asianCountries.add("Timor-Leste");
-                
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject country = jsonArray.getJSONObject(i);
-                    String countryName = country.getJSONObject("name").getString("common");
-                    
-                    if (asianCountries.contains(countryName)) {
-                        // Chuyển đổi tên quốc gia sang tiếng Việt
-                        String vietnameseName = convertCountryNameToVietnamese(countryName);
-                        countries.add(vietnameseName);
-                        
-                        // Lấy thủ đô làm thành phố mặc định
-                        if (country.has("capital") && !country.isNull("capital")) {
-                            JSONArray capitals = country.getJSONArray("capital");
-                            if (capitals.length() > 0) {
-                                String capital = capitals.getString(0);
-                                List<String> cities = new ArrayList<>();
-                                cities.add(capital);
-                                citiesByCountry.put(vietnameseName, cities);
-                            }
-                        }
-                    }
-                }
-                
-                return true;
-            }
-        } catch (Exception e) {
-            System.err.println("✗ Lỗi khi tải dữ liệu từ API: " + e.getMessage());
-        }
-        
-        return false;
-    }
-    
-    private void loadFallbackCountries() {
-        // Dữ liệu cứng khi không kết nối được API
-        countries.clear();
-        String[] fallbackCountries = {"Việt Nam", "Lào", "Campuchia", "Thái Lan", "Singapore", "Malaysia"};
-        for (String country : fallbackCountries) {
-            countries.add(country);
-        }
-    }
-    
-    private String convertCountryNameToVietnamese(String englishName) {
-        Map<String, String> countryMap = new HashMap<>();
-        countryMap.put("Vietnam", "Việt Nam");
-        countryMap.put("Laos", "Lào");
-        countryMap.put("Cambodia", "Campuchia");
-        countryMap.put("Thailand", "Thái Lan");
-        countryMap.put("Singapore", "Singapore");
-        countryMap.put("Malaysia", "Malaysia");
-        countryMap.put("Indonesia", "Indonesia");
-        countryMap.put("Philippines", "Philippines");
-        countryMap.put("Myanmar", "Myanmar");
-        countryMap.put("Brunei", "Brunei");
-        countryMap.put("Timor-Leste", "Timor-Leste");
-        
-        return countryMap.getOrDefault(englishName, englishName);
-    }
+
     
     private void updateCitiesByCountry() {
         String selectedCountry = (String) Country.getSelectedItem();
@@ -698,13 +599,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         City.removeAllItems();
         
-        // Thử lấy thành phố từ API trước
-        if (loadCitiesFromAPI(selectedCountry)) {
-            // Đã tải thành phố từ API
-        } else {
-            // Fallback: sử dụng dữ liệu cứng
-            // Không thể kết nối API, sử dụng dữ liệu cứng
-            loadFallbackCities(selectedCountry);
+        // Chỉ load thành phố cho Việt Nam
+        if ("Việt Nam".equals(selectedCountry)) {
+            loadVietnamCities();
         }
         
         // Cập nhật phí vận chuyển sau khi thay đổi thành phố
@@ -717,276 +614,79 @@ public class DatHangJDialog extends javax.swing.JDialog {
         // Đã cập nhật thành phố theo quốc gia
     }
     
-    private boolean loadCitiesFromAPI(String country) {
-        try {
-            // Sử dụng API để lấy thành phố theo quốc gia
-            String countryCode = getCountryCode(country);
-            if (countryCode == null) return false;
-            
-            String apiUrl = "https://api.teleport.org/api/cities/?search=" + countryCode + "&embed=city:search-results/city:item/city:urban_area";
-            
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl))
-                .header("Accept", "application/json")
-                .GET()
-                .build();
-            
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            
-            if (response.statusCode() == 200) {
-                JSONObject jsonResponse = new JSONObject(response.body());
-                JSONObject embedded = jsonResponse.getJSONObject("_embedded");
-                JSONArray searchResults = embedded.getJSONArray("city:search-results");
-                
-                List<String> cities = new ArrayList<>();
-                
-                for (int i = 0; i < searchResults.length(); i++) {
-                    JSONObject result = searchResults.getJSONObject(i);
-                    JSONObject cityItem = result.getJSONObject("_embedded").getJSONObject("city:item");
-                    String cityName = cityItem.getString("name");
-                    cities.add(cityName);
-                }
-                
-                // Lưu vào cache
-                citiesByCountry.put(country, cities);
-                
-                // Thêm vào ComboBox
-                for (String city : cities) {
-                    City.addItem(city);
-                }
-                
-                // Chọn thành phố đầu tiên
-                if (!cities.isEmpty()) {
-                    City.setSelectedItem(cities.get(0));
-                }
-                
-                return true;
-            }
-        } catch (Exception e) {
-            System.err.println("✗ Lỗi khi tải thành phố từ API cho " + country + ": " + e.getMessage());
-        }
-        
-        return false;
-    }
+
     
-    private void loadFallbackCities(String country) {
-        // Dữ liệu cứng khi không kết nối được API
+    private void loadVietnamCities() {
+        // Dữ liệu thành phố Việt Nam
         List<String> cities = new ArrayList<>();
         
-        switch (country) {
-            case "Việt Nam":
-                // Thành phố trực thuộc Trung ương (5)
-                String[] vietnamCities = {
-                    "TP Hà Nội", "TPHCM", "TP Đà Nẵng", "TP Hải Phòng", "TP Cần Thơ"
-                };
-                
-                // Tỉnh miền Bắc (12)
-                String[] northernProvinces = {
-                    "Cao Bằng", "Lạng Sơn", "Lai Châu", "Điện Biên", "Sơn La", "Tuyên Quang",
-                    "Lào Cai", "Thái Nguyên", "Phú Thọ", "Bắc Ninh", "Hưng Yên", "Ninh Bình"
-                };
-                
-                // Tỉnh miền Trung (11)
-                String[] centralProvinces = {
-                    "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Quảng Trị", "Quảng Ngãi", "Gia Lai",
-                    "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "TP Huế", "TP Đà Nẵng"
-                };
-                
-                // Tỉnh miền Nam (6)
-                String[] southernProvinces = {
-                    "Đồng Nai", "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
-                };
-                
-                // Thêm thành phố trước (ưu tiên hiển thị)
-                for (String city : vietnamCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                
-                // Thêm tỉnh miền Bắc
-                for (String province : northernProvinces) {
-                    cities.add(province);
-                    City.addItem(province);
-                }
-                
-                // Thêm tỉnh miền Trung
-                for (String province : centralProvinces) {
-                    cities.add(province);
-                    City.addItem(province);
-                }
-                
-                // Thêm tỉnh miền Nam
-                for (String province : southernProvinces) {
-                    cities.add(province);
-                    City.addItem(province);
-                }
-                
-                City.setSelectedItem("Hà Nội");
-                break;
-                
-            case "Lào":
-                String[] laosCities = {"Vientiane", "Luang Prabang", "Savannakhet", "Pakse", "Thakhek", "Oudomxay"};
-                for (String city : laosCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Vientiane");
-                break;
-                
-            case "Campuchia":
-                String[] cambodiaCities = {"Phnom Penh", "Siem Reap", "Battambang", "Sihanoukville", "Kampot", "Kep"};
-                for (String city : cambodiaCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Phnom Penh");
-                break;
-                
-            case "Thái Lan":
-                String[] thailandCities = {"Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Krabi", "Ayutthaya", "Hua Hin", "Koh Samui"};
-                for (String city : thailandCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Bangkok");
-                break;
-                
-            case "Singapore":
-                String[] singaporeCities = {"Singapore"};
-                for (String city : singaporeCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Singapore");
-                break;
-                
-            case "Malaysia":
-                String[] malaysiaCities = {"Kuala Lumpur", "Penang", "Malacca", "Johor Bahru", "Kuching", "Kota Kinabalu", "Ipoh", "Alor Setar"};
-                for (String city : malaysiaCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Kuala Lumpur");
-                break;
-                
-            default:
-                // Fallback
-                String[] defaultCities = {"Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng"};
-                for (String city : defaultCities) {
-                    cities.add(city);
-                    City.addItem(city);
-                }
-                City.setSelectedItem("Hà Nội");
-                break;
+        // Thành phố trực thuộc Trung ương (5)
+        String[] vietnamCities = {
+            "TP Hà Nội", "TPHCM", "TP Đà Nẵng", "TP Hải Phòng", "TP Cần Thơ"
+        };
+        
+        // Tỉnh miền Bắc (12)
+        String[] northernProvinces = {
+            "Cao Bằng", "Lạng Sơn", "Lai Châu", "Điện Biên", "Sơn La", "Tuyên Quang",
+            "Lào Cai", "Thái Nguyên", "Phú Thọ", "Bắc Ninh", "Hưng Yên", "Ninh Bình"
+        };
+        
+        // Tỉnh miền Trung (11)
+        String[] centralProvinces = {
+            "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Quảng Trị", "Quảng Ngãi", "Gia Lai",
+            "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "TP Huế", "TP Đà Nẵng"
+        };
+        
+        // Tỉnh miền Nam (6)
+        String[] southernProvinces = {
+            "Đồng Nai", "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
+        };
+        
+        // Thêm thành phố trước (ưu tiên hiển thị)
+        for (String city : vietnamCities) {
+            cities.add(city);
+            City.addItem(city);
         }
         
+        // Thêm tỉnh miền Bắc
+        for (String province : northernProvinces) {
+            cities.add(province);
+            City.addItem(province);
+        }
+        
+        // Thêm tỉnh miền Trung
+        for (String province : centralProvinces) {
+            cities.add(province);
+            City.addItem(province);
+        }
+        
+        // Thêm tỉnh miền Nam
+        for (String province : southernProvinces) {
+            cities.add(province);
+            City.addItem(province);
+        }
+        
+        City.setSelectedItem("TP Hà Nội");
+        
         // Lưu vào cache
-        citiesByCountry.put(country, cities);
+        citiesByCountry.put("Việt Nam", cities);
     }
     
-    private String getCountryCode(String countryName) {
-        Map<String, String> countryCodeMap = new HashMap<>();
-        countryCodeMap.put("Việt Nam", "VN");
-        countryCodeMap.put("Lào", "LA");
-        countryCodeMap.put("Campuchia", "KH");
-        countryCodeMap.put("Thái Lan", "TH");
-        countryCodeMap.put("Singapore", "SG");
-        countryCodeMap.put("Malaysia", "MY");
-        countryCodeMap.put("Indonesia", "ID");
-        countryCodeMap.put("Philippines", "PH");
-        countryCodeMap.put("Myanmar", "MM");
-        countryCodeMap.put("Brunei", "BN");
-        countryCodeMap.put("Timor-Leste", "TL");
-        
-        return countryCodeMap.get(countryName);
-    }
+
     
     private void showAPIStatus() {
         StringBuilder status = new StringBuilder();
-        status.append("🌐 API STATUS\n\n");
-        
-        // Kiểm tra kết nối API
-        boolean apiConnected = testAPIConnection();
-        
-        if (apiConnected) {
-            status.append("✅ API Connected\n");
-            status.append("📊 Countries: ").append(countries.size()).append("\n");
-            status.append("🏙️ Cities cached: ").append(citiesByCountry.size()).append(" countries\n");
-            status.append("🔗 Source: REST Countries API\n");
-            status.append("🌍 Coverage: Asian countries\n");
-        } else {
-            status.append("⚠️ API Disconnected\n");
-            status.append("📊 Countries: ").append(countries.size()).append(" (fallback)\n");
-            status.append("🏙️ Cities: Using local data\n");
-            status.append("🔗 Source: Local fallback data\n");
-        }
+        status.append("🇻🇳 VIỆT NAM ONLY\n\n");
+        status.append("✅ Chỉ hỗ trợ giao hàng trong nước\n");
+        status.append("📊 Thành phố: ").append(citiesByCountry.getOrDefault("Việt Nam", new ArrayList<>()).size()).append(" tỉnh/thành\n");
+        status.append("🔗 Nguồn: Dữ liệu local\n");
+        status.append("🌍 Phạm vi: Việt Nam\n");
         
         // Hiển thị tooltip cho Country ComboBox
         Country.setToolTipText(status.toString());
         
         // In thông tin ra console
-        // API Status
-    }
-    
-    private boolean testAPIConnection() {
-        try {
-            // Test kết nối API
-            String testUrl = "https://restcountries.com/v3.1/name/vietnam";
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(testUrl))
-                .header("Accept", "application/json")
-                .GET()
-                .timeout(java.time.Duration.ofSeconds(5))
-                .build();
-            
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
-    private void refreshAPIData() {
-        // Đang refresh dữ liệu từ API
-        
-        // Clear cache
-        countries.clear();
-        citiesByCountry.clear();
-        
-        // Reload countries
-        if (loadCountriesFromAPI()) {
-            // Đã refresh quốc gia từ API
-            
-            // Update ComboBox
-            Country.removeAllItems();
-            for (String country : countries) {
-                Country.addItem(country);
-            }
-            Country.setSelectedItem("Việt Nam");
-            
-            // Update cities for current country
-            String currentCountry = (String) Country.getSelectedItem();
-            if (currentCountry != null) {
-                updateCitiesByCountry();
-            }
-            
-            // Update API status
-            showAPIStatus();
-            
-            JOptionPane.showMessageDialog(this, 
-                "✅ Đã refresh dữ liệu từ API thành công!\n" +
-                "📊 Số quốc gia: " + countries.size() + "\n" +
-                "🏙️ Số thành phố cached: " + citiesByCountry.size(),
-                "API Refresh", 
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            System.err.println("❌ Không thể refresh dữ liệu từ API");
-            JOptionPane.showMessageDialog(this, 
-                "❌ Không thể kết nối API!\n" +
-                "Sử dụng dữ liệu local.",
-                "API Error", 
-                JOptionPane.WARNING_MESSAGE);
-        }
+        System.out.println("🇻🇳 Chế độ chỉ giao hàng trong nước");
     }
     
     private void loadCoupons() {
@@ -1159,25 +859,18 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private BigDecimal calculateShippingFee(String city, String country) {
-        // Tính phí vận chuyển cơ bản dựa trên thành phố và quốc gia
+        // Tính phí vận chuyển chỉ cho Việt Nam
         BigDecimal baseShippingFee;
         
         if ("Việt Nam".equals(country)) {
-            if ("Hà Nội".equals(city) || "TP. Hồ Chí Minh".equals(city)) {
+            if ("TP Hà Nội".equals(city) || "TPHCM".equals(city)) {
                 baseShippingFee = new BigDecimal("15000"); // 15,000 ₫ cho Hà Nội và TP.HCM
             } else {
                 baseShippingFee = new BigDecimal("25000"); // 25,000 ₫ cho các tỉnh khác
             }
-        } else if ("Lào".equals(country) || "Campuchia".equals(country)) {
-            baseShippingFee = new BigDecimal("80000"); // 80,000 ₫ cho Lào và Campuchia
-        } else if ("Thái Lan".equals(country)) {
-            baseShippingFee = new BigDecimal("120000"); // 120,000 ₫ cho Thái Lan
-        } else if ("Singapore".equals(country)) {
-            baseShippingFee = new BigDecimal("150000"); // 150,000 ₫ cho Singapore
-        } else if ("Malaysia".equals(country)) {
-            baseShippingFee = new BigDecimal("130000"); // 130,000 ₫ cho Malaysia
         } else {
-            baseShippingFee = new BigDecimal("200000"); // 200,000 ₫ cho các quốc gia khác
+            // Fallback cho trường hợp không phải Việt Nam
+            baseShippingFee = new BigDecimal("25000");
         }
         
         // Tính phí vận chuyển dựa trên số lượng đơn hàng
@@ -1348,7 +1041,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         info.append("✅ Đã cập nhật theo danh sách chính xác 34 tỉnh thành 2025\n\n");
         
-        info.append("ℹ️ Double click vào Country để refresh dữ liệu");
+        info.append("ℹ️ Chế độ chỉ giao hàng trong nước");
         
         // Hiển thị tooltip cho City ComboBox
         City.setToolTipText(info.toString());
@@ -1357,19 +1050,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private BigDecimal calculateBaseShippingFee(String city, String country) {
-        // Tính phí vận chuyển cơ bản (không tính theo số lượng đơn hàng)
+        // Tính phí vận chuyển cơ bản chỉ cho Việt Nam
         if ("Việt Nam".equals(country)) {
             return calculateVietnamShippingFee(city);
-        } else if ("Lào".equals(country) || "Campuchia".equals(country)) {
-            return new BigDecimal("80000");
-        } else if ("Thái Lan".equals(country)) {
-            return new BigDecimal("120000");
-        } else if ("Singapore".equals(country)) {
-            return new BigDecimal("150000");
-        } else if ("Malaysia".equals(country)) {
-            return new BigDecimal("130000");
         } else {
-            return new BigDecimal("200000");
+            return new BigDecimal("25000"); // Fallback
         }
     }
     
@@ -1820,6 +1505,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
             return;
         }
         
+        // Kiểm tra xem đã cập nhật đầy đủ thông tin cho đơn hàng chưa
+        if (!validateOrderInformation()) {
+            return;
+        }
+        
         // Validate form
         if (!validateForm()) {
             return;
@@ -1957,6 +1647,42 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 dispose();
             }
         }
+    }
+    
+    private boolean validateOrderInformation() {
+        // Kiểm tra xem đã cập nhật thông tin cho đơn hàng chưa
+        boolean hasUpdatedInfo = false;
+        
+        for (OrderRequestItem item : orderItems) {
+            if (item.getCustomerName() != null && !item.getCustomerName().trim().isEmpty() &&
+                item.getPhone() != null && !item.getPhone().trim().isEmpty() &&
+                item.getAddress() != null && !item.getAddress().trim().isEmpty() &&
+                item.getCity() != null && !item.getCity().trim().isEmpty() &&
+                item.getCountry() != null && !item.getCountry().trim().isEmpty()) {
+                hasUpdatedInfo = true;
+                break;
+            }
+        }
+        
+        if (!hasUpdatedInfo) {
+            JOptionPane.showMessageDialog(this,
+                "⚠️ Vui lòng cập nhật đầy đủ thông tin cho đơn hàng trước khi xác nhận!\n\n" +
+                "📋 Các thông tin cần thiết:\n" +
+                "• Họ và tên\n" +
+                "• Số điện thoại\n" +
+                "• Địa chỉ\n" +
+                "• Thành phố\n" +
+                "• Quốc gia\n\n" +
+                "💡 Hướng dẫn:\n" +
+                "1. Điền thông tin vào form\n" +
+                "2. Nhấn nút 'Cập nhật' để áp dụng thông tin\n" +
+                "3. Hoặc chọn dòng sản phẩm cụ thể rồi nhấn 'Cập nhật'",
+                "Thông tin đơn hàng chưa đầy đủ",
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        return true;
     }
     
     private boolean validateForm() {
