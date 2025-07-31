@@ -53,6 +53,10 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 }
             }
         });
+        
+        // Thêm các listener cho table
+        addTableSelectionListener();
+        addTableModelListener();
     }
 
     /**
@@ -72,7 +76,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
@@ -87,27 +90,10 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jButton11 = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox<>();
         jComboBox3 = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        jComboBox4 = new javax.swing.JComboBox<>();
+        jButton12 = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel16.setText("Chưa chọn đơn hàng nào");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -157,29 +143,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
             jTable1.getColumnModel().getColumn(9).setResizable(false);
         }
 
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 2 && jTable1.getSelectedRow() != -1) {
-                    int row = jTable1.getSelectedRow();
-                    // Lấy Order từ danh sách hiện tại (orderList hoặc từ model)
-                    int orderId = (int) jTable1.getValueAt(row, 0); // Giả sở cột 0 là OrderID
-                    Order order = orderDAO.selectById(orderId);
-                    if (order != null) {
-                        setForm(order);
-                        jTabbedPane1.setSelectedIndex(1); // Chuyển sang tab Chỉnh sửa
-                    }
-                }
-            }
-        });
-
-        jButton6.setText("Chọn mục");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
         jButton7.setText("Xóa mục đã chọn");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,9 +169,9 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jLabel13.setText("Tìm kiếm Theo Trạng Thái:");
 
         jButton10.setText("Tìm");
-        jComboBox3.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox3ItemStateChanged(evt);
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
             }
         });
 
@@ -217,15 +180,34 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jLabel15.setText("Đến Ngày");
 
         jButton11.setText("Tìm");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Hôm Nay", "Tuần Này", "Tháng Này", "Qúy Này", "Năm Nay" }));
         jComboBox2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBox2ItemStateChanged(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Hôm Nay", "Tuần Này", "Tháng Này", "Qúy Này", "Năm Nay" }));
-
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "Processing", "Shipped", "Completed", "Cancelled" }));
+        jComboBox3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox3ItemStateChanged(evt);
+            }
+        });
+
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pending", "Processing", "Shipped", "Completed", "Cancelled" }));
+
+        jButton12.setText("Cập nhật trạng thái");
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -271,19 +253,27 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton11)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 43, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(jButton6)
-                .addGap(51, 51, 51)
-                .addComponent(jButton7)
-                .addGap(52, 52, 52)
-                .addComponent(jButton8)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(126, 126, 126)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton7)
+                        .addGap(107, 107, 107)
+                        .addComponent(jButton8)
+                        .addGap(112, 112, 112))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton12)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,156 +306,17 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
                     .addComponent(jButton7)
-                    .addComponent(jButton8))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton8)
+                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jButton12)
+                .addGap(18, 18, 18))
         );
 
         jTabbedPane1.addTab("Danh mục", jPanel1);
-
-        jLabel11.setText("CouponID:");
-
-        jLabel8.setText("OrderDate:");
-
-        jLabel9.setText("UserID:");
-
-        jLabel10.setText("TotalAmount:");
-
-        jButton2.setText("Thêm");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Cập nhật");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("Xóa");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setText("OrderID:");
-
-        jButton5.setText("Làm mới");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("PaymentMethod:");
-
-        jLabel5.setText("OrderStatus:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pending", "Processing", "Shipped", "Completed", "Cancelled" }));
-
-        jLabel7.setText("DeliveryAddressID:");
-
-        lblTimeRange = new javax.swing.JLabel();
-        jPanel1.add(lblTimeRange);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton3)
-                        .addGap(31, 31, 31)
-                        .addComponent(jButton4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, 0, 264, Short.MAX_VALUE)
-                                .addGap(34, 34, 34)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel9)
-                                            .addComponent(jLabel6))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                                            .addComponent(jTextField4))))
-                                .addGap(40, 40, 40)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(187, Short.MAX_VALUE))))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(308, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Chỉnh sửa", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -489,41 +340,16 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
 this.open();        // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         this.create();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-this.update();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-this.delete();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-this.clear();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
- this.edit();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-this.deleteCheckedItems();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
-
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-this. uncheckAll();        // TODO add your handling code here:
+        this. uncheckAll();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    // === Sự kiện nút trên giao diện ===
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        this.deleteCheckedItems();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
 
-
-
-
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm kiếm theo tên khách hàng
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Tìm kiếm theo tên khách hàng
         String keyword = jTextField1.getText().trim();
         List<Order> result = new ArrayList<>();
         if (!keyword.isEmpty()) {
@@ -533,7 +359,14 @@ this. uncheckAll();        // TODO add your handling code here:
             }
         }
         fillToTableWithList(result);
-    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+        updateOrderStatusForSelected();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    // === Sự kiện nút trên giao diện ===
+
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm theo mã hóa đơn
         String keyword = jTextField9.getText().trim();
         List<Order> result;
@@ -551,6 +384,67 @@ this. uncheckAll();        // TODO add your handling code here:
         }
         fillToTableWithList(result);
     }
+    
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm theo trạng thái
+        String status = (String) jComboBox3.getSelectedItem();
+        List<Order> result;
+        if ("All".equals(status)) {
+            result = orderDAO.selectAll();
+        } else {
+            result = selectByStatus(status);
+        }
+        fillToTableWithList(result);
+    }
+    
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm theo thời gian
+        String period = (String) jComboBox2.getSelectedItem();
+        LocalDateTime from = null, to = null;
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        switch (period) {
+            case "Tất Cả":
+                from = LocalDateTime.MIN;
+                to = LocalDateTime.MAX;
+                break;
+            case "Hôm Nay":
+                from = today.atStartOfDay();
+                to = today.atTime(LocalTime.MAX);
+                break;
+            case "Tuần Này": {
+                LocalDate firstDay = today.minusDays(today.getDayOfWeek().getValue() - 1);
+                LocalDate lastDay = firstDay.plusDays(6);
+                from = firstDay.atStartOfDay();
+                to = lastDay.atTime(LocalTime.MAX);
+                break;
+            }
+            case "Tháng Này": {
+                LocalDate firstDay = today.withDayOfMonth(1);
+                LocalDate lastDay = today.withDayOfMonth(today.lengthOfMonth());
+                from = firstDay.atStartOfDay();
+                to = lastDay.atTime(LocalTime.MAX);
+                break;
+            }
+            case "Qúy Này": {
+                int month = today.getMonthValue();
+                int quarter = (month - 1) / 3 + 1;
+                LocalDate firstDay = LocalDate.of(today.getYear(), (quarter - 1) * 3 + 1, 1);
+                LocalDate lastDay = firstDay.plusMonths(2).withDayOfMonth(firstDay.plusMonths(2).lengthOfMonth());
+                from = firstDay.atStartOfDay();
+                to = lastDay.atTime(LocalTime.MAX);
+                break;
+            }
+            case "Năm Nay": {
+                LocalDate firstDay = today.withDayOfYear(1);
+                LocalDate lastDay = today.withDayOfYear(today.lengthOfYear());
+                from = firstDay.atStartOfDay();
+                to = lastDay.atTime(LocalTime.MAX);
+                break;
+            }
+        }
+        List<Order> result = selectByDateRange(from, to);
+        fillToTableWithList(result);
+    }
+    
     private void jComboBox3ItemStateChanged(java.awt.event.ItemEvent evt) { // Trạng thái
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             String status = (String) jComboBox3.getSelectedItem();
@@ -563,6 +457,7 @@ this. uncheckAll();        // TODO add your handling code here:
             fillToTableWithList(result);
         }
     }
+    
     private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) { // Thời gian
         if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             String period = (String) jComboBox2.getSelectedItem();
@@ -573,14 +468,14 @@ this. uncheckAll();        // TODO add your handling code here:
                 case "Tất Cả":
                     from = LocalDateTime.MIN;
                     to = LocalDateTime.MAX;
-                    lblTimeRange.setText("");
+                    if (lblTimeRange != null) lblTimeRange.setText("");
                     jTextField11.setText("");
                     jTextField12.setText("");
                     break;
                 case "Hôm Nay":
                     from = today.atStartOfDay();
                     to = today.atTime(LocalTime.MAX);
-                    lblTimeRange.setText(today.format(fmt));
+                    if (lblTimeRange != null) lblTimeRange.setText(today.format(fmt));
                     jTextField11.setText(today.format(fmt));
                     jTextField12.setText(today.format(fmt));
                     break;
@@ -589,7 +484,7 @@ this. uncheckAll();        // TODO add your handling code here:
                     LocalDate lastDay = firstDay.plusDays(6);
                     from = firstDay.atStartOfDay();
                     to = lastDay.atTime(LocalTime.MAX);
-                    lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
+                    if (lblTimeRange != null) lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
                     jTextField11.setText(firstDay.format(fmt));
                     jTextField12.setText(lastDay.format(fmt));
                     break;
@@ -599,7 +494,7 @@ this. uncheckAll();        // TODO add your handling code here:
                     LocalDate lastDay = today.withDayOfMonth(today.lengthOfMonth());
                     from = firstDay.atStartOfDay();
                     to = lastDay.atTime(LocalTime.MAX);
-                    lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
+                    if (lblTimeRange != null) lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
                     jTextField11.setText(firstDay.format(fmt));
                     jTextField12.setText(lastDay.format(fmt));
                     break;
@@ -611,7 +506,7 @@ this. uncheckAll();        // TODO add your handling code here:
                     LocalDate lastDay = firstDay.plusMonths(2).withDayOfMonth(firstDay.plusMonths(2).lengthOfMonth());
                     from = firstDay.atStartOfDay();
                     to = lastDay.atTime(LocalTime.MAX);
-                    lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
+                    if (lblTimeRange != null) lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
                     jTextField11.setText(firstDay.format(fmt));
                     jTextField12.setText(lastDay.format(fmt));
                     break;
@@ -621,7 +516,7 @@ this. uncheckAll();        // TODO add your handling code here:
                     LocalDate lastDay = today.withDayOfYear(today.lengthOfYear());
                     from = firstDay.atStartOfDay();
                     to = lastDay.atTime(LocalTime.MAX);
-                    lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
+                    if (lblTimeRange != null) lblTimeRange.setText(firstDay.format(fmt) + " - " + lastDay.format(fmt));
                     jTextField11.setText(firstDay.format(fmt));
                     jTextField12.setText(lastDay.format(fmt));
                     break;
@@ -678,46 +573,27 @@ this. uncheckAll();        // TODO add your handling code here:
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
@@ -735,88 +611,89 @@ this. uncheckAll();        // TODO add your handling code here:
     public void fillToTable() {
         orderList = orderDAO.selectAll();
         fillToTableWithList(orderList);
+        updateComboBoxStatus();
     }
+//
+//    @Override
+//    public void setForm(poly.entity.Order o) {
+//        jTextField2.setText(o.getOrderId() != null ? o.getOrderId().toString() : "");
+//        jTextField4.setText(o.getUserId() != null ? o.getUserId().toString() : "");
+//        jTextField3.setText(o.getOrderDate() != null ? o.getOrderDate().toString() : "");
+//        jTextField5.setText(o.getTotalAmount() != null ? o.getTotalAmount().toString() : "");
+//        jTextField6.setText(o.getCouponId() != null ? o.getCouponId() : "");
+//        jTextField7.setText(o.getPaymentMethod() != null ? o.getPaymentMethod() : "");
+//        jComboBox1.setSelectedItem(o.getOrderStatus() != null ? o.getOrderStatus() : "Pending");
+//        jTextField8.setText(o.getDeliveryAddressId() != null ? o.getDeliveryAddressId().toString() : "");
+//    }
+//
+//    @Override
+//    public poly.entity.Order getForm() {
+//        poly.entity.Order o = new poly.entity.Order();
+//        try { o.setOrderId(jTextField2.getText().isEmpty() ? null : Integer.parseInt(jTextField2.getText())); } catch(Exception e) { o.setOrderId(null); }
+//        try { o.setUserId(jTextField4.getText().isEmpty() ? null : Integer.parseInt(jTextField4.getText())); } catch(Exception e) { o.setUserId(null); }
+//        try { o.setOrderDate(jTextField3.getText().isEmpty() ? null : java.time.LocalDateTime.parse(jTextField3.getText())); } catch(Exception e) { o.setOrderDate(null); }
+//        try { o.setTotalAmount(jTextField5.getText().isEmpty() ? null : new java.math.BigDecimal(jTextField5.getText())); } catch(Exception e) { o.setTotalAmount(null); }
+//        o.setCouponId(jTextField6.getText());
+//        o.setPaymentMethod(jTextField7.getText());
+//        o.setOrderStatus((String) jComboBox1.getSelectedItem());
+//        try { o.setDeliveryAddressId(jTextField8.getText().isEmpty() ? null : Integer.parseInt(jTextField8.getText())); } catch(Exception e) { o.setDeliveryAddressId(null); }
+//        o.setIsActive(true);
+//        return o;
+//    }
 
-    @Override
-    public void setForm(poly.entity.Order o) {
-        jTextField2.setText(o.getOrderId() != null ? o.getOrderId().toString() : "");
-        jTextField4.setText(o.getUserId() != null ? o.getUserId().toString() : "");
-        jTextField3.setText(o.getOrderDate() != null ? o.getOrderDate().toString() : "");
-        jTextField5.setText(o.getTotalAmount() != null ? o.getTotalAmount().toString() : "");
-        jTextField6.setText(o.getCouponId() != null ? o.getCouponId() : "");
-        jTextField7.setText(o.getPaymentMethod() != null ? o.getPaymentMethod() : "");
-        jComboBox1.setSelectedItem(o.getOrderStatus() != null ? o.getOrderStatus() : "Pending");
-        jTextField8.setText(o.getDeliveryAddressId() != null ? o.getDeliveryAddressId().toString() : "");
-    }
-
-    @Override
-    public poly.entity.Order getForm() {
-        poly.entity.Order o = new poly.entity.Order();
-        try { o.setOrderId(jTextField2.getText().isEmpty() ? null : Integer.parseInt(jTextField2.getText())); } catch(Exception e) { o.setOrderId(null); }
-        try { o.setUserId(jTextField4.getText().isEmpty() ? null : Integer.parseInt(jTextField4.getText())); } catch(Exception e) { o.setUserId(null); }
-        try { o.setOrderDate(jTextField3.getText().isEmpty() ? null : java.time.LocalDateTime.parse(jTextField3.getText())); } catch(Exception e) { o.setOrderDate(null); }
-        try { o.setTotalAmount(jTextField5.getText().isEmpty() ? null : new java.math.BigDecimal(jTextField5.getText())); } catch(Exception e) { o.setTotalAmount(null); }
-        o.setCouponId(jTextField6.getText());
-        o.setPaymentMethod(jTextField7.getText());
-        o.setOrderStatus((String) jComboBox1.getSelectedItem());
-        try { o.setDeliveryAddressId(jTextField8.getText().isEmpty() ? null : Integer.parseInt(jTextField8.getText())); } catch(Exception e) { o.setDeliveryAddressId(null); }
-        o.setIsActive(true);
-        return o;
-    }
-
-    @Override
-    public void create() {
-        poly.entity.Order o = getForm();
-        orderDAO.insert(o);
-        fillToTable();
-        clear();
-        javax.swing.JOptionPane.showMessageDialog(this, "Thêm hóa đơn thành công!");
-    }
-
-    @Override
-    public void update() {
-        poly.entity.Order o = getForm();
-        orderDAO.update(o);
-        fillToTable();
-        javax.swing.JOptionPane.showMessageDialog(this, "Cập nhật hóa đơn thành công!");
-    }
-
-    @Override
-    public void delete() {
-        String id = jTextField2.getText();
-        if (id.isEmpty()) return;
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa hóa đơn này?", "Xác nhận", javax.swing.JOptionPane.YES_NO_OPTION);
-        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
-        orderDAO.delete(Integer.parseInt(id));
-        fillToTable();
-        clear();
-        javax.swing.JOptionPane.showMessageDialog(this, "Xóa hóa đơn thành công!");
-    }
-
-    @Override
-    public void clear() {
-        jTextField2.setText("");
-        jTextField4.setText("");
-        jTextField3.setText("");
-        jTextField5.setText("");
-        jTextField6.setText("");
-        jTextField7.setText("");
-        jComboBox1.setSelectedIndex(0);
-        jTextField8.setText("");
-        currentRow = -1;
-    }
-
-    @Override
-    public void setEditable(boolean editable) {
-        jTextField2.setEditable(editable);
-        jTextField4.setEditable(editable);
-        jTextField3.setEditable(editable);
-        jTextField5.setEditable(editable);
-        jTextField6.setEditable(editable);
-        jTextField7.setEditable(editable);
-        jComboBox1.setEnabled(editable);
-        jTextField8.setEditable(editable);
-    }
+//    @Override
+//    public void create() {
+//        poly.entity.Order o = getForm();
+//        orderDAO.insert(o);
+//        fillToTable();
+//        clear();
+//        javax.swing.JOptionPane.showMessageDialog(this, "Thêm hóa đơn thành công!");
+//    }
+//
+//    @Override
+//    public void update() {
+//        poly.entity.Order o = getForm();
+//        orderDAO.update(o);
+//        fillToTable();
+//        javax.swing.JOptionPane.showMessageDialog(this, "Cập nhật hóa đơn thành công!");
+//    }
+//
+//    @Override
+//    public void delete() {
+//        String id = jTextField2.getText();
+//        if (id.isEmpty()) return;
+//        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa hóa đơn này?", "Xác nhận", javax.swing.JOptionPane.YES_NO_OPTION);
+//        if (confirm != javax.swing.JOptionPane.YES_OPTION) return;
+//        orderDAO.delete(Integer.parseInt(id));
+//        fillToTable();
+//        clear();
+//        javax.swing.JOptionPane.showMessageDialog(this, "Xóa hóa đơn thành công!");
+//    }
+//
+//    @Override
+//    public void clear() {
+//        jTextField2.setText("");
+//        jTextField4.setText("");
+//        jTextField3.setText("");
+//        jTextField5.setText("");
+//        jTextField6.setText("");
+//        jTextField7.setText("");
+//        jComboBox1.setSelectedIndex(0);
+//        jTextField8.setText("");
+//        currentRow = -1;
+//    }
+//
+//    @Override
+//    public void setEditable(boolean editable) {
+//        jTextField2.setEditable(editable);
+//        jTextField4.setEditable(editable);
+//        jTextField3.setEditable(editable);
+//        jTextField5.setEditable(editable);
+//        jTextField6.setEditable(editable);
+//        jTextField7.setEditable(editable);
+//        jComboBox1.setEnabled(editable);
+//        jTextField8.setEditable(editable);
+//    }
 
     @Override
     public void edit() {
@@ -832,11 +709,63 @@ this. uncheckAll();        // TODO add your handling code here:
     }
 
     @Override
+    public void create() {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+    }
+
+    @Override
+    public void update() {
+        // Không cần implement vì màn hình này chỉ cập nhật trạng thái
+    }
+
+    @Override
+    public void delete() {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+    }
+
+    @Override
+    public void clear() {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+    }
+
+    @Override
+    public void setForm(Order entity) {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+    }
+
+    @Override
+    public Order getForm() {
+        // Không cần implement vì màn hình này chỉ xem và cập nhật đơn hàng
+        return null;
+    }
+
+//    @Override
+//    public void moveFirst() {
+//        if (orderList.isEmpty()) return;
+//        currentRow = 0;
+//        setForm(orderList.get(currentRow));
+//        jTable1.setRowSelectionInterval(currentRow, currentRow);
+//    }
+//
+//    @Override
+//    public void movePrevious() {
+//        if (orderList.isEmpty() || currentRow <= 0) return;
+//        currentRow--;
+//        setForm(orderList.get(currentRow));
+//        jTable1.setRowSelectionInterval(currentRow, currentRow);
+//    }
+    @Override
     public void moveFirst() {
-        if (orderList.isEmpty()) return;
-        currentRow = 0;
-        setForm(orderList.get(currentRow));
-        jTable1.setRowSelectionInterval(currentRow, currentRow);
+        if (!orderList.isEmpty()) {
+            currentRow = 0;
+            setForm(orderList.get(currentRow));
+            jTable1.setRowSelectionInterval(currentRow, currentRow);
+        }
     }
 
     @Override
@@ -857,18 +786,20 @@ this. uncheckAll();        // TODO add your handling code here:
 
     @Override
     public void moveLast() {
-        if (orderList.isEmpty()) return;
-        currentRow = orderList.size() - 1;
-        setForm(orderList.get(currentRow));
-        jTable1.setRowSelectionInterval(currentRow, currentRow);
+        if (!orderList.isEmpty()) {
+            currentRow = orderList.size() - 1;
+            setForm(orderList.get(currentRow));
+            jTable1.setRowSelectionInterval(currentRow, currentRow);
+        }
     }
 
     @Override
     public void moveTo(int rowIndex) {
-        if (orderList.isEmpty() || rowIndex < 0 || rowIndex >= orderList.size()) return;
-        currentRow = rowIndex;
-        setForm(orderList.get(currentRow));
-        jTable1.setRowSelectionInterval(currentRow, currentRow);
+        if (rowIndex >= 0 && rowIndex < orderList.size()) {
+            currentRow = rowIndex;
+            setForm(orderList.get(rowIndex));
+            jTable1.setRowSelectionInterval(currentRow, currentRow);
+        }
     }
 
     @Override
@@ -877,6 +808,7 @@ this. uncheckAll();        // TODO add your handling code here:
         for (int i = 0; i < model.getRowCount(); i++) {
             model.setValueAt(true, i, 9);
         }
+        updateComboBoxStatus();
     }
 
     @Override
@@ -885,6 +817,7 @@ this. uncheckAll();        // TODO add your handling code here:
         for (int i = 0; i < model.getRowCount(); i++) {
             model.setValueAt(false, i, 9);
         }
+        updateComboBoxStatus();
     }
 
     @Override
@@ -993,5 +926,244 @@ this. uncheckAll();        // TODO add your handling code here:
             });
         }
         currentRow = -1;
+        updateComboBoxStatus();
+    }
+    
+    /**
+     * Cập nhật trạng thái cho các đơn hàng được chọn
+     */
+    private void updateOrderStatusForSelected() {
+        String newStatus = (String) jComboBox4.getSelectedItem();
+        if (newStatus == null || newStatus.trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn trạng thái mới!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        java.util.List<Integer> selectedOrderIds = new java.util.ArrayList<>();
+        java.util.List<String> completedOrders = new java.util.ArrayList<>();
+        
+        // Kiểm tra các đơn hàng được chọn
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean checked = (Boolean) model.getValueAt(i, 9);
+            if (checked != null && checked) {
+                Integer orderId = (Integer) model.getValueAt(i, 0);
+                String currentStatus = (String) model.getValueAt(i, 7);
+                
+                // Kiểm tra nếu đơn hàng đã ở trạng thái Completed
+                if ("Completed".equals(currentStatus)) {
+                    completedOrders.add("Đơn hàng #" + orderId);
+                } else {
+                    selectedOrderIds.add(orderId);
+                }
+            }
+        }
+        
+        // Hiển thị cảnh báo nếu có đơn hàng Completed được chọn
+        if (!completedOrders.isEmpty()) {
+            StringBuilder message = new StringBuilder("Không thể cập nhật trạng thái cho các đơn hàng sau (đã hoàn thành):\n");
+            for (String order : completedOrders) {
+                message.append("- ").append(order).append("\n");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, message.toString(), "Cảnh báo", javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+        
+        // Cập nhật trạng thái cho các đơn hàng có thể cập nhật
+        if (selectedOrderIds.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một đơn hàng để cập nhật!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        // Xác nhận cập nhật
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+            this, 
+            "Bạn có chắc chắn muốn cập nhật trạng thái thành '" + newStatus + "' cho " + selectedOrderIds.size() + " đơn hàng được chọn?",
+            "Xác nhận cập nhật",
+            javax.swing.JOptionPane.YES_NO_OPTION
+        );
+        
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        // Thực hiện cập nhật
+        int successCount = 0;
+        for (Integer orderId : selectedOrderIds) {
+            try {
+                orderDAO.updateOrderStatus(orderId, newStatus);
+                successCount++;
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi cập nhật đơn hàng #" + orderId + ": " + e.getMessage(), 
+                    "Lỗi", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        // Hiển thị kết quả
+        if (successCount > 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Đã cập nhật thành công trạng thái cho " + successCount + " đơn hàng!", 
+                "Thành công", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+            // Refresh bảng
+            fillToTable();
+            
+            // Bỏ chọn tất cả
+            uncheckAll();
+            
+            // Cập nhật trạng thái combobox
+            updateComboBoxStatus();
+        }
+    }
+    
+    /**
+     * Kiểm tra xem trạng thái có thể chuyển đổi được không
+     */
+    private boolean canUpdateStatus(String currentStatus, String newStatus) {
+        // Nếu đơn hàng đã hoàn thành, không thể cập nhật
+        if ("Completed".equals(currentStatus)) {
+            return false;
+        }
+        
+        // Các trạng thái khác có thể chuyển đổi tự do
+        return true;
+    }
+    
+    /**
+     * Lấy danh sách các trạng thái có thể chuyển đổi từ trạng thái hiện tại
+     */
+    private java.util.List<String> getAvailableStatuses(String currentStatus) {
+        java.util.List<String> availableStatuses = new java.util.ArrayList<>();
+        
+        if ("Completed".equals(currentStatus)) {
+            // Đơn hàng đã hoàn thành không thể thay đổi trạng thái
+            return availableStatuses;
+        }
+        
+        // Các trạng thái có thể chuyển đổi
+        availableStatuses.add("Pending");
+        availableStatuses.add("Processing");
+        availableStatuses.add("Shipped");
+        availableStatuses.add("Completed");
+        availableStatuses.add("Cancelled");
+        
+        return availableStatuses;
+    }
+    
+    /**
+     * Cập nhật trạng thái của combobox dựa trên đơn hàng được chọn
+     */
+    private void updateComboBoxStatus() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        java.util.Set<String> selectedStatuses = new java.util.HashSet<>();
+        int selectedCount = 0;
+        int completedCount = 0;
+        
+        // Lấy tất cả trạng thái của các đơn hàng được chọn
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean checked = (Boolean) model.getValueAt(i, 9);
+            if (checked != null && checked) {
+                selectedCount++;
+                String currentStatus = (String) model.getValueAt(i, 7);
+                selectedStatuses.add(currentStatus);
+                if ("Completed".equals(currentStatus)) {
+                    completedCount++;
+                }
+            }
+        }
+        
+        // Cập nhật thông tin hiển thị
+        if (selectedCount == 0) {
+            jLabel16.setText("Chưa chọn đơn hàng nào");
+            jComboBox4.setEnabled(false);
+            jButton12.setEnabled(false);
+        } else if (completedCount > 0) {
+            jLabel16.setText("Đã chọn " + selectedCount + " đơn hàng (" + completedCount + " đơn đã hoàn thành - không thể cập nhật)");
+            jComboBox4.setEnabled(false);
+            jButton12.setEnabled(false);
+        } else {
+            jLabel16.setText("Đã chọn " + selectedCount + " đơn hàng - Có thể cập nhật trạng thái");
+            jComboBox4.setEnabled(true);
+            jButton12.setEnabled(true);
+        }
+    }
+    
+    /**
+     * Thêm listener cho việc thay đổi selection trong table
+     */
+    private void addTableSelectionListener() {
+        jTable1.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    updateComboBoxStatus();
+                }
+            }
+        });
+    }
+    
+    /**
+     * Thêm listener cho việc thay đổi checkbox trong table
+     */
+    private void addTableModelListener() {
+        jTable1.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
+            @Override
+            public void tableChanged(javax.swing.event.TableModelEvent e) {
+                if (e.getColumn() == 9) { // Cột checkbox
+                    updateComboBoxStatus();
+                }
+            }
+        });
+    }
+    
+    /**
+     * Hiển thị thông tin chi tiết về các đơn hàng được chọn
+     */
+    private void showSelectedOrdersInfo() {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        java.util.List<String> selectedOrders = new java.util.ArrayList<>();
+        java.util.List<String> completedOrders = new java.util.ArrayList<>();
+        
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean checked = (Boolean) model.getValueAt(i, 9);
+            if (checked != null && checked) {
+                Integer orderId = (Integer) model.getValueAt(i, 0);
+                String customerName = (String) model.getValueAt(i, 2);
+                String currentStatus = (String) model.getValueAt(i, 7);
+                String orderInfo = "Đơn hàng #" + orderId + " - " + customerName + " (" + currentStatus + ")";
+                
+                if ("Completed".equals(currentStatus)) {
+                    completedOrders.add(orderInfo);
+                } else {
+                    selectedOrders.add(orderInfo);
+                }
+            }
+        }
+        
+        if (selectedOrders.isEmpty() && completedOrders.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Chưa chọn đơn hàng nào!", "Thông tin", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        StringBuilder message = new StringBuilder("Thông tin các đơn hàng được chọn:\n\n");
+        
+        if (!selectedOrders.isEmpty()) {
+            message.append("Có thể cập nhật (").append(selectedOrders.size()).append(" đơn):\n");
+            for (String order : selectedOrders) {
+                message.append("- ").append(order).append("\n");
+            }
+            message.append("\n");
+        }
+        
+        if (!completedOrders.isEmpty()) {
+            message.append("Không thể cập nhật (").append(completedOrders.size()).append(" đơn đã hoàn thành):\n");
+            for (String order : completedOrders) {
+                message.append("- ").append(order).append("\n");
+            }
+        }
+        
+        javax.swing.JOptionPane.showMessageDialog(this, message.toString(), "Thông tin đơn hàng", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
 }
