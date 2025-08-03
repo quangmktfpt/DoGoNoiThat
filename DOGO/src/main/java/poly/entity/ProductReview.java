@@ -17,6 +17,7 @@ public class ProductReview {
     private Byte rating;
     private String comment;
     private LocalDateTime reviewDate;
+    private String userName; // Tên người dùng đánh giá
 
     public ProductReview() {
     }
@@ -67,6 +68,14 @@ public class ProductReview {
 
     public void setReviewDate(LocalDateTime reviewDate) {
         this.reviewDate = reviewDate;
+    }
+    
+    public String getUserName() {
+        return userName;
+    }
+    
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public ProductReview(Integer reviewId, String productId, Integer userId, Byte rating, String comment, LocalDateTime reviewDate) {

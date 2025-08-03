@@ -18,6 +18,7 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
     private String productId;
     private int userId;
     private int selectedRating = 0;
+    private Runnable onReviewSubmitted; // Callback khi đánh giá được gửi
 
     public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
         super(parent, "Đánh giá sản phẩm", true);
@@ -33,6 +34,12 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         // Đảm bảo dialog có kích thước phù hợp với layout mới
         if (getWidth() < 700) setSize(700, getHeight());
         if (getHeight() < 500) setSize(getWidth(), 500);
+    }
+    
+    // Constructor với callback
+    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua, Runnable onReviewSubmitted) {
+        this(parent, productId, userId, tenSanPham, hinhAnh, daMua);
+        this.onReviewSubmitted = onReviewSubmitted;
     }
 
     /**
@@ -415,6 +422,12 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                 "Cảm ơn bạn đã đánh giá sản phẩm!\nĐánh giá của bạn đã được lưu thành công.", 
                 "Thành công", 
                 JOptionPane.INFORMATION_MESSAGE);
+            
+            // Gọi callback nếu có
+            if (onReviewSubmitted != null) {
+                onReviewSubmitted.run();
+            }
+            
             dispose();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, 

@@ -58,6 +58,12 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jLabel11 = new javax.swing.JLabel();
+        jPasswordField2 = new javax.swing.JPasswordField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,6 +93,15 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
 
         jButton1.setText("Cập nhật thông tin");
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Hủy tài khoản");
+
+        jLabel10.setText("Mật khẩu:");
+
+        jLabel11.setText("Xác nhận mật khẩu");
+
+        jButton2.setText("Hủy tài khoản");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -111,10 +126,21 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
                             .addComponent(jLabel5)
                             .addGap(18, 18, 18)
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel6)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(jLabel8))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton1)
+                        .addComponent(jButton2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPasswordField2))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -122,46 +148,60 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addComponent(jLabel8)))
-                .addContainerGap(67, Short.MAX_VALUE))
+                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPasswordField1)))))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8)
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jButton1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel11))
+                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(22, 22, 22))
+                .addComponent(jButton2)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -193,7 +233,14 @@ private void fillUserInfo(String username) {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateUserInfo();
             }
-        });   
+        });
+        
+        // Thêm event handler cho nút xóa tài khoản
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                disableAccount();
+            }
+        });
     }
 
   private void updateUserInfo() {
@@ -241,6 +288,142 @@ if (!currentPass.isEmpty() || !newPass.isEmpty()) {
 }
 
     /**
+     * Vô hiệu hóa tài khoản - giữ nguyên dữ liệu nhưng không cho phép đăng nhập
+     */
+    private void disableAccount() {
+        // Kiểm tra mật khẩu
+        String password = new String(jPasswordField1.getPassword());
+        String confirmPassword = new String(jPasswordField2.getPassword());
+        
+        if (password.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ mật khẩu và xác nhận mật khẩu!", 
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!password.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", 
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!password.equals(user.getPasswordHash())) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không đúng!", 
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Xác nhận vô hiệu hóa tài khoản
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "⚠️ VÔ HIỆU HÓA TÀI KHOẢN ⚠️\n\n" +
+            "Bạn có chắc chắn muốn vô hiệu hóa tài khoản '" + user.getUsername() + "'?\n\n" +
+            "Hành động này sẽ:\n" +
+            "• Vô hiệu hóa tài khoản (không thể đăng nhập)\n" +
+            "• Giữ nguyên tất cả dữ liệu cá nhân\n" +
+            "• Giữ nguyên lịch sử đơn hàng\n" +
+            "• Giữ nguyên đánh giá sản phẩm\n" +
+            "• Có thể kích hoạt lại bởi admin\n\n" +
+            "Bạn có muốn tiếp tục?",
+            "XÁC NHẬN VÔ HIỆU HÓA TÀI KHOẢN",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+            
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        // Thực hiện vô hiệu hóa tài khoản
+        try {
+            Integer userId = user.getUserId();
+            
+            System.out.println("Bắt đầu vô hiệu hóa tài khoản cho UserID: " + userId);
+            
+            // Cập nhật trạng thái IsActive = 0 (vô hiệu hóa)
+            String disableUserSQL = "UPDATE Users SET IsActive = 0 WHERE UserID = ?";
+            int updatedUser = poly.util.XJdbc.executeUpdate(disableUserSQL, userId);
+            System.out.println("Đã vô hiệu hóa " + updatedUser + " tài khoản user");
+            
+            if (updatedUser == 0) {
+                throw new Exception("Không thể vô hiệu hóa tài khoản - UserID không tồn tại");
+            }
+            
+            // Thông báo thành công
+            JOptionPane.showMessageDialog(this,
+                "✅ Tài khoản đã được vô hiệu hóa thành công!\n\n" +
+                "Tài khoản '" + user.getUsername() + "' đã bị vô hiệu hóa.\n" +
+                "Tất cả dữ liệu vẫn được giữ nguyên.\n" +
+                "Bạn sẽ được đăng xuất khỏi hệ thống.",
+                "VÔ HIỆU HÓA TÀI KHOẢN THÀNH CÔNG",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            // Đăng xuất
+            logoutAndClose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "❌ Lỗi khi vô hiệu hóa tài khoản: " + e.getMessage() + "\n\n" +
+                "Vui lòng thử lại hoặc liên hệ admin.",
+                "LỖI VÔ HIỆU HÓA TÀI KHOẢN",
+                JOptionPane.ERROR_MESSAGE);
+            
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Đăng xuất và chuyển về màn hình đăng nhập
+     */
+    private void logoutAndClose() {
+        // Xóa thông tin user hiện tại
+        poly.util.CurrentUserUtil.setCurrentUserId(null);
+        poly.util.CurrentUserUtil.setCurrentUsername(null);
+        
+        // Đóng dialog hiện tại
+        this.dispose();
+        
+        try {
+            // Tìm parent frame
+            java.awt.Frame parentFrame = (java.awt.Frame) this.getOwner();
+            if (parentFrame != null) {
+                // Đóng parent frame (màn hình chính)
+                parentFrame.dispose();
+                
+                // Hiển thị thông báo đăng xuất
+                JOptionPane.showMessageDialog(null,
+                    "Bạn đã được đăng xuất khỏi hệ thống.\n" +
+                    "Vui lòng đăng nhập lại nếu muốn sử dụng hệ thống.",
+                    "ĐĂNG XUẤT",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                // Mở lại màn hình đăng nhập
+                openLoginScreen();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Nếu có lỗi, vẫn mở lại màn hình đăng nhập
+            openLoginScreen();
+        }
+    }
+    
+    /**
+     * Mở lại màn hình đăng nhập
+     */
+    private void openLoginScreen() {
+        try {
+            // Tạo và hiển thị màn hình đăng nhập mới
+            poly.ui.DNhapJDialog loginDialog = new poly.ui.DNhapJDialog(null, true);
+            loginDialog.setLocationRelativeTo(null);
+            loginDialog.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                "Lỗi khi mở màn hình đăng nhập: " + e.getMessage(),
+                "LỖI",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
      * @param args the command line arguments
      */
 public static void main(String args[]) {
@@ -262,6 +445,10 @@ HoSoJDialog1 dialog = new HoSoJDialog1(new javax.swing.JFrame(), true, username)
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -270,6 +457,8 @@ HoSoJDialog1 dialog = new HoSoJDialog1(new javax.swing.JFrame(), true, username)
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

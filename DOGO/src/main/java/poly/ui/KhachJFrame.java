@@ -212,7 +212,7 @@ public class KhachJFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // Mở màn hình duyệt sản phẩm
-        poly.ui.DuyetspJDialog_nghia duyetsp = new poly.ui.DuyetspJDialog_nghia(this, true);
+        poly.ui.DuyetspJDialog_nghia1 duyetsp = new poly.ui.DuyetspJDialog_nghia1(this, true);
         duyetsp.setLocationRelativeTo(this);
         duyetsp.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed

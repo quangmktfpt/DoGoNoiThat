@@ -811,6 +811,37 @@ clear();        // TODO add your handling code here:
             XDialog.alert("Lỗi khi đặt lại mật khẩu: " + e.getMessage());
         }
     }
+    
+    /**
+     * Kích hoạt lại tài khoản bị vô hiệu hóa
+     */
+    public void reactivateCustomerAccount(Integer userId) {
+        try {
+            User user = userDAO.selectById(userId);
+            if (user == null) {
+                XDialog.alert("Không tìm thấy khách hàng!");
+                return;
+            }
+            
+            if (user.getIsActive() != null && user.getIsActive()) {
+                XDialog.alert("Tài khoản này đã đang hoạt động!");
+                return;
+            }
+            
+            // Cập nhật trạng thái IsActive = 1 (kích hoạt)
+            user.setIsActive(true);
+            userDAO.update(user);
+            
+            XDialog.alert("✅ Đã kích hoạt lại tài khoản '" + user.getUsername() + "' thành công!");
+            
+            // Refresh danh sách
+            loadCustomers();
+            fillToTable();
+            
+        } catch (Exception e) {
+            XDialog.alert("❌ Lỗi khi kích hoạt lại tài khoản: " + e.getMessage());
+        }
+    }
 
     @Override
     public List<Order> getCustomerOrderHistory(Integer userId) {
@@ -1256,5 +1287,36 @@ clear();        // TODO add your handling code here:
         jButton3.addActionListener(evt -> jButton3ActionPerformed(evt));
         jButton4.addActionListener(evt -> jButton4ActionPerformed(evt));
         jButton5.addActionListener(evt -> jButton5ActionPerformed(evt));
+    }
+    
+    /**
+     * Xử lý sự kiện kích hoạt lại tài khoản
+     */
+    private void reactivateAccountActionPerformed(java.awt.event.ActionEvent evt) {
+        if (currentRow >= 0 && currentRow < customerList.size()) {
+            User selectedCustomer = customerList.get(currentRow);
+            
+            // Kiểm tra xem tài khoản có bị vô hiệu hóa không
+            if (selectedCustomer.getIsActive() != null && selectedCustomer.getIsActive()) {
+                XDialog.alert("Tài khoản '" + selectedCustomer.getUsername() + "' đã đang hoạt động!");
+                return;
+            }
+            
+            // Xác nhận kích hoạt lại
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc chắn muốn kích hoạt lại tài khoản '" + selectedCustomer.getUsername() + "'?\n\n" +
+                "Tài khoản sẽ có thể đăng nhập lại sau khi được kích hoạt.",
+                "XÁC NHẬN KÍCH HOẠT LẠI TÀI KHOẢN",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                reactivateCustomerAccount(selectedCustomer.getUserId());
+            }
+        } else {
+            XDialog.alert("Vui lòng chọn một khách hàng để kích hoạt lại tài khoản!");
+        }
     }
 }

@@ -134,6 +134,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
         jLabel5.setText("?");
 
         jButton3.setText("Áp dụng");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Phí Vận Chuyển");
@@ -159,6 +164,16 @@ public class DatHangJDialog extends javax.swing.JDialog {
         jButton1.setText("Quay Lại");
 
         jButton2.setText("Xác Nhận Đơn Hàng");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         Country.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -339,6 +354,18 @@ public class DatHangJDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+      confirmOrder();
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+     applyCouponFromTextField();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -489,7 +516,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         jButton3.addActionListener(e -> applyCouponFromTextField());
         
         // Confirm order button
-        jButton2.addActionListener(e -> confirmOrder());
+      
         
         // Back button
         jButton1.addActionListener(e -> dispose());
@@ -501,7 +528,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         Country.addActionListener(e -> updateCitiesByCountry());
         
         // JTextField4 - nhập mã giảm giá
-        jTextField4.setToolTipText("Nhập mã giảm giá (ví dụ: CP10, CP50) và ấn Áp dụng");
+      
         
         // Table selection - tính tổng tiền của sản phẩm được chọn
         jTable1.getSelectionModel().addListSelectionListener(e -> {

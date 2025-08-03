@@ -283,6 +283,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&#xc1;p d&#x1ee5;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
@@ -352,6 +355,10 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="X&#xe1;c Nh&#x1ead;n &#x110;&#x1a1;n H&#xe0;ng"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton2MouseClicked"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="Country">
       <Properties>
