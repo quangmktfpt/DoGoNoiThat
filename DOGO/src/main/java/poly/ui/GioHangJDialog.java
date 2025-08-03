@@ -12,6 +12,7 @@ import poly.entity.ShoppingCart;
 import poly.entity.CartItem;
 import poly.entity.Product;
 import java.util.List;
+import java.util.ArrayList;
 import java.math.BigDecimal;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
@@ -108,58 +109,68 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
 
     @Override
     public void edit() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow >= 0) {
-            // Lấy productId từ CartItem thay vì từ bảng
-            CartItem selectedItem = cartItems.get(selectedRow);
-            String productId = selectedItem.getProductId();
-            
-            // Kiểm tra số lượng tồn kho hiện tại
-            Product currentProduct = productDAO.selectById(productId);
-            if (currentProduct == null) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin sản phẩm!", 
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            int currentStock = currentProduct.getQuantity() != null ? currentProduct.getQuantity() : 0;
-            int currentQuantity = selectedItem.getQuantity();
-            
-            String quantityStr = JOptionPane.showInputDialog(this, 
-                "Nhập số lượng mới (Trong kho hiện tại: " + currentStock + "):", 
-                "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE);
-            
-            if (quantityStr != null && !quantityStr.trim().isEmpty()) {
-                try {
-                    int newQuantity = Integer.parseInt(quantityStr.trim());
-                    if (newQuantity <= 0) {
-                        JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", 
-                            "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    // Kiểm tra số lượng tồn kho
-                    if (newQuantity > currentStock) {
-                        JOptionPane.showMessageDialog(this, 
-                            "Số lượng vượt quá trong kho sẵn có! (Trong kho: " + currentStock + ")", 
-                            "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    // Cập nhật trực tiếp CartItem
-                    selectedItem.setQuantity(newQuantity);
-                    updateCartItem(selectedItem);
-                    loadCartData(); // Reload dữ liệu
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công!", 
-                        "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", 
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần cập nhật!", 
+        // Lấy danh sách các dòng đã được tích chọn
+        List<Integer> selectedRows = getSelectedRowIndexes();
+        
+        if (selectedRows.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng tích chọn sản phẩm cần cập nhật!", 
                 "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (selectedRows.size() > 1) {
+            JOptionPane.showMessageDialog(this, "Chỉ được chọn 1 sản phẩm để cập nhật số lượng!", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Lấy dòng đã chọn (chỉ có 1 dòng)
+        int selectedRow = selectedRows.get(0);
+        CartItem selectedItem = cartItems.get(selectedRow);
+        String productId = selectedItem.getProductId();
+        
+        // Kiểm tra số lượng tồn kho hiện tại
+        Product currentProduct = productDAO.selectById(productId);
+        if (currentProduct == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin sản phẩm!", 
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int currentStock = currentProduct.getQuantity() != null ? currentProduct.getQuantity() : 0;
+        int currentQuantity = selectedItem.getQuantity();
+        
+        String quantityStr = JOptionPane.showInputDialog(this, 
+            "Nhập số lượng mới (Trong kho hiện tại: " + currentStock + "):", 
+            "Cập nhật số lượng", JOptionPane.QUESTION_MESSAGE);
+        
+        if (quantityStr != null && !quantityStr.trim().isEmpty()) {
+            try {
+                int newQuantity = Integer.parseInt(quantityStr.trim());
+                if (newQuantity <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!", 
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                // Kiểm tra số lượng tồn kho
+                if (newQuantity > currentStock) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Số lượng vượt quá trong kho sẵn có! (Trong kho: " + currentStock + ")", 
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                // Cập nhật trực tiếp CartItem
+                selectedItem.setQuantity(newQuantity);
+                updateCartItem(selectedItem);
+                loadCartData(); // Reload dữ liệu
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công!", 
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", 
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -175,26 +186,39 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
 
     @Override
     public void delete() {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow >= 0) {
-            CartItem selectedItem = cartItems.get(selectedRow);
-            String productId = selectedItem.getProductId();
-            
-            int confirm = JOptionPane.showConfirmDialog(this, 
-                "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?", 
-                "Xác nhận", JOptionPane.YES_NO_OPTION);
-            
-            if (confirm == JOptionPane.YES_OPTION) {
-                if (currentCart != null) {
-                    deleteCartItemByProduct(currentCart.getCartId(), productId);
-                    loadCartData(); // Reload dữ liệu
-                    JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi giỏ hàng!", 
-                        "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm cần xóa!", 
+        // Lấy danh sách các dòng đã được tích chọn
+        List<Integer> selectedRows = getSelectedRowIndexes();
+        
+        if (selectedRows.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng tích chọn sản phẩm cần xóa!", 
                 "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Xác nhận xóa
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xóa " + selectedRows.size() + " sản phẩm khỏi giỏ hàng?", 
+            "Xác nhận", JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (currentCart != null) {
+                int deletedCount = 0;
+                
+                // Xóa từng sản phẩm đã chọn
+                for (int rowIndex : selectedRows) {
+                    if (rowIndex < cartItems.size()) {
+                        CartItem selectedItem = cartItems.get(rowIndex);
+                        String productId = selectedItem.getProductId();
+                        
+                        deleteCartItemByProduct(currentCart.getCartId(), productId);
+                        deletedCount++;
+                    }
+                }
+                
+                loadCartData(); // Reload dữ liệu
+                JOptionPane.showMessageDialog(this, "Đã xóa " + deletedCount + " sản phẩm khỏi giỏ hàng!", 
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 
@@ -246,11 +270,12 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
         if (userId == null) {
             JOptionPane.showMessageDialog(this, "Bạn chưa đăng nhập!", "Thông báo", JOptionPane.WARNING_MESSAGE);
             // Hiển thị bảng trống
-            tableModel = new DefaultTableModel();
+            tableModel = new CheckboxTableModel();
             tableModel.addColumn("Sản Phẩm");
             tableModel.addColumn("Số Lượng");
             tableModel.addColumn("Giá");
             tableModel.addColumn("Tổng Cộng");
+            tableModel.addColumn("Chọn");
             jTable1.setModel(tableModel);
             return;
         }
@@ -260,21 +285,24 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
             displayCartItems();
         } else {
             // Hiển thị bảng trống nếu chưa có giỏ hàng
-            tableModel = new DefaultTableModel();
+            tableModel = new CheckboxTableModel();
             tableModel.addColumn("Sản Phẩm");
             tableModel.addColumn("Số Lượng");
             tableModel.addColumn("Giá");
             tableModel.addColumn("Tổng Cộng");
+            tableModel.addColumn("Chọn");
             jTable1.setModel(tableModel);
         }
     }
 
     private void displayCartItems() {
-        tableModel = new DefaultTableModel();
+        tableModel = new CheckboxTableModel();
+        
         tableModel.addColumn("Sản Phẩm");
         tableModel.addColumn("Số Lượng");
         tableModel.addColumn("Giá");
         tableModel.addColumn("Tổng Cộng");
+        tableModel.addColumn("Chọn");
         
         if (cartItems != null && !cartItems.isEmpty()) {
             for (CartItem item : cartItems) {
@@ -287,13 +315,69 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
                         product.getProductName(),
                         item.getQuantity(),
                         unitPrice.toString() + " ₫",
-                        totalPrice.toString() + " ₫"
+                        totalPrice.toString() + " ₫",
+                        false // Checkbox mặc định không được chọn
                     });
                 }
             }
         }
         
         jTable1.setModel(tableModel);
+    }
+    
+    // Inner class để giảm anonymous classes
+    private static class CheckboxTableModel extends DefaultTableModel {
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex == 4) {
+                return Boolean.class;
+            }
+            return Object.class;
+        }
+        
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == 4;
+        }
+    }
+    
+    /**
+     * Lấy danh sách các sản phẩm đã được tích chọn trong bảng
+     */
+    private List<CartItem> getSelectedCartItems() {
+        List<CartItem> selectedItems = new ArrayList<>();
+        
+        if (cartItems == null || cartItems.isEmpty()) {
+            return selectedItems;
+        }
+        
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            Boolean isSelected = (Boolean) jTable1.getValueAt(i, 4); // Cột checkbox
+            if (isSelected != null && isSelected) {
+                // Lấy CartItem tương ứng với dòng đã chọn
+                if (i < cartItems.size()) {
+                    selectedItems.add(cartItems.get(i));
+                }
+            }
+        }
+        
+        return selectedItems;
+    }
+    
+    /**
+     * Lấy danh sách index của các dòng đã được tích chọn
+     */
+    private List<Integer> getSelectedRowIndexes() {
+        List<Integer> selectedRows = new ArrayList<>();
+        
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            Boolean isSelected = (Boolean) jTable1.getValueAt(i, 4); // Cột checkbox
+            if (isSelected != null && isSelected) {
+                selectedRows.add(i);
+            }
+        }
+        
+        return selectedRows;
     }
 
     /**
@@ -342,15 +426,30 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Sản Phẩm", "Số Lượng", "Giá", "Tổng Cộng"
+                "Sản Phẩm", "Số Lượng", "Giá", "Tổng Cộng", ""
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         lblCartTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -429,9 +528,18 @@ public class GioHangJDialog extends javax.swing.JDialog implements ShoppingCartC
             return;
         }
         
-        // Mở màn hình Đặt Hàng
+        // Lấy danh sách sản phẩm đã được chọn
+        List<CartItem> selectedItems = getSelectedCartItems();
+        
+        if (selectedItems.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một sản phẩm để thanh toán!", 
+                "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Mở màn hình Đặt Hàng với danh sách sản phẩm đã chọn
         try {
-            DatHangJDialog datHangDialog = new DatHangJDialog((java.awt.Frame) this.getOwner(), true);
+            DatHangJDialog datHangDialog = new DatHangJDialog((java.awt.Frame) this.getOwner(), true, selectedItems);
             datHangDialog.setVisible(true);
             
             // Sau khi đóng màn hình đặt hàng, reload lại giỏ hàng

@@ -23,6 +23,7 @@ import poly.util.InventoryUpdateUtil;
 import poly.dao.CouponDAO;
 import poly.dao.impl.CouponDAOImpl;
 import poly.entity.Coupon;
+import poly.entity.CartItem;
 
 /**
  *
@@ -51,6 +52,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         initializeForm();
         setupEventHandlers();
+    }
+    
+    /**
+     * Creates new form DatHangJDialog with selected cart items
+     */
+    public DatHangJDialog(java.awt.Frame parent, boolean modal, List<poly.entity.CartItem> selectedCartItems) {
+        this(parent, modal);
+        // Load chỉ những sản phẩm đã được chọn
+        loadSelectedCartItems(selectedCartItems);
     }
 
     /**
@@ -812,6 +822,82 @@ public class DatHangJDialog extends javax.swing.JDialog {
         }
         
         updateTable();
+    }
+    
+    /**
+     * Load chỉ những sản phẩm đã được chọn từ giỏ hàng
+     */
+    private void loadSelectedCartItems(List<poly.entity.CartItem> selectedCartItems) {
+        orderItems.clear();
+        
+        // Lấy thông tin từ form
+        String customerName = jTextField3.getText();
+        String address = jTextField1.getText();
+        String phone = jTextField2.getText();
+        String paymentMethod = "Thanh toán khi nhận hàng";
+        
+        // Nếu chưa có thông tin user, để trống
+        if (customerName == null || customerName.trim().isEmpty()) {
+            customerName = "";
+        }
+        if (address == null || address.trim().isEmpty()) {
+            address = "";
+        }
+        if (phone == null || phone.trim().isEmpty()) {
+            phone = "";
+        }
+        
+        // Load chỉ những sản phẩm đã được chọn
+        if (selectedCartItems != null && !selectedCartItems.isEmpty()) {
+            try {
+                poly.dao.ProductDAO productDAO = new poly.dao.impl.ProductDAOImpl();
+                
+                for (poly.entity.CartItem cartItem : selectedCartItems) {
+                    if (cartItem != null && cartItem.getProductId() != null) {
+                        poly.entity.Product product = productDAO.selectById(cartItem.getProductId());
+                        if (product != null) {
+                            OrderRequestItem orderItem = new OrderRequestItem();
+                            orderItem.setProductId(product.getProductId());
+                            orderItem.setProductName(product.getProductName());
+                            orderItem.setQuantity(cartItem.getQuantity());
+                            orderItem.setUnitPrice(product.getUnitPrice());
+                            orderItem.calculateTotalPrice();
+                            orderItem.setCity((String) City.getSelectedItem());
+                            orderItem.setCountry((String) Country.getSelectedItem());
+                            orderItem.setCustomerName(customerName);
+                            orderItem.setAddress(address);
+                            orderItem.setPhone(phone);
+                            orderItem.setPaymentMethod(paymentMethod);
+                            orderItems.add(orderItem);
+                            
+                            System.out.println("✓ Đã chọn sản phẩm: " + product.getProductName() + 
+                                " - Số lượng: " + cartItem.getQuantity());
+                        } else {
+                            System.err.println("✗ Không tìm thấy sản phẩm với ID: " + cartItem.getProductId());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tải dữ liệu sản phẩm đã chọn: " + e.getMessage(), 
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        // Nếu không có sản phẩm nào được chọn, hiển thị thông báo
+        if (orderItems.isEmpty()) {
+            System.out.println("⚠️ Không có sản phẩm nào được chọn để đặt hàng");
+            JOptionPane.showMessageDialog(this,
+                "⚠️ Không có sản phẩm nào được chọn!\n" +
+                "Vui lòng chọn ít nhất một sản phẩm từ giỏ hàng.",
+                "Không có sản phẩm được chọn",
+                JOptionPane.WARNING_MESSAGE);
+        } else {
+            System.out.println("✓ Đã load " + orderItems.size() + " sản phẩm đã chọn");
+        }
+        
+        updateTable();
+        updateTotals();
     }
     
     private void updateTable() {
