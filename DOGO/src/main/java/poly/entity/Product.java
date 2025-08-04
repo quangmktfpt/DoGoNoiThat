@@ -28,6 +28,7 @@ public class Product {
     private Integer quantity;    // tồn kho hiện tại
     private String imagePath;
     private LocalDateTime createdDate;
+    private String description; // mô tả sản phẩm
 
     public Product(String productId, String categoryId, String productName, BigDecimal unitPrice, BigDecimal gianhap, Integer quantity, String imagePath, LocalDateTime createdDate) {
         this.productId = productId;
@@ -96,6 +97,14 @@ public class Product {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Product() {
