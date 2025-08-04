@@ -13,8 +13,8 @@ import java.util.function.Consumer;
 
 public class OpenAIClient {
     private static final String API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String API_KEY = "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";
-    private static final String MODEL = "qwen/qwen2.5-vl-72b-instruct:free";
+    private static final String API_KEY = "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";
+    private static final String MODEL = "google/gemma-3-27b-it:free";
 
     public static String getAIResponse(String userMessage) throws Exception {
         RequestConfig config = RequestConfig.custom()

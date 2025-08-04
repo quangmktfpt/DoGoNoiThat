@@ -266,19 +266,62 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                                 
                                 // Phân tích câu hỏi để đưa ra tư vấn phù hợp
                                 String lowerMessage = userMessage.toLowerCase();
-                                if (lowerMessage.contains("100") || lowerMessage.contains("nghìn") || lowerMessage.contains("đồng")) {
-                                    fallbackResponse.append("Với ngân sách 100 nghìn đồng, bạn có thể xem xét:\n");
-                                    for (Product_Nghia p : allProducts) {
-                                        if (p.getUnitPrice() != null && p.getUnitPrice().compareTo(new java.math.BigDecimal("100000")) <= 0) {
-                                            String pName = p.getProductName() != null ? p.getProductName() : "";
-                                            String pPrice = p.getUnitPrice().toString();
-                                            String pCategory = getCategoryName(p.getCategoryId());
-                                            fallbackResponse.append(String.format("- %s (%s): %s VNĐ\n", pName, pCategory, pPrice));
+                                
+                                // Tìm số tiền trong câu hỏi
+                                java.util.regex.Pattern pricePattern = java.util.regex.Pattern.compile("(\\d+)\\s*(nghìn|k|vnđ|đồng|vnd)?", java.util.regex.Pattern.CASE_INSENSITIVE);
+                                java.util.regex.Matcher matcher = pricePattern.matcher(lowerMessage);
+                                
+                                if (matcher.find()) {
+                                    String numberStr = matcher.group(1);
+                                    String unit = matcher.group(2);
+                                    int budget = Integer.parseInt(numberStr);
+                                    
+                                    // Chuyển đổi đơn vị
+                                    if (unit != null) {
+                                        if (unit.toLowerCase().contains("nghìn") || unit.toLowerCase().contains("k")) {
+                                            budget = budget * 1000;
                                         }
                                     }
-                                    fallbackResponse.append("\nBạn có muốn biết thêm chi tiết về sản phẩm nào không?\n");
-                                } else if (lowerMessage.contains("rẻ") || lowerMessage.contains("giá thấp")) {
-                                    fallbackResponse.append("Các sản phẩm có giá tốt:\n");
+                                    
+                                    // Tìm tất cả sản phẩm phù hợp với ngân sách
+                                    java.util.List<Product_Nghia> affordableProducts = new java.util.ArrayList<>();
+                                    for (Product_Nghia p : allProducts) {
+                                        if (p.getUnitPrice() != null && p.getUnitPrice().compareTo(new java.math.BigDecimal(budget)) <= 0) {
+                                            affordableProducts.add(p);
+                                        }
+                                    }
+                                    
+                                    if (!affordableProducts.isEmpty()) {
+                                        fallbackResponse.append(String.format("Với ngân sách %d VNĐ, bạn có thể xem xét các sản phẩm sau:\n\n", budget));
+                                        
+                                        // Sắp xếp theo giá từ thấp đến cao
+                                        affordableProducts.sort((p1, p2) -> {
+                                            if (p1.getUnitPrice() == null) return 1;
+                                            if (p2.getUnitPrice() == null) return -1;
+                                            return p1.getUnitPrice().compareTo(p2.getUnitPrice());
+                                        });
+                                        
+                                        for (Product_Nghia p : affordableProducts) {
+                                            String pName = p.getProductName() != null ? p.getProductName() : "";
+                                            String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
+                                            String pCategory = getCategoryName(p.getCategoryId());
+                                            String pSize = p.getKichThuoc() != null ? p.getKichThuoc() : "";
+                                            String pStock = p.getQuantity() != null ? p.getQuantity().toString() : "";
+                                            
+                                            fallbackResponse.append(String.format(
+                                                "- %s (%s): %s VNĐ, Kích thước: %s, Tồn kho: %s\n",
+                                                pName, pCategory, pPrice, pSize, pStock
+                                            ));
+                                        }
+                                        
+                                        fallbackResponse.append(String.format("\nTổng cộng có %d sản phẩm phù hợp với ngân sách của bạn.\n", affordableProducts.size()));
+                                        fallbackResponse.append("Bạn có muốn biết thêm chi tiết về sản phẩm nào không?\n");
+                                    } else {
+                                        fallbackResponse.append(String.format("Với ngân sách %d VNĐ, hiện tại không có sản phẩm nào phù hợp.\n", budget));
+                                        fallbackResponse.append("Bạn có thể xem xét tăng ngân sách hoặc liên hệ với chúng tôi để được tư vấn thêm.\n");
+                                    }
+                                } else if (lowerMessage.contains("rẻ") || lowerMessage.contains("giá thấp") || lowerMessage.contains("rẻ nhất")) {
+                                    fallbackResponse.append("Các sản phẩm có giá tốt nhất:\n");
                                     java.util.List<Product_Nghia> sortedByPrice = new java.util.ArrayList<>(allProducts);
                                     sortedByPrice.sort((p1, p2) -> {
                                         if (p1.getUnitPrice() == null) return 1;
@@ -286,16 +329,21 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                                         return p1.getUnitPrice().compareTo(p2.getUnitPrice());
                                     });
                                     
-                                    for (int i = 0; i < Math.min(5, sortedByPrice.size()); i++) {
+                                    for (int i = 0; i < Math.min(10, sortedByPrice.size()); i++) {
                                         Product_Nghia p = sortedByPrice.get(i);
                                         String pName = p.getProductName() != null ? p.getProductName() : "";
                                         String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
                                         String pCategory = getCategoryName(p.getCategoryId());
-                                        fallbackResponse.append(String.format("- %s (%s): %s VNĐ\n", pName, pCategory, pPrice));
+                                        String pSize = p.getKichThuoc() != null ? p.getKichThuoc() : "";
+                                        
+                                        fallbackResponse.append(String.format(
+                                            "- %s (%s): %s VNĐ, Kích thước: %s\n",
+                                            pName, pCategory, pPrice, pSize
+                                        ));
                                     }
                                 } else {
                                     fallbackResponse.append("Tôi có thể tư vấn cho bạn về:\n");
-                                    fallbackResponse.append("- Sản phẩm theo ngân sách\n");
+                                    fallbackResponse.append("- Sản phẩm theo ngân sách (ví dụ: 'tôi có 500k thì mua gì?')\n");
                                     fallbackResponse.append("- So sánh giá cả\n");
                                     fallbackResponse.append("- Khuyến nghị theo không gian\n");
                                     fallbackResponse.append("- Thông tin chi tiết sản phẩm\n\n");
