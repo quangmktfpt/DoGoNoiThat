@@ -113,7 +113,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Completed", "Cancelled", "Return Requested" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Delivering", "Completed", "Cancelled" }));
         cboTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThaiActionPerformed(evt);
@@ -255,7 +255,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboTrangThai1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Completed", "Cancelled" }));
+        cboTrangThai1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Delivering", "Completed", "Cancelled" }));
         cboTrangThai1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThai1ActionPerformed(evt);
@@ -515,6 +515,96 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private OrderDAOImpl orderDAO = new OrderDAOImpl();
     private UserDAOImpl userDAO = new UserDAOImpl();
     private ProductDAOImpl productDAO = new ProductDAOImpl();
+    
+    // Method để lấy thông tin người nhận từ bảng Addresses
+    private String getRecipientName(Integer orderId) {
+        try {
+            // Lấy thông tin đơn hàng
+            Order order = orderDAO.selectById(orderId);
+            if (order == null || order.getDeliveryAddressId() == null) {
+                return "N/A";
+            }
+            
+            // Lấy thông tin địa chỉ giao hàng
+            String sql = "SELECT a.AddressLine1, a.City, a.Country, a.Phone, u.FullName " +
+                        "FROM Addresses a " +
+                        "LEFT JOIN Users u ON a.UserID = u.UserID " +
+                        "WHERE a.AddressID = ?";
+            
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, order.getDeliveryAddressId());
+            if (rs.next()) {
+                String fullName = rs.getString("FullName");
+                String phone = rs.getString("Phone");
+                
+                // Ưu tiên hiển thị tên người nhận từ địa chỉ giao hàng
+                // Thông tin này được lưu từ form "Xác nhận đơn hàng"
+                if (fullName != null && !fullName.trim().isEmpty()) {
+                    return fullName;
+                } else if (phone != null && !phone.trim().isEmpty()) {
+                    return "Người nhận: " + phone;
+                } else {
+                    return "N/A";
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi lấy thông tin người nhận: " + e.getMessage());
+        }
+        return "N/A";
+    }
+    
+    // Method để lấy thông tin địa chỉ giao hàng
+    // Thông tin này được lưu từ form "Xác nhận đơn hàng" trong DatHangJDialog
+    private String getRecipientAddress(Integer orderId) {
+        try {
+            // Lấy thông tin đơn hàng
+            Order order = orderDAO.selectById(orderId);
+            if (order == null || order.getDeliveryAddressId() == null) {
+                return "N/A";
+            }
+            
+            // Lấy thông tin địa chỉ giao hàng từ bảng Addresses
+            // Thông tin này được tạo từ form đặt hàng của người dùng
+            String sql = "SELECT a.AddressLine1, a.City, a.Country, a.Phone " +
+                        "FROM Addresses a " +
+                        "WHERE a.AddressID = ?";
+            
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, order.getDeliveryAddressId());
+            if (rs.next()) {
+                String addressLine1 = rs.getString("AddressLine1");
+                String city = rs.getString("City");
+                String country = rs.getString("Country");
+                String phone = rs.getString("Phone");
+                
+                StringBuilder address = new StringBuilder();
+                if (addressLine1 != null && !addressLine1.trim().isEmpty()) {
+                    address.append(addressLine1);
+                }
+                if (city != null && !city.trim().isEmpty()) {
+                    if (address.length() > 0) address.append(", ");
+                    address.append(city);
+                }
+                if (country != null && !country.trim().isEmpty()) {
+                    if (address.length() > 0) address.append(", ");
+                    address.append(country);
+                }
+                
+                String result = address.toString();
+                if (result.isEmpty()) {
+                    return "N/A";
+                }
+                
+                // Thêm số điện thoại nếu có
+                if (phone != null && !phone.trim().isEmpty()) {
+                    result += " (SĐT: " + phone + ")";
+                }
+                
+                return result;
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi lấy thông tin địa chỉ: " + e.getMessage());
+        }
+        return "N/A";
+    }
     private Order currentOrder = null;
     private boolean isProcessingOrder = false; // Flag để tránh xử lý nhiều lần
 
@@ -522,6 +612,11 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     public void open() {
         fillToTable();
         setLocationRelativeTo(null);
+        
+        // Khởi tạo trạng thái các nút
+        btnHuy.setEnabled(false);
+        btnYeuCauDoiTraLichSu.setEnabled(false);
+        btnYeuCauDoiTraHienTai.setEnabled(false);
     }
 
     @Override
@@ -546,13 +641,12 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         try {
             List<Order> list = orderDAO.selectByUserId(currentUserId);
             for (Order order : list) {
-                User user = userDAO.selectById(order.getUserId());
-                String customerName = user != null ? user.getFullName() : "N/A";
+                String recipientName = getRecipientName(order.getOrderId());
                 model.addRow(new Object[]{
                     order.getOrderId(),
                     order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                    customerName,
-                    order.getOrderStatus()
+                    recipientName,
+                    getStatusDisplayName(order.getOrderStatus())
                 });
             }
         } catch (Exception e) {
@@ -570,20 +664,21 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             return;
         }
         try {
-            // Lấy đơn hàng chưa hoàn thành của user hiện tại
+            // Lấy đơn hàng có thể thao tác của user hiện tại
             List<Order> list = new java.util.ArrayList<>();
             list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Pending".equals(o.getOrderStatus())).toList());
             list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Processing".equals(o.getOrderStatus())).toList());
             list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Shipped".equals(o.getOrderStatus())).toList());
+            list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Delivering".equals(o.getOrderStatus())).toList());
+            list.addAll(orderDAO.selectByUserId(currentUserId).stream().filter(o -> "Completed".equals(o.getOrderStatus())).toList());
             for (Order order : list) {
-                User user = userDAO.selectById(order.getUserId());
-                String customerName = user != null ? user.getFullName() : "N/A";
+                String recipientName = getRecipientName(order.getOrderId());
                 model.addRow(new Object[]{
                     order.getOrderId(),
                     getProductNames(order.getOrderId()),
                     order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                    customerName,
-                    order.getOrderStatus()
+                    recipientName,
+                    getStatusDisplayName(order.getOrderStatus())
                 });
             }
         } catch (Exception e) {
@@ -618,6 +713,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             Integer orderId = (Integer) (selectedTab == 0 ? 
                 tblLichSu.getValueAt(row, 0) : tblHienTai.getValueAt(row, 0));
             currentOrder = orderDAO.selectById(orderId);
+            
+            // Cập nhật trạng thái các nút dựa trên trạng thái đơn hàng
+            if (currentOrder != null) {
+                String status = currentOrder.getOrderStatus();
+                
+                // Enable/disable nút huỷ đơn hàng
+                btnHuy.setEnabled(canCancelOrder(status));
+                
+                // Enable/disable nút yêu cầu đổi trả
+                btnYeuCauDoiTraLichSu.setEnabled(canRequestReturn(status));
+                btnYeuCauDoiTraHienTai.setEnabled(canRequestReturn(status));
+            }
         }
     }
 
@@ -706,22 +813,21 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         try {
             List<Order> list = orderDAO.selectByUserId(currentUserId).stream().filter(o -> status.equals(o.getOrderStatus())).toList();
             for (Order order : list) {
-                User user = userDAO.selectById(order.getUserId());
-                String customerName = user != null ? user.getFullName() : "N/A";
+                String recipientName = getRecipientName(order.getOrderId());
                 if (selectedTab == 0) {
                     model.addRow(new Object[]{
                         order.getOrderId(),
                         order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
+                        recipientName,
+                        getStatusDisplayName(order.getOrderStatus())
                     });
                 } else {
                     model.addRow(new Object[]{
                         order.getOrderId(),
                         getProductNames(order.getOrderId()),
                         order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
+                        recipientName,
+                        getStatusDisplayName(order.getOrderStatus())
                     });
                 }
             }
@@ -784,22 +890,21 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 filteredList = filterOrdersByTime(list, timeFilter);
             }
             for (Order order : filteredList) {
-                User user = userDAO.selectById(order.getUserId());
-                String customerName = user != null ? user.getFullName() : "N/A";
+                String recipientName = getRecipientName(order.getOrderId());
                 if (selectedTab == 0) {
                     model.addRow(new Object[]{
                         order.getOrderId(),
                         order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
+                        recipientName,
+                        getStatusDisplayName(order.getOrderStatus())
                     });
                 } else {
                     model.addRow(new Object[]{
                         order.getOrderId(),
                         getProductNames(order.getOrderId()),
                         order.getOrderDate() != null ? order.getOrderDate().toString() : "N/A",
-                        customerName,
-                        order.getOrderStatus()
+                        recipientName,
+                        getStatusDisplayName(order.getOrderStatus())
                     });
                 }
             }
@@ -857,29 +962,56 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         try {
             List<OrderDetail> details = orderDAO.getOrderDetails(currentOrder.getOrderId());
             User user = userDAO.selectById(currentOrder.getUserId());
+            String recipientName = getRecipientName(currentOrder.getOrderId());
+            String recipientAddress = getRecipientAddress(currentOrder.getOrderId());
             
             StringBuilder sb = new StringBuilder();
             sb.append("=== CHI TIẾT ĐƠN HÀNG ===\n");
             sb.append("Mã đơn: ").append(currentOrder.getOrderId()).append("\n");
             sb.append("Ngày đặt: ").append(currentOrder.getOrderDate() != null ? currentOrder.getOrderDate().toString() : "N/A").append("\n");
-            sb.append("Khách hàng: ").append(user != null ? user.getFullName() : "N/A").append("\n");
+            sb.append("Người đặt: ").append(user != null ? user.getFullName() : "N/A").append("\n");
+            sb.append("Người nhận: ").append(recipientName).append("\n");
+            sb.append("Địa chỉ giao hàng: ").append(recipientAddress).append("\n");
             sb.append("Số điện thoại: ").append(user != null ? user.getPhone() : "N/A").append("\n");
             sb.append("Tổng tiền: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
             sb.append("Tổng số tiền phải trả: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
-            sb.append("Trạng thái: ").append(currentOrder.getOrderStatus()).append("\n");
+            sb.append("Trạng thái: ").append(getStatusDisplayName(currentOrder.getOrderStatus())).append("\n");
+            
+            // Hiển thị thông tin bổ sung cho trạng thái Cancelled
+            if ("Cancelled".equals(currentOrder.getOrderStatus()) && currentOrder.getReturnReason() != null) {
+                String reason = currentOrder.getReturnReason();
+                if (reason.startsWith("[ĐỔI TRẢ")) {
+                    sb.append("📋 Loại: Yêu cầu đổi trả\n");
+                } else if (reason.startsWith("[HUỶ]")) {
+                    sb.append("📋 Loại: Huỷ đơn hàng\n");
+                }
+            }
             sb.append("Phương thức thanh toán: ").append(currentOrder.getPaymentMethod() != null ? currentOrder.getPaymentMethod() : "N/A").append("\n");
             
             // Hiển thị lý do đổi trả hoặc lý do huỷ đơn hàng nếu có
             if (currentOrder.getReturnReason() != null && !currentOrder.getReturnReason().trim().isEmpty()) {
-                // Phân biệt dựa trên prefix
                 String reason = currentOrder.getReturnReason();
-                if (reason.startsWith("[ĐỔI TRẢ]")) {
-                    sb.append("Lý do đổi trả: ").append(reason.substring(10)).append("\n");
+                
+                // Phân biệt rõ ràng loại lý do
+                if (reason.startsWith("[ĐỔI TRẢ - ĐÃ THANH TOÁN]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Đã thanh toán):\n");
+                    sb.append("   → Lý do: ").append(reason.substring(25)).append("\n");
+                    sb.append("   → Xử lý: Hoàn tiền + Trả hàng\n\n");
+                } else if (reason.startsWith("[ĐỔI TRẢ - CHƯA THANH TOÁN]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Chưa thanh toán):\n");
+                    sb.append("   → Lý do: ").append(reason.substring(28)).append("\n");
+                    sb.append("   → Xử lý: Chỉ trả hàng\n\n");
+                } else if (reason.startsWith("[ĐỔI TRẢ]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ:\n");
+                    sb.append("   → Lý do: ").append(reason.substring(10)).append("\n\n");
                 } else if (reason.startsWith("[HUỶ]")) {
-                    sb.append("Lý do huỷ đơn hàng: ").append(reason.substring(6)).append("\n");
+                    sb.append("❌ LÝ DO HUỶ ĐƠN HÀNG:\n");
+                    sb.append("   → Lý do: ").append(reason.substring(6)).append("\n");
+                    sb.append("   → Xử lý: Huỷ đơn hàng + Cập nhật tồn kho\n\n");
                 } else {
                     // Fallback cho dữ liệu cũ
-                    sb.append("Lý do: ").append(reason).append("\n");
+                    sb.append("📝 LÝ DO:\n");
+                    sb.append("   → ").append(reason).append("\n\n");
                 }
             }
             
@@ -923,8 +1055,9 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             return;
         }
         
-        if (!"Completed".equals(currentOrder.getOrderStatus()) && !"Shipped".equals(currentOrder.getOrderStatus())) {
-            XDialog.alert("Chỉ có thể yêu cầu đổi trả đơn hàng đã hoàn thành hoặc đã giao hàng!");
+        // Cho phép yêu cầu đổi trả khi đã nhận hàng (Completed) hoặc đang giao hàng (Delivering)
+        if (!"Completed".equals(currentOrder.getOrderStatus()) && !"Delivering".equals(currentOrder.getOrderStatus())) {
+            XDialog.alert("Chỉ có thể yêu cầu đổi trả đơn hàng đã hoàn thành hoặc đang giao hàng!");
             return;
         }
         
@@ -941,9 +1074,14 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 try {
                     isProcessingOrder = true; // Set flag
                     
-                    // Sử dụng method mới để lưu cả trạng thái, lý do và cập nhật tồn kho
-                    // Thêm prefix để admin phân biệt được
-                    String reasonWithPrefix = "[ĐỔI TRẢ] " + returnReason.trim();
+                    // Phân biệt loại đổi trả dựa trên trạng thái
+                    String reasonWithPrefix;
+                    if ("Completed".equals(currentOrder.getOrderStatus())) {
+                        reasonWithPrefix = "[ĐỔI TRẢ - ĐÃ THANH TOÁN] " + returnReason.trim();
+                    } else {
+                        reasonWithPrefix = "[ĐỔI TRẢ - CHƯA THANH TOÁN] " + returnReason.trim();
+                    }
+                    
                     orderDAO.updateOrderStatusWithReasonAndInventory(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
                     XDialog.alert("Đã gửi yêu cầu đổi trả thành công và cập nhật tồn kho!");
                     fillToTable();
@@ -958,6 +1096,26 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         }
     }
 
+    private String getStatusDisplayName(String status) {
+        switch (status) {
+            case "Pending": return "⏳ Chờ xử lý";
+            case "Processing": return "⚙️ Đang xử lý";
+            case "Shipped": return "📦 Đã gửi hàng";
+            case "Delivering": return "🚚 Đang giao hàng";
+            case "Completed": return "✅ Đã hoàn thành";
+            case "Cancelled": return "❌ Đã huỷ/Đổi trả";
+            default: return status;
+        }
+    }
+    
+    private boolean canCancelOrder(String status) {
+        return "Pending".equals(status) || "Processing".equals(status) || "Shipped".equals(status) || "Delivering".equals(status);
+    }
+    
+    private boolean canRequestReturn(String status) {
+        return "Completed".equals(status) || "Delivering".equals(status);
+    }
+
     private void cancelOrder() {
         if (isProcessingOrder) {
             return; // Tránh xử lý nhiều lần
@@ -969,8 +1127,9 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             return;
         }
         
-        if (!"Pending".equals(currentOrder.getOrderStatus())) {
-            XDialog.alert("Chỉ có thể huỷ đơn hàng đang chờ xử lý!");
+        // Cho phép huỷ khi chưa hoàn thành (Pending, Processing, Shipped, Delivering)
+        if (!"Pending".equals(currentOrder.getOrderStatus()) && !"Processing".equals(currentOrder.getOrderStatus()) && !"Shipped".equals(currentOrder.getOrderStatus()) && !"Delivering".equals(currentOrder.getOrderStatus())) {
+            XDialog.alert("Chỉ có thể huỷ đơn hàng khi chưa hoàn thành (đang chờ xử lý, đang xử lý, đã gửi hàng hoặc đang giao hàng)!");
             return;
         }
         
