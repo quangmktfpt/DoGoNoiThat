@@ -47,6 +47,11 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         // Đảm bảo AI trả lời luôn xuống dòng, không kéo ngang
         jTextArea1.setLineWrap(true);
         jTextArea1.setWrapStyleWord(true);
+        
+        // Cấu hình TextArea nhập liệu hiển thị theo chiều dọc
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setRows(3); // Hiển thị 3 dòng
         // Hiển thị sản phẩm dạng lưới 3 cột, khoảng cách 16px
         productGridPanel.setLayout(new java.awt.GridLayout(0, 3, 16, 16));
         productScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -56,7 +61,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER && !evt.isShiftDown()) {
                     evt.consume();
-                    jButton1.doClick();
+                    btnGui.doClick();
                 }
             }
         });
@@ -87,35 +92,224 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                 formWindowOpened(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGui.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String userMessage = jTextArea2.getText().trim();
                 if (userMessage.isEmpty()) return;
                 jTextArea1.append("\n[Bạn]: " + userMessage + "\n[AI]: Đang trả lời...\n");
                 jTextArea2.setText("");
-                jButton1.setEnabled(false);
+                btnGui.setEnabled(false);
                 jTextArea2.setEnabled(false);
-                new javax.swing.SwingWorker<String, Void>() {
-                    @Override
-                    protected String doInBackground() throws Exception {
-                        return poly.util.OpenAIClient.getAIResponse(userMessage);
-                    }
-                    @Override
-                    protected void done() {
-                        try {
-                            String aiResponse = get();
-                            String currentText = jTextArea1.getText();
-                            jTextArea1.setText(currentText.replace("[AI]: Đang trả lời...", "[AI]: " + aiResponse));
-                        } catch (Exception e) {
-                            jTextArea1.append("[Lỗi]: " + e.getMessage() + "\n");
-                        } finally {
-                            jButton1.setEnabled(true);
-                            jTextArea2.setEnabled(true);
-                            jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
-                            jTextArea2.requestFocusInWindow();
+                
+                // Sử dụng streaming response
+                if (currentProductInChat != null) {
+                    // Lấy đầy đủ thông tin sản phẩm hiện tại
+                    String productName = currentProductInChat.getProductName() != null ? currentProductInChat.getProductName() : "";
+                    String productPrice = currentProductInChat.getUnitPrice() != null ? currentProductInChat.getUnitPrice().toString() : "";
+                    String productDescription = currentProductInChat.getDescription() != null ? currentProductInChat.getDescription() : "";
+                    String productSize = currentProductInChat.getKichThuoc() != null ? currentProductInChat.getKichThuoc() : "";
+                    String productStock = currentProductInChat.getQuantity() != null ? currentProductInChat.getQuantity().toString() : "";
+                    String productCategory = getCategoryName(currentProductInChat.getCategoryId());
+                    String categoryId = currentProductInChat.getCategoryId();
+                    
+                    // Lấy tất cả sản phẩm cùng danh mục để so sánh
+                    List<Product_Nghia> sameCategoryProducts = searchByCategory(categoryId);
+                    StringBuilder categoryProductsInfo = new StringBuilder();
+                    
+                    if (sameCategoryProducts.size() > 1) {
+                        categoryProductsInfo.append("\nCác sản phẩm cùng danh mục ").append(productCategory).append(":\n");
+                        for (Product_Nghia p : sameCategoryProducts) {
+                            String pName = p.getProductName() != null ? p.getProductName() : "";
+                            String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
+                            String pSize = p.getKichThuoc() != null ? p.getKichThuoc() : "";
+                            String pStock = p.getQuantity() != null ? p.getQuantity().toString() : "";
+                            
+                            categoryProductsInfo.append(String.format(
+                                "- %s: %s VNĐ, Kích thước: %s, Tồn kho: %s\n",
+                                pName, pPrice, pSize, pStock
+                            ));
                         }
                     }
-                }.execute();
+                    
+                    String productContext = String.format(
+                        "Thông tin sản phẩm hiện tại:\n" +
+                        "- Tên: %s\n" +
+                        "- Danh mục: %s\n" +
+                        "- Giá: %s VNĐ\n" +
+                        "- Kích thước: %s\n" +
+                        "- Tồn kho: %s sản phẩm\n" +
+                        "- Mô tả: %s%s\n\n" +
+                        "Câu hỏi của bạn: %s",
+                        productName, productCategory, productPrice, productSize, productStock, productDescription, 
+                        categoryProductsInfo.toString(), userMessage
+                    );
+                    
+                    poly.util.OpenAIClient.getAIResponseStream(productContext, 
+                        (chunk) -> {
+                            // Hiển thị từng chunk
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                jTextArea1.append(chunk);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                            });
+                        },
+                        (complete) -> {
+                            // Hoàn thành
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                jTextArea1.append("\n");
+                                btnGui.setEnabled(true);
+                                jTextArea2.setEnabled(true);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                                jTextArea2.requestFocusInWindow();
+                            });
+                        },
+                        (error) -> {
+                            // Lỗi - sử dụng fallback
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                StringBuilder fallbackResponse = new StringBuilder();
+                                fallbackResponse.append(String.format(
+                                    "Xin chào! Tôi thấy bạn đang hỏi về sản phẩm '%s' thuộc danh mục %s.\n" +
+                                    "Thông tin chi tiết:\n" +
+                                    "- Giá: %s VNĐ\n" +
+                                    "- Kích thước: %s\n" +
+                                    "- Tồn kho: %s sản phẩm\n" +
+                                    "- Mô tả: %s\n\n",
+                                    productName, productCategory, productPrice, productSize, productStock, productDescription
+                                ));
+                                
+                                // Thêm thông tin so sánh nếu có nhiều sản phẩm cùng danh mục
+                                if (sameCategoryProducts.size() > 1) {
+                                    fallbackResponse.append("Các sản phẩm cùng danh mục để so sánh:\n");
+                                    for (Product_Nghia p : sameCategoryProducts) {
+                                        String pName = p.getProductName() != null ? p.getProductName() : "";
+                                        String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
+                                        String pSize = p.getKichThuoc() != null ? p.getKichThuoc() : "";
+                                        fallbackResponse.append(String.format("- %s: %s VNĐ, Kích thước: %s\n", pName, pPrice, pSize));
+                                    }
+                                    fallbackResponse.append("\nBạn có thể so sánh các sản phẩm này để chọn phù hợp nhất!\n");
+                                }
+                                
+                                fallbackResponse.append("Đây là một sản phẩm nội thất chất lượng cao. Bạn có muốn biết thêm thông tin gì không?");
+                                
+                                jTextArea1.append("[AI]: " + fallbackResponse.toString() + "\n");
+                                btnGui.setEnabled(true);
+                                jTextArea2.setEnabled(true);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                            });
+                        }
+                    );
+                } else {
+                    // Khi không có sản phẩm được chọn, AI có thể tư vấn dựa trên tất cả sản phẩm
+                    List<Product_Nghia> allProducts = productDAO.selectAll();
+                    StringBuilder allProductsInfo = new StringBuilder();
+                    
+                    // Phân loại sản phẩm theo danh mục
+                    java.util.Map<String, java.util.List<Product_Nghia>> productsByCategory = new java.util.HashMap<>();
+                    for (Product_Nghia p : allProducts) {
+                        String categoryName = getCategoryName(p.getCategoryId());
+                        productsByCategory.computeIfAbsent(categoryName, k -> new java.util.ArrayList<>()).add(p);
+                    }
+                    
+                    // Tạo thông tin tất cả sản phẩm
+                    allProductsInfo.append("\nTất cả sản phẩm trong cửa hàng:\n");
+                    for (java.util.Map.Entry<String, java.util.List<Product_Nghia>> entry : productsByCategory.entrySet()) {
+                        String categoryName = entry.getKey();
+                        java.util.List<Product_Nghia> products = entry.getValue();
+                        
+                        allProductsInfo.append("\n").append(categoryName).append(":\n");
+                        for (Product_Nghia p : products) {
+                            String pName = p.getProductName() != null ? p.getProductName() : "";
+                            String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
+                            String pSize = p.getKichThuoc() != null ? p.getKichThuoc() : "";
+                            String pStock = p.getQuantity() != null ? p.getQuantity().toString() : "";
+                            
+                            allProductsInfo.append(String.format(
+                                "- %s: %s VNĐ, Kích thước: %s, Tồn kho: %s\n",
+                                pName, pPrice, pSize, pStock
+                            ));
+                        }
+                    }
+                    
+                    String fullContext = String.format(
+                        "Bạn là trợ lý AI của cửa hàng nội thất. Dựa trên thông tin sản phẩm sau, hãy tư vấn cho khách hàng:\n%s\n\n" +
+                        "Câu hỏi của khách hàng: %s\n\n" +
+                        "Hãy đưa ra tư vấn chi tiết, bao gồm:\n" +
+                        "1. Sản phẩm phù hợp với ngân sách (nếu có đề cập)\n" +
+                        "2. So sánh các lựa chọn\n" +
+                        "3. Khuyến nghị cụ thể\n" +
+                        "4. Thông tin bổ sung về sản phẩm",
+                        allProductsInfo.toString(), userMessage
+                    );
+                    
+                    poly.util.OpenAIClient.getAIResponseStream(fullContext, 
+                        (chunk) -> {
+                            // Hiển thị từng chunk
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                jTextArea1.append(chunk);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                            });
+                        },
+                        (complete) -> {
+                            // Hoàn thành
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                jTextArea1.append("\n");
+                                btnGui.setEnabled(true);
+                                jTextArea2.setEnabled(true);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                                jTextArea2.requestFocusInWindow();
+                            });
+                        },
+                        (error) -> {
+                            // Lỗi - sử dụng fallback thông minh
+                            javax.swing.SwingUtilities.invokeLater(() -> {
+                                StringBuilder fallbackResponse = new StringBuilder();
+                                fallbackResponse.append("Xin chào! Tôi là trợ lý AI của cửa hàng nội thất.\n\n");
+                                
+                                // Phân tích câu hỏi để đưa ra tư vấn phù hợp
+                                String lowerMessage = userMessage.toLowerCase();
+                                if (lowerMessage.contains("100") || lowerMessage.contains("nghìn") || lowerMessage.contains("đồng")) {
+                                    fallbackResponse.append("Với ngân sách 100 nghìn đồng, bạn có thể xem xét:\n");
+                                    for (Product_Nghia p : allProducts) {
+                                        if (p.getUnitPrice() != null && p.getUnitPrice().compareTo(new java.math.BigDecimal("100000")) <= 0) {
+                                            String pName = p.getProductName() != null ? p.getProductName() : "";
+                                            String pPrice = p.getUnitPrice().toString();
+                                            String pCategory = getCategoryName(p.getCategoryId());
+                                            fallbackResponse.append(String.format("- %s (%s): %s VNĐ\n", pName, pCategory, pPrice));
+                                        }
+                                    }
+                                    fallbackResponse.append("\nBạn có muốn biết thêm chi tiết về sản phẩm nào không?\n");
+                                } else if (lowerMessage.contains("rẻ") || lowerMessage.contains("giá thấp")) {
+                                    fallbackResponse.append("Các sản phẩm có giá tốt:\n");
+                                    java.util.List<Product_Nghia> sortedByPrice = new java.util.ArrayList<>(allProducts);
+                                    sortedByPrice.sort((p1, p2) -> {
+                                        if (p1.getUnitPrice() == null) return 1;
+                                        if (p2.getUnitPrice() == null) return -1;
+                                        return p1.getUnitPrice().compareTo(p2.getUnitPrice());
+                                    });
+                                    
+                                    for (int i = 0; i < Math.min(5, sortedByPrice.size()); i++) {
+                                        Product_Nghia p = sortedByPrice.get(i);
+                                        String pName = p.getProductName() != null ? p.getProductName() : "";
+                                        String pPrice = p.getUnitPrice() != null ? p.getUnitPrice().toString() : "";
+                                        String pCategory = getCategoryName(p.getCategoryId());
+                                        fallbackResponse.append(String.format("- %s (%s): %s VNĐ\n", pName, pCategory, pPrice));
+                                    }
+                                } else {
+                                    fallbackResponse.append("Tôi có thể tư vấn cho bạn về:\n");
+                                    fallbackResponse.append("- Sản phẩm theo ngân sách\n");
+                                    fallbackResponse.append("- So sánh giá cả\n");
+                                    fallbackResponse.append("- Khuyến nghị theo không gian\n");
+                                    fallbackResponse.append("- Thông tin chi tiết sản phẩm\n\n");
+                                    fallbackResponse.append("Bạn có thể hỏi cụ thể hơn về nhu cầu của mình!");
+                                }
+                                
+                                jTextArea1.append("[AI]: " + fallbackResponse.toString() + "\n");
+                                btnGui.setEnabled(true);
+                                jTextArea2.setEnabled(true);
+                                jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                            });
+                        }
+                    );
+                }
             }
         });
     }
@@ -152,7 +346,10 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        btnGui = new javax.swing.JButton();
+        btnXoaNguCanh = new javax.swing.JButton();
+        btnXoaChat = new javax.swing.JButton();
+        btnAI = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblHinhAnh = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -245,6 +442,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             }
         });
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
@@ -253,23 +451,55 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         jTextArea2.setRows(5);
         jScrollPane3.setViewportView(jTextArea2);
 
-        jButton1.setText("Gửi");
+        btnGui.setText("Gửi");
+        btnGui.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuiActionPerformed(evt);
+            }
+        });
+
+        btnXoaNguCanh.setText("Xoá ngữ cảnh");
+        btnXoaNguCanh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaNguCanhActionPerformed(evt);
+            }
+        });
+
+        btnXoaChat.setText("Xoá đoạn chat");
+        btnXoaChat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaChatActionPerformed(evt);
+            }
+        });
+
+        btnAI.setText("AI");
+        btnAI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAIActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(85, 85, 85))))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnGui, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnXoaNguCanh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnXoaChat)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAI, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,7 +508,11 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGui)
+                    .addComponent(btnXoaNguCanh)
+                    .addComponent(btnXoaChat)
+                    .addComponent(btnAI)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -286,36 +520,38 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTimKiem)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnTimLoai)
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGiaTu, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTimGia)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(325, 325, 325))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTimKiemSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTimKiem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cboLoaiSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnTimLoai)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtGiaTu, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtGiaDen, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTimGia)
-                .addContainerGap(99, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(productScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,7 +574,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(productScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(249, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Tổng quan", jPanel1);
@@ -397,18 +633,6 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         btnThemVaoGio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnThemVaoGioActionPerformed(evt);
-            }
-        });
-        
-        // Thêm nút đánh giá sản phẩm
-        btnDanhGiaSanPham = new javax.swing.JButton();
-        btnDanhGiaSanPham.setText("Đánh giá sản phẩm");
-        btnDanhGiaSanPham.setBackground(new java.awt.Color(255, 193, 7));
-        btnDanhGiaSanPham.setForeground(java.awt.Color.WHITE);
-        btnDanhGiaSanPham.setFont(new java.awt.Font("Segoe UI", 1, 12));
-        btnDanhGiaSanPham.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDanhGiaSanPhamActionPerformed(evt);
             }
         });
 
@@ -489,8 +713,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                             .addComponent(btnMoveLast, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(29, 29, 29)))
                     .addComponent(txtTonKho, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnThemVaoGio)
-                    .addComponent(btnDanhGiaSanPham))
+                    .addComponent(btnThemVaoGio))
                 .addContainerGap(158, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
@@ -540,8 +763,6 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                     .addComponent(btnMovePrevious)
                     .addComponent(btnMoveNext)
                     .addComponent(btnMoveLast))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDanhGiaSanPham)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jLabel16)
                 .addGap(18, 18, 18)
@@ -734,6 +955,34 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         reviewDialog.setVisible(true);
     }//GEN-LAST:event_btnDanhGiaSanPhamActionPerformed
 
+    private void btnGuiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuiActionPerformed
+
+    private void btnAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAIActionPerformed
+        if (currentProductInChat != null) {
+            // Hỏi AI về sản phẩm đang được chọn
+            askAIAboutProduct(currentProductInChat);
+        } else {
+            // Nếu chưa chọn sản phẩm nào
+            jTabbedPane1.setSelectedIndex(0);
+            jTextArea1.append("\n[AI]: Vui lòng chọn một sản phẩm trước khi hỏi tôi về nó.\n");
+            jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+        }
+    }//GEN-LAST:event_btnAIActionPerformed
+
+    private void btnXoaNguCanhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaNguCanhActionPerformed
+        currentProductInChat = null;
+        jTextArea1.append("\n[AI]: Đã xóa ngữ cảnh sản phẩm. Bạn có thể chat chung với tôi.\n");
+        jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+    }//GEN-LAST:event_btnXoaNguCanhActionPerformed
+
+    private void btnXoaChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaChatActionPerformed
+        jTextArea1.setText("");
+        currentProductInChat = null;
+        jTextArea1.append("[AI]: Đã xóa toàn bộ đoạn chat. Bạn có thể bắt đầu cuộc trò chuyện mới.\n");
+    }//GEN-LAST:event_btnXoaChatActionPerformed
+
     private void btnTimLoaiActionPerformed(java.awt.event.ActionEvent evt) {
         int selectedIndex = cboLoaiSanPham.getSelectedIndex();
         if (selectedIndex == 0) { // Nếu chọn Tất cả
@@ -796,7 +1045,8 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDanhGiaSanPham;
+    private javax.swing.JButton btnAI;
+    private javax.swing.JButton btnGui;
     private javax.swing.JButton btnMoveFirst;
     private javax.swing.JButton btnMoveLast;
     private javax.swing.JButton btnMoveNext;
@@ -805,8 +1055,9 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
     private javax.swing.JButton btnTimGia;
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnTimLoai;
+    private javax.swing.JButton btnXoaChat;
+    private javax.swing.JButton btnXoaNguCanh;
     private javax.swing.JComboBox<String> cboLoaiSanPham;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -855,6 +1106,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
     private List<Product_Nghia> productList;
     private List<Product_Nghia> currentTypeList = new java.util.ArrayList<>();
     private int currentTypeIndex = -1;
+    private Product_Nghia currentProductInChat = null; // Lưu sản phẩm đang được chat
 
     @Override
     public void open() {
@@ -1115,7 +1367,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
 
         card.add(javax.swing.Box.createVerticalGlue());
 
-        // Sự kiện click: hiệu ứng khi click 1 lần, double-click mới chuyển tab
+        // Sự kiện click: chỉ chọn sản phẩm, không hỏi AI
         card.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1128,6 +1380,9 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                     }
                     // Đổi border card này
                     card.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(25, 118, 210), 2));
+                    
+                    // Lưu sản phẩm được chọn để nút AI sử dụng
+                    currentProductInChat = product;
                 } else if (evt.getClickCount() == 2) {
                     setForm(product);
                     // Lấy danh sách cùng loại
@@ -1219,5 +1474,77 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             stars.append("★");
         }
         return stars.toString();
+    }
+    
+    // Phương thức hỏi AI về thông tin sản phẩm
+    private void askAIAboutProduct(Product_Nghia product) {
+        // Lưu sản phẩm hiện tại để AI nhớ ngữ cảnh
+        currentProductInChat = product;
+        
+        // Chuyển sang tab chat AI
+        jTabbedPane1.setSelectedIndex(0);
+        
+        // Lấy đầy đủ thông tin sản phẩm
+        String productName = product.getProductName() != null ? product.getProductName() : "";
+        String productPrice = product.getUnitPrice() != null ? product.getUnitPrice().toString() : "";
+        String productDescription = product.getDescription() != null ? product.getDescription() : "";
+        String productSize = product.getKichThuoc() != null ? product.getKichThuoc() : "";
+        String productStock = product.getQuantity() != null ? product.getQuantity().toString() : "";
+        String productCategory = getCategoryName(product.getCategoryId());
+        
+        // Hiển thị thông báo đang hỏi AI
+        jTextArea1.append("\n[AI]: Đang phân tích sản phẩm '" + productName + "'...\n");
+        
+        // Sử dụng streaming response
+        String prompt = String.format(
+            "Phân tích chi tiết sản phẩm:\n" +
+            "- Tên: %s\n" +
+            "- Danh mục: %s\n" +
+            "- Giá: %s VNĐ\n" +
+            "- Kích thước: %s\n" +
+            "- Tồn kho: %s sản phẩm\n" +
+            "- Mô tả: %s\n\n" +
+            "Hãy đưa ra nhận xét chi tiết về sản phẩm này, bao gồm:\n" +
+            "1. Đánh giá về chất lượng và thiết kế\n" +
+            "2. Phù hợp với không gian nào\n" +
+            "3. So sánh giá cả với thị trường\n" +
+            "4. Khuyến nghị cho khách hàng",
+            productName, productCategory, productPrice, productSize, productStock, productDescription
+        );
+        
+        poly.util.OpenAIClient.getAIResponseStream(prompt, 
+            (chunk) -> {
+                // Hiển thị từng chunk
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    jTextArea1.append(chunk);
+                    jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                });
+            },
+            (complete) -> {
+                // Hoàn thành
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    jTextArea1.append("\n");
+                    jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                });
+            },
+            (error) -> {
+                // Lỗi - sử dụng fallback
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    String fallbackResponse = String.format(
+                        "Sản phẩm '%s' thuộc danh mục %s có giá %s VNĐ.\n\n" +
+                        "Thông tin chi tiết:\n" +
+                        "- Kích thước: %s\n" +
+                        "- Tồn kho: %s sản phẩm\n" +
+                        "- Mô tả: %s\n\n" +
+                        "Đây là một sản phẩm nội thất chất lượng cao, phù hợp cho không gian hiện đại. " +
+                        "Với kích thước này, sản phẩm sẽ phù hợp cho phòng khách hoặc văn phòng. " +
+                        "Bạn có muốn biết thêm thông tin về cách bảo quản hoặc tư vấn mua hàng không?",
+                        productName, productCategory, productPrice, productSize, productStock, productDescription
+                    );
+                    jTextArea1.append("[AI]: " + fallbackResponse + "\n");
+                    jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+                });
+            }
+        );
     }
 }
