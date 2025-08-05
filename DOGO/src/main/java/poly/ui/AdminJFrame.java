@@ -25,13 +25,13 @@ public class AdminJFrame extends javax.swing.JFrame {
     public AdminJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
+
         // Khởi tạo controller
         controller = new AdminJFrameController(this);
-        
+
         // Thêm hiệu ứng hover cho màu chữ các nút
         addHoverTextEffect(jButton2); // Nút đăng xuất
-     //   addHoverTextEffect(jButton4);
+        //   addHoverTextEffect(jButton4);
         addHoverTextEffect(jButton5);
         addHoverTextEffect(jButton6);
         addHoverTextEffect(jButton7);
@@ -42,8 +42,8 @@ public class AdminJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton11);
         addHoverTextEffect(jButton12);
         addHoverTextEffect(jButton13);
-        addHoverTextEffect(jButton14);
-        
+        addHoverTextEffect(chatSupportButton);
+
         // Cấu hình nút đăng xuất
         setupLogoutButton();
     }
@@ -70,8 +70,8 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        chatSupportButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -230,20 +230,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton12);
 
-        jButton14.setBackground(new java.awt.Color(204, 204, 255));
-        jButton14.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton14.setText("QL Tin Nhắn Liên Hệ");
-        jButton14.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jButton14.setBorderPainted(false);
-        jButton14.setContentAreaFilled(false);
-        jButton14.setFocusPainted(false);
-        jButton14.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton14ActionPerformed(evt);
-            }
-        });
-        sidebarPanel.add(jButton14);
-
         jButton5.setBackground(new java.awt.Color(204, 204, 255));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton5.setText("Quản Lý Sản Phẩm");
@@ -257,6 +243,20 @@ public class AdminJFrame extends javax.swing.JFrame {
             }
         });
         sidebarPanel.add(jButton5);
+
+        chatSupportButton.setBackground(new java.awt.Color(204, 204, 255));
+        chatSupportButton.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        chatSupportButton.setText("Quản Lí Tin Nhắn");
+        chatSupportButton.setBorder(null);
+        chatSupportButton.setBorderPainted(false);
+        chatSupportButton.setContentAreaFilled(false);
+        chatSupportButton.setFocusPainted(false);
+        chatSupportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chatSupportButtonActionPerformed(evt);
+            }
+        });
+        sidebarPanel.add(chatSupportButton);
 
         getContentPane().add(sidebarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 52, -1, 520));
 
@@ -323,7 +323,7 @@ public class AdminJFrame extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // Mở màn hình quản lý danh mục sản phẩm
-       Doimatkhaudialog dialog = new Doimatkhaudialog(this, true);
+        Doimatkhaudialog dialog = new Doimatkhaudialog(this, true);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_jButton12ActionPerformed
@@ -333,34 +333,31 @@ public class AdminJFrame extends javax.swing.JFrame {
         controller.openMaGiamGia();
     }//GEN-LAST:event_jButton13ActionPerformed
 
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        // Mở màn hình quản lý tin nhắn liên hệ
-        poly.ui.manager.QLTinNhanLienHe qltnlh = new poly.ui.manager.QLTinNhanLienHe(this, true);
-        qltnlh.setLocationRelativeTo(this);
-        qltnlh.setVisible(true);
-    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void chatSupportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chatSupportButtonActionPerformed
+        // Mở màn hình chat hỗ trợ cho agent
+        poly.ui.manager.AgentChatWindow agentChat = new poly.ui.manager.AgentChatWindow(this);
+        agentChat.setLocationRelativeTo(this);
+        agentChat.setVisible(true);
+    }//GEN-LAST:event_chatSupportButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Xác nhận đăng xuất
-        int choice = javax.swing.JOptionPane.showConfirmDialog(this, 
-            "Bạn có chắc chắn muốn đăng xuất?", 
-            "Xác nhận đăng xuất", 
-            javax.swing.JOptionPane.YES_NO_OPTION);
-        
+        int choice = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Bạn có chắc chắn muốn đăng xuất?",
+                "Xác nhận đăng xuất",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
         if (choice == javax.swing.JOptionPane.YES_OPTION) {
             // Đóng cửa sổ hiện tại
             this.dispose();
-            
+
             // Mở lại màn hình đăng nhập
             poly.ui.DNhapJDialog loginDialog = new poly.ui.DNhapJDialog(null, true);
             loginDialog.setLocationRelativeTo(null);
             loginDialog.setVisible(true);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
-
-
-
-
 
     // Cấu hình nút đăng xuất
     private void setupLogoutButton() {
@@ -371,7 +368,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14));
         jButton2.setForeground(new Color(153, 0, 51)); // Màu đỏ đậm
     }
-    
+
     // Hiệu ứng hover cho màu chữ JButton
     private void addHoverTextEffect(javax.swing.JButton button) {
         Color originalFg = button.getForeground();
@@ -381,6 +378,7 @@ public class AdminJFrame extends javax.swing.JFrame {
             public void mouseEntered(MouseEvent e) {
                 button.setForeground(hoverFg);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setForeground(originalFg);
@@ -424,12 +422,12 @@ public class AdminJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton chatSupportButton;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
