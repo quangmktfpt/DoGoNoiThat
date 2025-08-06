@@ -336,9 +336,9 @@ public class AdminJFrame extends javax.swing.JFrame {
 
     private void chatSupportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chatSupportButtonActionPerformed
         // Mở màn hình chat hỗ trợ cho agent
-        poly.ui.manager.AgentChatWindow agentChat = new poly.ui.manager.AgentChatWindow(this);
-        agentChat.setLocationRelativeTo(this);
-        agentChat.setVisible(true);
+        poly.ui.AdminChatWindowJDialog adminChat = new poly.ui.AdminChatWindowJDialog(this, true);
+        adminChat.setLocationRelativeTo(this);
+        adminChat.setVisible(true);
     }//GEN-LAST:event_chatSupportButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

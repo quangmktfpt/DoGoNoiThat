@@ -267,9 +267,9 @@ public class HoTroJDialog extends javax.swing.JDialog {
 
     private void openChatSupport() {
         try {
-            ChatWindow chatWindow = new ChatWindow(this);
-            chatWindow.setLocationRelativeTo(this);
-            chatWindow.setVisible(true);
+            CustomerChatWindowJDialog chatDialog = new CustomerChatWindowJDialog((java.awt.Frame) this.getOwner(), true);
+            chatDialog.setLocationRelativeTo(this);
+            chatDialog.setVisible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                     "Lỗi khi mở chat hỗ trợ: " + e.getMessage(),
@@ -310,7 +310,7 @@ public class HoTroJDialog extends javax.swing.JDialog {
      */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         // Mở cửa sổ chat
-        poly.ui.ChatWindow chatWindow = new poly.ui.ChatWindow(this);
-        chatWindow.setVisible(true);
+        poly.ui.CustomerChatWindowJDialog chatDialog = new poly.ui.CustomerChatWindowJDialog((java.awt.Frame) this.getOwner(), true);
+        chatDialog.setVisible(true);
     }
 }

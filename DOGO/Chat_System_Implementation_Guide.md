@@ -40,7 +40,7 @@
 - `ChatMessageDAOImpl.java` - Implementation cho ChatMessage
 
 ### UI Components:
-- `ChatWindow.java` - Cửa sổ chat chính
+- `CustomerChatWindowJDialog.java` - Cửa sổ chat chính cho khách hàng
 - `HoTroJDialog.java` - Đã thêm nút "Chat Hỗ Trợ"
 
 ## 🚀 Cách sử dụng
@@ -100,7 +100,7 @@
 - [x] Stored procedures
 
 ### ✅ UI Integration:
-- [x] ChatWindow component
+- [x] CustomerChatWindowJDialog component
 - [x] Integration với HoTroJDialog
 - [x] Modern UI design
 
