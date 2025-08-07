@@ -7,6 +7,9 @@ public interface UserDAO extends CrudDAO<User, Integer> {
     // Đăng nhập, trả về User nếu thành công, null nếu thất bại
     User login(String username, String password);
 
+    // Tìm user theo username
+    User selectByUsername(String username);
+
     // Tìm user theo email
     User findByEmail(String email);
 

@@ -3,13 +3,16 @@ package poly.dao.impl;
 import poly.dao.OrderRequestDAO;
 import poly.dao.CouponDAO;
 import poly.dao.ShoppingCartDAO;
+import poly.dao.AddressDAO;
 import poly.dao.impl.CouponDAOImpl;
 import poly.dao.impl.ShoppingCartDAOImpl;
+import poly.dao.impl.AddressDAOImpl;
 import poly.entity.OrderRequest;
 import poly.entity.OrderRequestItem;
 import poly.entity.Coupon;
 import poly.entity.CartItem;
 import poly.entity.Product;
+import poly.entity.Address;
 import poly.util.XJdbc;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -42,11 +45,12 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
     private final String SELECT_ORDER_ITEMS_SQL = "SELECT od.*, p.ProductName FROM OrderDetails od LEFT JOIN Products p ON od.ProductID = p.ProductID WHERE od.OrderID=?";
     private final String DELETE_ORDER_ITEM_SQL = "DELETE FROM OrderDetails WHERE OrderDetailID=?";
     
-    private final String INSERT_ADDRESS_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, IsDefault) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String INSERT_ADDRESS_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private final String SELECT_ADDRESS_BY_USER_SQL = "SELECT * FROM Addresses WHERE UserID=? ORDER BY IsDefault DESC";
     
     private CouponDAO couponDAO = new CouponDAOImpl();
     private ShoppingCartDAO cartDAO = new ShoppingCartDAOImpl();
+    private AddressDAO addressDAO = new AddressDAOImpl();
 
     @Override
     public void insert(OrderRequest orderRequest) {
@@ -402,35 +406,25 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
     // Helper methods
     private Integer createDeliveryAddress(OrderRequest orderRequest) {
         try {
-            // Kiểm tra xem đã có địa chỉ cho user này chưa
-            String checkSql = "SELECT AddressID FROM Addresses WHERE UserID = ? AND AddressLine1 = ? AND City = ? AND Country = ?";
-            ResultSet rs = XJdbc.executeQuery(checkSql, 
-                orderRequest.getUserId(),
-                orderRequest.getAddress(),
-                orderRequest.getCity(),
-                orderRequest.getCountry()
-            );
+            // Tạo địa chỉ mới từ thông tin đơn hàng
+            Address newAddress = new Address();
+            newAddress.setUserId(orderRequest.getUserId());
+            newAddress.setAddressLine1(orderRequest.getAddress());
+            newAddress.setCity(orderRequest.getCity());
+            newAddress.setCountry(orderRequest.getCountry());
+            newAddress.setPhone(orderRequest.getPhone());
+            newAddress.setCustomerName(orderRequest.getCustomerName());
+            newAddress.setIsDefault(false);
+            newAddress.setCouponId(null);
+            newAddress.setCreatedDate(LocalDateTime.now());
             
-            if (rs.next()) {
-                // Nếu đã có địa chỉ giống hệt, sử dụng lại
-                return rs.getInt("AddressID");
-            }
+            // Lưu địa chỉ mới
+            addressDAO.insert(newAddress);
             
-            // Nếu chưa có, tạo địa chỉ mới
-            XJdbc.executeUpdate(INSERT_ADDRESS_SQL, 
-                orderRequest.getUserId(),
-                orderRequest.getAddress(),
-                orderRequest.getCity(),
-                orderRequest.getCountry(),
-                orderRequest.getPhone(),
-                false // Không phải địa chỉ mặc định
-            );
-            
-            // Lấy AddressID vừa tạo bằng cách query lại
-            rs = XJdbc.executeQuery("SELECT TOP 1 AddressID FROM Addresses WHERE UserID = ? ORDER BY AddressID DESC", 
-                orderRequest.getUserId());
-            if (rs.next()) {
-                return rs.getInt("AddressID");
+            // Lấy AddressID vừa tạo
+            List<Address> addresses = addressDAO.selectByUserId(orderRequest.getUserId());
+            if (!addresses.isEmpty()) {
+                return addresses.get(0).getAddressId();
             }
             
         } catch (Exception e) {
@@ -458,19 +452,15 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
     
     private void ensureUserHasDefaultAddress(Integer userId) {
         try {
-            // Kiểm tra xem user đã có địa chỉ nào chưa
-            ResultSet rs = XJdbc.executeQuery("SELECT COUNT(*) as count FROM Addresses WHERE UserID = ?", userId);
-            if (rs.next() && rs.getInt("count") == 0) {
-                // Nếu chưa có địa chỉ nào, tạo địa chỉ mặc định
-                XJdbc.executeUpdate(INSERT_ADDRESS_SQL, 
-                    userId,
-                    "Địa chỉ mặc định",
-                    "Hà Nội",
-                    "Việt Nam",
-                    "0900000000",
-                    true // Địa chỉ mặc định
-                );
-                System.out.println("✓ Đã tạo địa chỉ mặc định cho user " + userId);
+            // Sử dụng AddressDAO để kiểm tra và tạo địa chỉ mặc định
+            if (!addressDAO.hasAddress(userId)) {
+                // Lấy thông tin user để có tên khách hàng
+                poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
+                poly.entity.User user = userDAO.selectById(userId);
+                String customerName = user != null ? user.getFullName() : "Khách hàng mặc định";
+                
+                // Tạo địa chỉ mặc định
+                addressDAO.createDefaultAddress(userId, customerName);
             }
         } catch (Exception e) {
             System.err.println("Lỗi khi đảm bảo địa chỉ mặc định: " + e.getMessage());

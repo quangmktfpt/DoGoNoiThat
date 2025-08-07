@@ -16,16 +16,23 @@ public class Address {
     private String addressLine1;
     private String city;
     private String country;
+    private String phone;
+    private String customerName;
     private Boolean isDefault;
+    private String couponId;
     private LocalDateTime createdDate;
 
-    public Address(Integer addressId, Integer userId, String addressLine1, String city, String country, Boolean isDefault, LocalDateTime createdDate) {
+    public Address(Integer addressId, Integer userId, String addressLine1, String city, String country, 
+                   String phone, String customerName, Boolean isDefault, String couponId, LocalDateTime createdDate) {
         this.addressId = addressId;
         this.userId = userId;
         this.addressLine1 = addressLine1;
         this.city = city;
         this.country = country;
+        this.phone = phone;
+        this.customerName = customerName;
         this.isDefault = isDefault;
+        this.couponId = couponId;
         this.createdDate = createdDate;
     }
 
@@ -69,12 +76,36 @@ public class Address {
         this.country = country;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     public Boolean getIsDefault() {
         return isDefault;
     }
 
     public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
     }
 
     public LocalDateTime getCreatedDate() {

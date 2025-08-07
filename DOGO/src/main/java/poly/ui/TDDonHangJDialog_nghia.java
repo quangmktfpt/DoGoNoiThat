@@ -564,7 +564,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             
             // Lấy thông tin địa chỉ giao hàng từ bảng Addresses
             // Thông tin này được tạo từ form đặt hàng của người dùng
-            String sql = "SELECT a.AddressLine1, a.City, a.Country, a.Phone " +
+            String sql = "SELECT a.AddressLine1, a.City, a.Country, a.Phone, a.CustomerName " +
                         "FROM Addresses a " +
                         "WHERE a.AddressID = ?";
             
@@ -574,8 +574,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 String city = rs.getString("City");
                 String country = rs.getString("Country");
                 String phone = rs.getString("Phone");
+                String customerName = rs.getString("CustomerName");
                 
                 StringBuilder address = new StringBuilder();
+                
+                // Thêm tên khách hàng nếu có
+                if (customerName != null && !customerName.trim().isEmpty()) {
+                    address.append(customerName);
+                    if (addressLine1 != null && !addressLine1.trim().isEmpty()) {
+                        address.append(" - ");
+                    }
+                }
+                
                 if (addressLine1 != null && !addressLine1.trim().isEmpty()) {
                     address.append(addressLine1);
                 }

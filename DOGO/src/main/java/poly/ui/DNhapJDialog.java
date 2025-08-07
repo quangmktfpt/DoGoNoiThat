@@ -249,28 +249,42 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
             return;
         }
 
-        // 2. Kiểm tra tài khoản
+        // 2. Kiểm tra tài khoản theo từng bước
         poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
-        poly.entity.User user = userDAO.login(username, password);
-
-        if (user == null) {
-            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản bị khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        
+        // 2.1. Kiểm tra username có tồn tại không
+        poly.entity.User existingUser = userDAO.selectByUsername(username);
+        if (existingUser == null) {
+            JOptionPane.showMessageDialog(this, "❌ Tên đăng nhập không tồn tại!\n\nVui lòng kiểm tra lại tên đăng nhập hoặc đăng ký tài khoản mới.", 
+                "Tên đăng nhập không đúng", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // 2.2. Kiểm tra tài khoản có bị khóa không
+        if (existingUser.getIsActive() == null || !existingUser.getIsActive()) {
+            JOptionPane.showMessageDialog(this, "🚫 Tài khoản đã bị khóa!\n\nTài khoản của bạn đã bị vô hiệu hóa do có hành vi xấu, liên hệ admin để được hỗ trợ.", 
+                "Tài khoản bị khóa", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // 2.3. Kiểm tra mật khẩu có đúng không
+        if (!password.equals(existingUser.getPasswordHash())) {
+            JOptionPane.showMessageDialog(this, "🔐 Mật khẩu không đúng!\n\nVui lòng kiểm tra lại mật khẩu hoặc sử dụng chức năng quên mật khẩu.", 
+                "Mật khẩu không đúng", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // 3. Kiểm tra quyền và active
-        if (user.getIsActive() == null || !user.getIsActive()) {
-            JOptionPane.showMessageDialog(this, "Tài khoản đã bị khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+        // 3. Đăng nhập thành công
+        poly.entity.User user = existingUser;
+        
         // 4. Lưu thông tin user đăng nhập vào tiện ích toàn cục
         poly.util.CurrentUserUtil.setCurrentUserId(user.getUserId());
         poly.util.CurrentUserUtil.setCurrentUsername(user.getUsername());
 
         // 5. Chuyển màn hình theo quyền
         String roleMsg = user.getRole() != null && user.getRole() ? "Admin" : "Khách hàng";
-        JOptionPane.showMessageDialog(this, "Đăng nhập thành công!\nXin chào " + user.getUsername() + " (" + roleMsg + ")", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "✅ Đăng nhập thành công!\n\nXin chào " + user.getUsername() + " (" + roleMsg + ")", 
+            "Đăng nhập thành công", JOptionPane.INFORMATION_MESSAGE);
 
         this.dispose();
         if (user.getRole() != null && user.getRole()) {
