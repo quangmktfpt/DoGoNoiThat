@@ -980,10 +980,6 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             sb.append("Mã đơn: ").append(currentOrder.getOrderId()).append("\n");
             sb.append("Ngày đặt: ").append(currentOrder.getOrderDate() != null ? currentOrder.getOrderDate().toString() : "N/A").append("\n");
             sb.append("Người đặt: ").append(user != null ? user.getFullName() : "N/A").append("\n");
-            sb.append("Người nhận: ").append(recipientName).append("\n");
-            sb.append("Địa chỉ giao hàng: ").append(recipientAddress).append("\n");
-            sb.append("Số điện thoại: ").append(user != null ? user.getPhone() : "N/A").append("\n");
-            sb.append("Tổng tiền: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
             sb.append("Tổng số tiền phải trả: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
             sb.append("Trạng thái: ").append(getStatusDisplayName(currentOrder.getOrderStatus())).append("\n");
             
