@@ -713,6 +713,15 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             }
         });
         jScrollPane6.setViewportView(tblDanhGia);
+        
+        // Thêm sự kiện click vào bảng đánh giá để hiển thị chi tiết
+        tblDanhGia.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 1) {
+                    showReviewDetails();
+                }
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -1157,6 +1166,7 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
     private List<Product_Nghia> currentTypeList = new java.util.ArrayList<>();
     private int currentTypeIndex = -1;
     private Product_Nghia currentProductInChat = null; // Lưu sản phẩm đang được chat
+    private List<ProductReview> currentProductReviews = new java.util.ArrayList<>(); // Lưu danh sách đánh giá hiện tại
 
     @Override
     public void open() {
@@ -1480,6 +1490,10 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             // Lấy danh sách đánh giá từ database
             List<ProductReview> reviews = productReviewDAO.getReviewsByProduct(productId);
             
+            // Lưu danh sách đánh giá hiện tại
+            currentProductReviews.clear();
+            currentProductReviews.addAll(reviews);
+            
             // Tạo model cho bảng
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn("Tên người đánh giá");
@@ -1491,7 +1505,18 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
             for (ProductReview review : reviews) {
                 String userName = review.getUserName() != null ? review.getUserName() : "Không xác định";
                 String starRating = getStarRating(review.getRating());
+                
+                // Sửa lỗi font cho comment
                 String comment = review.getComment() != null ? review.getComment() : "";
+                try {
+                    // Thử chuyển đổi encoding nếu có vấn đề
+                    byte[] bytes = comment.getBytes("ISO-8859-1");
+                    comment = new String(bytes, "UTF-8");
+                } catch (Exception e) {
+                    // Nếu lỗi, giữ nguyên text gốc
+                    comment = review.getComment() != null ? review.getComment() : "";
+                }
+                
                 String reviewDate = review.getReviewDate() != null ? 
                     review.getReviewDate().toString().substring(0, 19) : "";
                 
@@ -1518,10 +1543,14 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
     
     // Phương thức chuyển đổi số sao thành ký tự sao
     private String getStarRating(Byte rating) {
-        if (rating == null) return "0";
+        if (rating == null) return "☆☆☆☆☆";
         StringBuilder stars = new StringBuilder();
         for (int i = 0; i < rating; i++) {
-            stars.append("★");
+            stars.append("★"); // Sử dụng ký tự Unicode sao đặc
+        }
+        // Thêm sao rỗng cho đủ 5 sao
+        for (int i = rating; i < 5; i++) {
+            stars.append("☆"); // Sử dụng ký tự Unicode sao rỗng
         }
         return stars.toString();
     }
@@ -1596,5 +1625,136 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                 });
             }
         );
+    }
+    
+    // Phương thức hiển thị chi tiết đánh giá
+    private void showReviewDetails() {
+        int selectedRow = tblDanhGia.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một đánh giá để xem chi tiết!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        if (selectedRow >= currentProductReviews.size()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin đánh giá!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        ProductReview selectedReview = currentProductReviews.get(selectedRow);
+        
+        // Tạo dialog hiển thị chi tiết đánh giá
+        javax.swing.JDialog detailDialog = new javax.swing.JDialog(this, "Chi tiết đánh giá", true);
+        detailDialog.setLayout(new java.awt.BorderLayout());
+        detailDialog.setSize(500, 400);
+        detailDialog.setLocationRelativeTo(this);
+        
+        // Panel chính
+        javax.swing.JPanel mainPanel = new javax.swing.JPanel();
+        mainPanel.setLayout(new javax.swing.BoxLayout(mainPanel, javax.swing.BoxLayout.Y_AXIS));
+        mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Thông tin người đánh giá
+        javax.swing.JPanel userPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        javax.swing.JLabel userLabel = new javax.swing.JLabel("Người đánh giá:");
+        userLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        javax.swing.JLabel userNameLabel = new javax.swing.JLabel(selectedReview.getUserName() != null ? selectedReview.getUserName() : "Không xác định");
+        userNameLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        userPanel.add(userLabel);
+        userPanel.add(userNameLabel);
+        
+        // Số sao - Sửa lỗi hiển thị sao
+        javax.swing.JPanel ratingPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        javax.swing.JLabel ratingLabel = new javax.swing.JLabel("Số sao:");
+        ratingLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        
+        // Tạo label hiển thị số sao bằng ký tự Unicode
+        String starRating = "";
+        if (selectedReview.getRating() != null) {
+            int rating = selectedReview.getRating();
+            for (int i = 0; i < rating; i++) {
+                starRating += "★"; // Sử dụng ký tự Unicode sao đặc
+            }
+            // Thêm sao rỗng cho đủ 5 sao
+            for (int i = rating; i < 5; i++) {
+                starRating += "☆"; // Sử dụng ký tự Unicode sao rỗng
+            }
+        } else {
+            starRating = "☆☆☆☆☆"; // 5 sao rỗng nếu không có đánh giá
+        }
+        
+        javax.swing.JLabel starLabel = new javax.swing.JLabel(starRating);
+        starLabel.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        starLabel.setForeground(new java.awt.Color(255, 193, 7)); // Màu vàng cho sao
+        ratingPanel.add(ratingLabel);
+        ratingPanel.add(starLabel);
+        
+        // Ngày đánh giá
+        javax.swing.JPanel datePanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        javax.swing.JLabel dateLabel = new javax.swing.JLabel("Ngày đánh giá:");
+        dateLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        String reviewDate = selectedReview.getReviewDate() != null ? 
+            selectedReview.getReviewDate().toString().substring(0, 19) : "Không xác định";
+        javax.swing.JLabel dateValueLabel = new javax.swing.JLabel(reviewDate);
+        dateValueLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        datePanel.add(dateLabel);
+        datePanel.add(dateValueLabel);
+        
+        // Nội dung đánh giá - Sửa lỗi font
+        javax.swing.JPanel commentPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        javax.swing.JLabel commentLabel = new javax.swing.JLabel("Nội dung đánh giá:");
+        commentLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        commentLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        
+        javax.swing.JTextArea commentArea = new javax.swing.JTextArea();
+        String commentText = selectedReview.getComment() != null ? selectedReview.getComment() : "Không có nội dung đánh giá";
+        
+        // Sửa lỗi font bằng cách chuyển đổi encoding
+        try {
+            // Thử chuyển đổi từ UTF-8 nếu có vấn đề encoding
+            byte[] bytes = commentText.getBytes("ISO-8859-1");
+            commentText = new String(bytes, "UTF-8");
+        } catch (Exception e) {
+            // Nếu lỗi, giữ nguyên text gốc
+            commentText = selectedReview.getComment() != null ? selectedReview.getComment() : "Không có nội dung đánh giá";
+        }
+        
+        commentArea.setText(commentText);
+        commentArea.setEditable(false);
+        commentArea.setLineWrap(true);
+        commentArea.setWrapStyleWord(true);
+        commentArea.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        commentArea.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.LIGHT_GRAY));
+        
+        javax.swing.JScrollPane commentScrollPane = new javax.swing.JScrollPane(commentArea);
+        commentScrollPane.setPreferredSize(new java.awt.Dimension(450, 150));
+        
+        commentPanel.add(commentLabel, java.awt.BorderLayout.NORTH);
+        commentPanel.add(commentScrollPane, java.awt.BorderLayout.CENTER);
+        
+        // Thêm các panel vào panel chính
+        mainPanel.add(userPanel);
+        mainPanel.add(javax.swing.Box.createVerticalStrut(15));
+        mainPanel.add(ratingPanel);
+        mainPanel.add(javax.swing.Box.createVerticalStrut(15));
+        mainPanel.add(datePanel);
+        mainPanel.add(javax.swing.Box.createVerticalStrut(20));
+        mainPanel.add(commentPanel);
+        
+        // Nút đóng
+        javax.swing.JPanel buttonPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER));
+        javax.swing.JButton closeButton = new javax.swing.JButton("Đóng");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detailDialog.dispose();
+            }
+        });
+        buttonPanel.add(closeButton);
+        
+        // Thêm vào dialog
+        detailDialog.add(mainPanel, java.awt.BorderLayout.CENTER);
+        detailDialog.add(buttonPanel, java.awt.BorderLayout.SOUTH);
+        
+        // Hiển thị dialog
+        detailDialog.setVisible(true);
     }
 }

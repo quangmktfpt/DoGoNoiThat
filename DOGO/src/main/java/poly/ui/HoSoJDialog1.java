@@ -217,6 +217,7 @@ private void fillUserInfo(String username) {
     if (user != null) {
         this.user = user; // PHẢI có dòng này!
         jTextField1.setText(user.getUsername());
+        jTextField1.setEditable(false); // Không cho phép chỉnh sửa username
         jTextField2.setText(user.getFullName());
         jTextField3.setText(user.getPhone());
         jTextField4.setText(user.getAddress());
@@ -274,7 +275,7 @@ if (!currentPass.isEmpty() || !newPass.isEmpty()) {
     }
     user.setPasswordHash(newPass); // Lưu plain text
 }
-    // Cập nhật thông tin
+    // Cập nhật thông tin (không bao gồm username vì nó không thể thay đổi)
     user.setFullName(fullName);
     user.setPhone(phone);
     user.setAddress(address);
