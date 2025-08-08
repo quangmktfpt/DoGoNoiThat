@@ -95,7 +95,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
         jLabel10 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jTextField2 = new javax.swing.JTextField();
@@ -290,13 +289,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
             }
         });
 
-        jButton4.setText("Xóa");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Mã khách:");
 
         jButton5.setText("Nhập mới");
@@ -341,9 +333,7 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                 .addComponent(jButton11)
                 .addGap(38, 38, 38)
                 .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(34, 34, 34)
                 .addComponent(jButton5)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -417,7 +407,6 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                 .addGap(13, 13, 13)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
-                    .addComponent(jButton4)
                     .addComponent(jButton5)
                     .addComponent(jButton11))
                 .addContainerGap(537, Short.MAX_VALUE))
@@ -462,10 +451,6 @@ create() ;       // TODO add your handling code here:
  update();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-delete();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 clear();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -508,9 +493,7 @@ clear();        // TODO add your handling code here:
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
+    
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         bang(evt);        // TODO add your handling code here:
@@ -566,7 +549,6 @@ clear();        // TODO add your handling code here:
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -689,10 +671,14 @@ clear();        // TODO add your handling code here:
 
     @Override
     public boolean checkEmailExists(String email) {
+        if (email == null) return false;
+        String target = email.trim().toLowerCase();
         List<User> allUsers = userDAO.selectAll();
         return allUsers.stream()
-                .filter(user -> user.getRole() != null && !user.getRole()) // Chỉ kiểm tra trong khách hàng
-                .anyMatch(user -> user.getEmail() != null && user.getEmail().equals(email));
+                .anyMatch(user -> {
+                    String e = user.getEmail();
+                    return e != null && e.trim().toLowerCase().equals(target);
+                });
     }
 
     @Override
@@ -713,8 +699,8 @@ clear();        // TODO add your handling code here:
     @Override
     public void resetCustomerPassword(Integer userId, String newPassword) {
         try {
-            String hashedPassword = hashPassword(newPassword);
-            boolean success = userDAO.updatePassword(userId, hashedPassword);
+            // Lưu mật khẩu dạng plain text theo yêu cầu
+            boolean success = userDAO.updatePassword(userId, newPassword);
             if (!success) {
                 XDialog.alert("Không thể cập nhật mật khẩu! Vui lòng thử lại.");
             }
@@ -1023,16 +1009,16 @@ clear();        // TODO add your handling code here:
                 return;
             }
             
-            // Kiểm tra username và email trùng lặp (trừ user hiện tại)
-            if (!existingUser.getUsername().equals(user.getUsername()) && checkUsernameExists(user.getUsername())) {
-                XDialog.alert("Username đã tồn tại! Vui lòng sử dụng username khác.");
-                return;
-            }
-            
-            if (!existingUser.getEmail().equals(user.getEmail()) && checkEmailExists(user.getEmail())) {
+            // Chỉ kiểm tra email trùng lặp khi email thay đổi
+            String existingEmail = existingUser.getEmail() != null ? existingUser.getEmail().trim().toLowerCase() : "";
+            String newEmail = user.getEmail() != null ? user.getEmail().trim().toLowerCase() : "";
+            if (!existingEmail.equals(newEmail) && checkEmailExists(newEmail)) {
                 XDialog.alert("Email đã tồn tại! Vui lòng sử dụng email khác.");
                 return;
             }
+
+            // Không cho phép đổi username tại màn này để tránh xung đột
+            user.setUsername(existingUser.getUsername());
             
             // Không cần set mật khẩu khi update thông tin
             
@@ -1196,7 +1182,7 @@ clear();        // TODO add your handling code here:
         jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
       //  jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
         jButton3.addActionListener(evt -> jButton3ActionPerformed(evt));
-        jButton4.addActionListener(evt -> jButton4ActionPerformed(evt));
+       
         jButton5.addActionListener(evt -> jButton5ActionPerformed(evt));
     }
     

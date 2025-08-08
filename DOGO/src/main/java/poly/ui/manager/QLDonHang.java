@@ -178,6 +178,11 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Hôm Nay", "Tuần Này", "Tháng Này", "Qúy Này", "Năm Nay" }));
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "Processing", "Shipped", "Completed", "Delivering", "Cancelled" }));
 
