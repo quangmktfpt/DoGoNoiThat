@@ -91,7 +91,15 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             new String [] {
                 "Mã Đơn", "Ngày", "Ngưởi Đặt", "Trạng Thái"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblLichSu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblLichSuMouseClicked(evt);
@@ -113,7 +121,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Delivering", "Completed", "Cancelled" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Completed", "Cancelled", "" }));
         cboTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThaiActionPerformed(evt);
@@ -127,7 +135,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboThoiGian.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây", "Tùy chọn" }));
+        cboThoiGian.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây" }));
         cboThoiGian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboThoiGianActionPerformed(evt);
@@ -241,7 +249,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboThoiGian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây", "Tùy chọn" }));
+        cboThoiGian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả thởi gian", "Hôm nay", "Tuần này", "Tháng này", "3 tháng gần đây" }));
         cboThoiGian1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboThoiGian1ActionPerformed(evt);
@@ -255,7 +263,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboTrangThai1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Delivering", "Completed", "Cancelled" }));
+        cboTrangThai1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Completed", "Cancelled" }));
         cboTrangThai1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThai1ActionPerformed(evt);

@@ -76,7 +76,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jTextField9 = new javax.swing.JTextField();
@@ -142,13 +141,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
             jTable1.getColumnModel().getColumn(9).setResizable(false);
         }
 
-        jButton7.setText("Xóa mục đã chọn");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-
         jButton8.setText("Bỏ chọn mục");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,6 +151,11 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jLabel12.setText("Tìm kiếm Theo Mã Hóa Đơn:");
 
         jButton9.setText("Tìm");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jLabel13.setText("Tìm kiếm Theo Trạng Thái:");
 
@@ -174,6 +171,11 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jLabel15.setText("Đến Ngày");
 
         jButton11.setText("Tìm");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Hôm Nay", "Tuần Này", "Tháng Này", "Qúy Này", "Năm Nay" }));
 
@@ -248,17 +250,15 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 .addGap(126, 126, 126)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton7)
-                        .addGap(107, 107, 107)
-                        .addComponent(jButton8)
-                        .addGap(112, 112, 112))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton12)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton8)
+                        .addGap(216, 216, 216))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,7 +291,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7)
                     .addComponent(jButton8)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -329,10 +328,6 @@ this.open();        // TODO add your handling code here:
         this. uncheckAll();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        this.deleteCheckedItems();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Tìm kiếm theo tên khách hàng
         String keyword = jTextField1.getText().trim();
@@ -359,9 +354,19 @@ this.open();        // TODO add your handling code here:
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton10ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+       
+        mahoadon();// TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        timtheothoigian();
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton11ActionPerformed
+
     // === Sự kiện nút trên giao diện ===
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm theo mã hóa đơn
+    private void mahoadon() { // Tìm theo mã hóa đơn
         String keyword = jTextField9.getText().trim();
         List<Order> result;
         if (keyword.isEmpty()) {
@@ -421,7 +426,7 @@ this.open();        // TODO add your handling code here:
         }
     }
     
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) { // Tìm theo thời gian
+    private void timtheothoigian() { // Tìm theo thời gian
         String period = (String) jComboBox2.getSelectedItem();
         LocalDateTime from = null, to = null;
         LocalDate today = LocalDate.now();
@@ -599,7 +604,6 @@ this.open();        // TODO add your handling code here:
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox2;

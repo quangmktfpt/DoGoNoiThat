@@ -47,10 +47,13 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         // Đảm bảo AI trả lời luôn xuống dòng, không kéo ngang
         jTextArea1.setLineWrap(true);
         jTextArea1.setWrapStyleWord(true);
+        // Đặt font hỗ trợ tiếng Việt rõ ràng
+        jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 14));
         
         // Cấu hình TextArea nhập liệu hiển thị theo chiều dọc
         jTextArea2.setLineWrap(true);
         jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setFont(new java.awt.Font("Segoe UI", 0, 14));
         jTextArea2.setRows(3); // Hiển thị 3 dòng
         // Hiển thị sản phẩm dạng lưới 3 cột, khoảng cách 16px
         productGridPanel.setLayout(new java.awt.GridLayout(0, 3, 16, 16));
