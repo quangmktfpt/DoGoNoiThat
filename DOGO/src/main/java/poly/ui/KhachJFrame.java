@@ -34,7 +34,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton6);
         addHoverTextEffect(jButton7);
         addHoverTextEffect(jButton8);
-        addHoverTextEffect(jButton9);
         addHoverTextEffect(jButton10);
         
         // Cấu hình nút đăng xuất
@@ -50,7 +49,6 @@ public class KhachJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
         headerPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -60,12 +58,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-
-        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +84,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
 
         sidebarPanel.setBackground(new java.awt.Color(204, 204, 255));
-        sidebarPanel.setLayout(new java.awt.GridLayout(7, 1, 0, 5));
+        sidebarPanel.setLayout(new java.awt.GridLayout(6, 1, 0, 5));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -164,19 +157,7 @@ public class KhachJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton8);
 
-        jButton9.setBackground(new java.awt.Color(204, 204, 255));
-        jButton9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton9.setText("Đánh giá ");
-        jButton9.setBorder(null);
-        jButton9.setBorderPainted(false);
-        jButton9.setContentAreaFilled(false);
-        jButton9.setFocusPainted(false);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-        sidebarPanel.add(jButton9);
+
 
         jButton10.setBackground(new java.awt.Color(204, 204, 255));
         jButton10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -194,9 +175,15 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         getContentPane().add(sidebarPanel, java.awt.BorderLayout.LINE_START);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
-        getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
-        setJMenuBar(jMenuBar1);
+        // Tạo jPanel1 cho dashboard
+        jPanel1 = new javax.swing.JPanel();
+        jPanel1.setBackground(new java.awt.Color(248, 249, 250));
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+        
+        // Khởi tạo dashboard
+        initializeDashboard();
+        
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -231,12 +218,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         // Mở màn hình hồ sơ thông qua controller
         controller.openHoSo();
     }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // Mở dialog đánh giá sản phẩm thông qua controller
-        // Kiểm tra đơn hàng đã nhận trước khi cho phép đánh giá
-        checkAndOpenDanhGia();
-    }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // Mở màn hình hỗ trợ thông qua controller
@@ -720,11 +701,9 @@ public class KhachJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
 }
