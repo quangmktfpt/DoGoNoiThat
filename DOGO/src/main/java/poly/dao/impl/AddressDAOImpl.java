@@ -39,7 +39,7 @@ public class AddressDAOImpl implements AddressDAO {
             address.getPhone(),
             address.getCustomerName(),
             address.getIsDefault(),
-            address.getCouponId()
+            address.getCouponId() // Assuming Address entity has a couponId field
         );
     }
 
@@ -53,7 +53,7 @@ public class AddressDAOImpl implements AddressDAO {
             address.getPhone(),
             address.getCustomerName(),
             address.getIsDefault(),
-            address.getCouponId(),
+            address.getCouponId(), // Assuming Address entity has a couponId field
             address.getAddressId()
         );
     }
@@ -164,7 +164,7 @@ public class AddressDAOImpl implements AddressDAO {
                 address.setPhone(rs.getString("Phone"));
                 address.setCustomerName(rs.getString("CustomerName"));
                 address.setIsDefault(rs.getBoolean("IsDefault"));
-                address.setCouponId(rs.getString("CouponID"));
+                address.setCouponId(rs.getString("CouponID")); // Assuming Address entity has a couponId field
                 address.setCreatedDate(rs.getTimestamp("CreatedDate").toLocalDateTime());
                 list.add(address);
             }

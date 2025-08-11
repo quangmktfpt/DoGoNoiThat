@@ -940,12 +940,23 @@ this.open();        // TODO add your handling code here:
         for (Order o : list) {
             String tenKhachHang = "";
             String diaChiGiaoHang = "";
-            // Lấy tên khách hàng
-            User user = userDAO.selectById(o.getUserId());
-            if (user != null) tenKhachHang = user.getFullName();
-            // Lấy địa chỉ giao hàng
+            // Lấy tên khách hàng từ CustomerName trong Addresses
             Address address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE AddressId=?", o.getDeliveryAddressId());
-            if (address != null) diaChiGiaoHang = address.getAddressLine1() + ", " + address.getCity() + ", " + address.getCountry();
+            if (address != null) {
+                // Ưu tiên sử dụng CustomerName, nếu không có thì dùng tên user
+                if (address.getCustomerName() != null && !address.getCustomerName().trim().isEmpty()) {
+                    tenKhachHang = address.getCustomerName();
+                } else {
+                    // Fallback: lấy tên từ bảng Users
+                    User user = userDAO.selectById(o.getUserId());
+                    if (user != null) tenKhachHang = user.getFullName();
+                }
+                diaChiGiaoHang = address.getAddressLine1() + ", " + address.getCity() + ", " + address.getCountry();
+            } else {
+                // Fallback: lấy tên từ bảng Users nếu không có address
+                User user = userDAO.selectById(o.getUserId());
+                if (user != null) tenKhachHang = user.getFullName();
+            }
             model.addRow(new Object[]{
                 o.getOrderId(),
                 o.getUserId(),

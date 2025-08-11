@@ -878,7 +878,7 @@ checkAndFillProductName();        // TODO add your handling code here:
             } catch (Exception e) {}
             // Số lượng: có dấu + hoặc -
             String soLuongStr = "";
-            if ("PurchaseIn".equals(it.getTransactionType())) {
+            if ("PurchaseIn".equals(it.getTransactionType()) || "ReturnIn".equals(it.getTransactionType())) {
                 soLuongStr = "+" + it.getQuantityChange();
             } else if ("Adjustment".equals(it.getTransactionType()) || "SaleOut".equals(it.getTransactionType())) {
                 soLuongStr = "-" + Math.abs(it.getQuantityChange());
@@ -890,7 +890,7 @@ checkAndFillProductName();        // TODO add your handling code here:
             try {
                 java.math.BigDecimal giaTri = java.math.BigDecimal.ZERO;
                 if (p != null && it.getQuantityChange() != null) {
-                    if ("PurchaseIn".equals(it.getTransactionType())) {
+                    if ("PurchaseIn".equals(it.getTransactionType()) || "ReturnIn".equals(it.getTransactionType())) {
                         if (p.getGianhap() != null) {
                             giaTri = p.getGianhap().multiply(new java.math.BigDecimal(Math.abs(it.getQuantityChange())));
                         }
@@ -928,6 +928,7 @@ checkAndFillProductName();        // TODO add your handling code here:
     private String getTransactionTypeVN(String type) {
         switch (type) {
             case "PurchaseIn": return "Nhập kho";
+            case "ReturnIn": return "Nhập kho"; // Hoàn trả cũng hiển thị là "Nhập kho"
             case "SaleOut": return "Xuất kho";
             case "Adjustment": return "Xuất kho khác";
             default: return type;
@@ -953,7 +954,7 @@ checkAndFillProductName();        // TODO add your handling code here:
                 break;
             case 1: // Nhập kho
                 for (InventoryTransaction it : all) {
-                    if ("PurchaseIn".equals(it.getTransactionType())) filtered.add(it);
+                    if ("PurchaseIn".equals(it.getTransactionType()) || "ReturnIn".equals(it.getTransactionType())) filtered.add(it);
                 }
                 break;
             case 2: // Xuất kho toàn bộ (SaleOut + Adjustment)

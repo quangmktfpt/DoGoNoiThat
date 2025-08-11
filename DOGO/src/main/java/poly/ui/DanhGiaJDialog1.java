@@ -63,6 +63,9 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+
+        lblHinhAnh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/trump-small.png"))); // NOI18N
 
         starGroup.add(starButtons1);
         starButtons1.setText("★");
@@ -89,12 +92,7 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         starGroup.add(starButtons5);
         starButtons5.setText("★★★★★");
 
-        btnGuiDanhGia.setText("Gửi đánh giá");
-        btnGuiDanhGia.setBackground(new Color(51, 153, 255));
-        btnGuiDanhGia.setForeground(Color.WHITE);
-        btnGuiDanhGia.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnGuiDanhGia.setBorderPainted(false);
-        btnGuiDanhGia.setFocusPainted(false);
+        btnGuiDanhGia.setText("Gửi");
         btnGuiDanhGia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuiDanhGiaActionPerformed(evt);
@@ -124,6 +122,8 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,6 +152,10 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnGuiDanhGia)
                         .addGap(387, 387, 387))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(450, 450, 450)
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,7 +174,9 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                         .addGap(37, 37, 37)
                         .addComponent(btnGuiDanhGia))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel1)
+                        .addGap(34, 34, 34)
                         .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -439,6 +445,7 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuiDanhGia;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;

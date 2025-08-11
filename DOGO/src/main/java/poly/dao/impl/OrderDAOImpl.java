@@ -3,7 +3,6 @@ package poly.dao.impl;
 import poly.dao.OrderDAO;
 import poly.entity.Order;
 import poly.entity.OrderDetail;
-import poly.entity.User;
 import poly.util.XJdbc;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -168,6 +167,8 @@ public class OrderDAOImpl implements OrderDAO {
                     if (rsCurrent.next()) {
                         currentQuantityDirect = rsCurrent.getInt("Quantity");
                     }
+                    // Sử dụng cho mục đích debug đối chiếu số liệu hiện tại
+                    System.out.println("DEBUG: Tồn kho hiện tại (direct) của " + detail.getProductId() + ": " + currentQuantityDirect);
                     
                     // Hệ thống tự động cộng tồn kho khi đơn hàng bị huỷ/đổi trả
                     System.out.println("DEBUG: Hệ thống tự động cộng tồn kho - không cần code thêm");
@@ -190,12 +191,39 @@ public class OrderDAOImpl implements OrderDAO {
                         System.out.println("DEBUG: Chênh lệch: " + (newQuantity - (currentQuantity + detail.getQuantity())));
                     }
                     
-                    // Ghi log giao dịch tồn kho
-                    String insertTransactionSQL = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes) VALUES (?, ?, ?, ?, ?)";
-                    String transactionType = "Adjustment"; // Hoặc có thể dùng 'ReturnIn' nếu muốn
+                    // Ghi log giao dịch tồn kho: hoàn trả phải được ghi nhận là Nhập kho
+                    String insertTransactionSQL = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes, UserID) VALUES (?, ?, ?, ?, ?, ?)";
+                    String transactionType = "ReturnIn"; // Loại giao dịch riêng cho hoàn trả sản phẩm
                     String referenceID = "ORDER-" + orderId;
                     String notes = "Hoàn trả sản phẩm từ đơn hàng " + orderId + " - " + returnReason;
-                    XJdbc.executeUpdate(insertTransactionSQL, detail.getProductId(), transactionType, detail.getQuantity(), referenceID, notes);
+                    
+                    // Lấy UserID từ đơn hàng
+                    Integer userId = currentOrder.getUserId();
+                    
+                    try {
+                        // Thử insert với UserID trước
+                        XJdbc.executeUpdate(insertTransactionSQL, detail.getProductId(), transactionType, detail.getQuantity(), referenceID, notes, userId);
+                        System.out.println("DEBUG: ✅ Đã insert InventoryTransaction thành công với ReturnIn và UserID");
+                    } catch (Exception e) {
+                        System.out.println("DEBUG: ❌ Lỗi khi insert InventoryTransaction với UserID: " + e.getMessage());
+                        try {
+                            // Thử insert không có UserID nếu có lỗi
+                            String insertTransactionSQL2 = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes) VALUES (?, ?, ?, ?, ?)";
+                            XJdbc.executeUpdate(insertTransactionSQL2, detail.getProductId(), transactionType, detail.getQuantity(), referenceID, notes);
+                            System.out.println("DEBUG: ✅ Đã insert InventoryTransaction thành công (không có UserID)");
+                        } catch (Exception e2) {
+                            System.out.println("DEBUG: ❌ Lỗi khi insert InventoryTransaction không có UserID: " + e2.getMessage());
+                            // Nếu vẫn lỗi, thử với loại giao dịch khác
+                            try {
+                                String insertTransactionSQL3 = "INSERT INTO InventoryTransactions (ProductID, TransactionType, QuantityChange, ReferenceID, Notes) VALUES (?, ?, ?, ?, ?)";
+                                XJdbc.executeUpdate(insertTransactionSQL3, detail.getProductId(), "Adjustment", detail.getQuantity(), referenceID, notes);
+                                System.out.println("DEBUG: ✅ Đã insert InventoryTransaction thành công với Adjustment");
+                            } catch (Exception e3) {
+                                System.out.println("DEBUG: ❌ Lỗi khi insert InventoryTransaction với Adjustment: " + e3.getMessage());
+                                throw new RuntimeException("Không thể ghi log giao dịch tồn kho: " + e3.getMessage());
+                            }
+                        }
+                    }
                 }
                 
                 System.out.println("DEBUG: Hoàn thành cập nhật đơn hàng " + orderId);

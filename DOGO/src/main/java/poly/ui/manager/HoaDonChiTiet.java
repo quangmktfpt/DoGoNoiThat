@@ -239,12 +239,12 @@ public class HoaDonChiTiet extends javax.swing.JDialog implements OrderDetailCon
                 tenSanPham,
                 idSanPham,
                 od.getQuantity(),
-                od.getUnitPrice(),
-                thanhTien
+                formatCurrency(od.getUnitPrice().doubleValue()),
+                formatCurrency(thanhTien)
             });
             total += thanhTien;
         }
-        jLabel3.setText(String.valueOf(total));
+        jLabel3.setText(formatCurrency(total));
     }
 
     @Override
@@ -315,5 +315,13 @@ public class HoaDonChiTiet extends javax.swing.JDialog implements OrderDetailCon
     @Override
     public void moveTo(int rowIndex) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    /**
+     * Format số tiền thành định dạng tiền tệ Việt Nam
+     */
+    private String formatCurrency(double amount) {
+        java.text.DecimalFormat formatter = new java.text.DecimalFormat("#,##0.00");
+        return formatter.format(amount) + " VNĐ";
     }
 }

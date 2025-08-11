@@ -45,7 +45,7 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
     private final String SELECT_ORDER_ITEMS_SQL = "SELECT od.*, p.ProductName FROM OrderDetails od LEFT JOIN Products p ON od.ProductID = p.ProductID WHERE od.OrderID=?";
     private final String DELETE_ORDER_ITEM_SQL = "DELETE FROM OrderDetails WHERE OrderDetailID=?";
     
-    private final String INSERT_ADDRESS_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final String INSERT_ADDRESS_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault, CouponID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SELECT_ADDRESS_BY_USER_SQL = "SELECT * FROM Addresses WHERE UserID=? ORDER BY IsDefault DESC";
     
     private CouponDAO couponDAO = new CouponDAOImpl();
@@ -415,7 +415,7 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
             newAddress.setPhone(orderRequest.getPhone());
             newAddress.setCustomerName(orderRequest.getCustomerName());
             newAddress.setIsDefault(false);
-            newAddress.setCouponId(null);
+            newAddress.setCouponId(orderRequest.getCouponId());
             newAddress.setCreatedDate(LocalDateTime.now());
             
             // Lưu địa chỉ mới

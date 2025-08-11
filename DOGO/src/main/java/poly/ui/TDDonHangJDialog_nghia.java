@@ -18,6 +18,7 @@ import java.util.List;
 import poly.controller.OrderController_Nghia;
 import poly.util.CurrentUserUtil;
 import java.time.format.DateTimeFormatter;
+import poly.ui.manager.HoaDonChiTiet;
 
 /**
  *
@@ -34,6 +35,9 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         // Tự động load dữ liệu khi khởi tạo
         open();
         // KHÔNG setEnabled cho các ô ngày nữa, luôn cho phép nhập tay
+        
+        // Chỉ thêm debug logs, không thay đổi event listeners
+        addDebugLogs();
     }
 
     /**
@@ -102,10 +106,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         });
         tblLichSu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblLichSuMouseClicked(evt);
+                if (evt.getClickCount() == 1) {
+                    tblLichSuMouseClicked(evt);
+                } else if (evt.getClickCount() == 2) {
+                    System.out.println("DEBUG: tblLichSu double-click detected in mouseClicked");
+                    tblLichSuMouseDoubleClicked(evt);
+                }
             }
         });
         jScrollPane1.setViewportView(tblLichSu);
+        
+        // Thêm tooltip cho bảng lịch sử
+        tblLichSu.setToolTipText("Double-click để xem chi tiết hóa đơn");
 
         btnYeuCauDoiTraLichSu.setText("Yêu Cầu Đổi Trả");
         btnYeuCauDoiTraLichSu.addActionListener(new java.awt.event.ActionListener() {
@@ -223,10 +235,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         ));
         tblHienTai.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblHienTaiMouseClicked(evt);
+                if (evt.getClickCount() == 1) {
+                    tblHienTaiMouseClicked(evt);
+                } else if (evt.getClickCount() == 2) {
+                    System.out.println("DEBUG: tblHienTai double-click detected in mouseClicked");
+                    tblHienTaiMouseDoubleClicked(evt);
+                }
             }
         });
         jScrollPane2.setViewportView(tblHienTai);
+        
+        // Thêm tooltip cho bảng hiện tại
+        tblHienTai.setToolTipText("Double-click để xem chi tiết hóa đơn");
 
         btnYeuCauDoiTraHienTai.setText("Yêu Cầu Đổi Trả");
         btnYeuCauDoiTraHienTai.addActionListener(new java.awt.event.ActionListener() {
@@ -379,9 +399,19 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         edit();
     }//GEN-LAST:event_tblLichSuMouseClicked
 
+    private void tblLichSuMouseDoubleClicked(java.awt.event.MouseEvent evt) {
+        System.out.println("DEBUG: tblLichSu double-click event triggered");
+        openOrderDetailDialog();
+    }
+
     private void tblHienTaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHienTaiMouseClicked
         edit();
     }//GEN-LAST:event_tblHienTaiMouseClicked
+
+    private void tblHienTaiMouseDoubleClicked(java.awt.event.MouseEvent evt) {
+        System.out.println("DEBUG: tblHienTai double-click event triggered");
+        openOrderDetailDialog();
+    }
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         open();
@@ -1174,6 +1204,67 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         } else if (cancelReason != null) {
             XDialog.alert("Vui lòng nhập lý do huỷ đơn hàng!");
+        }
+    }
+
+    /**
+     * Thêm debug logs mà không thay đổi event listeners
+     */
+    private void addDebugLogs() {
+        System.out.println("DEBUG: TDDonHangJDialog_nghia initialized");
+        System.out.println("DEBUG: tblLichSu listeners count: " + tblLichSu.getMouseListeners().length);
+        System.out.println("DEBUG: tblHienTai listeners count: " + tblHienTai.getMouseListeners().length);
+        System.out.println("DEBUG: Original event listeners preserved");
+    }
+
+    /**
+     * Mở dialog chi tiết hóa đơn khi double-click vào dòng trong bảng
+     */
+    private void openOrderDetailDialog() {
+        // Lấy thông tin đơn hàng trực tiếp từ dòng được chọn
+        int selectedTab = jTabbedPane1.getSelectedIndex();
+        int row = selectedTab == 0 ? tblLichSu.getSelectedRow() : tblHienTai.getSelectedRow();
+        
+        System.out.println("DEBUG: Tab selected: " + selectedTab + ", Row selected: " + row);
+        
+        if (row < 0) {
+            XDialog.alert("Vui lòng chọn đơn hàng để xem chi tiết!");
+            return;
+        }
+        
+        try {
+            // Lấy OrderID trực tiếp từ bảng
+            Integer orderId = (Integer) (selectedTab == 0 ? 
+                tblLichSu.getValueAt(row, 0) : tblHienTai.getValueAt(row, 0));
+            
+            System.out.println("DEBUG: OrderID from table: " + orderId);
+            
+            if (orderId == null) {
+                XDialog.alert("Không thể lấy mã đơn hàng!");
+                return;
+            }
+            
+            // Lấy thông tin đơn hàng từ database
+            currentOrder = orderDAO.selectById(orderId);
+            
+            if (currentOrder == null) {
+                XDialog.alert("Không tìm thấy thông tin đơn hàng!");
+                return;
+            }
+            
+            System.out.println("DEBUG: Current order loaded: " + currentOrder.getOrderId());
+            
+            // Mở dialog chi tiết hóa đơn
+            HoaDonChiTiet hoaDonDialog = new HoaDonChiTiet((java.awt.Frame) this.getParent(), true, currentOrder.getOrderId().intValue());
+            hoaDonDialog.setLocationRelativeTo(this);
+            hoaDonDialog.setVisible(true);
+            
+            System.out.println("DEBUG: Dialog opened successfully");
+            
+        } catch (Exception e) {
+            System.err.println("DEBUG: Error opening dialog: " + e.getMessage());
+            e.printStackTrace();
+            XDialog.alert("Lỗi khi mở chi tiết hóa đơn: " + e.getMessage());
         }
     }
 
