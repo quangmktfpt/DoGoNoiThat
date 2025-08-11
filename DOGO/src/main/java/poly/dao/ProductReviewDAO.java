@@ -19,6 +19,9 @@ public interface ProductReviewDAO {
     // Kiểm tra xem user đã đánh giá sản phẩm chưa
     boolean hasUserReviewed(String productId, Integer userId);
     
+    // Kiểm tra xem user đã đánh giá sản phẩm trong đơn hàng cụ thể chưa
+    boolean hasUserReviewedInOrder(String productId, Integer userId, Integer orderId);
+    
     // Kiểm tra xem user có thể đánh giá sản phẩm không (đã mua và ship complete)
     boolean canUserReviewProduct(String productId, Integer userId);
     

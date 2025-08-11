@@ -1509,15 +1509,31 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
                 String userName = review.getUserName() != null ? review.getUserName() : "Không xác định";
                 String starRating = getStarRating(review.getRating());
                 
-                // Sửa lỗi font cho comment
+                // Sửa lỗi font cho comment - Xử lý encoding đúng cách
                 String comment = review.getComment() != null ? review.getComment() : "";
-                try {
-                    // Thử chuyển đổi encoding nếu có vấn đề
-                    byte[] bytes = comment.getBytes("ISO-8859-1");
-                    comment = new String(bytes, "UTF-8");
-                } catch (Exception e) {
-                    // Nếu lỗi, giữ nguyên text gốc
-                    comment = review.getComment() != null ? review.getComment() : "";
+                System.out.println("DEBUG: Original comment: " + comment);
+                
+                // Kiểm tra xem comment có ký tự lỗi không
+                if (comment.contains("?") && comment.length() > 0) {
+                    try {
+                        // Thử chuyển đổi từ Windows-1252 sang UTF-8
+                        byte[] bytes = comment.getBytes("Windows-1252");
+                        comment = new String(bytes, "UTF-8");
+                        System.out.println("DEBUG: Fixed comment: " + comment);
+                    } catch (Exception e) {
+                        System.err.println("DEBUG: Error fixing encoding: " + e.getMessage());
+                        // Nếu lỗi, thử cách khác
+                        try {
+                            // Thử chuyển đổi từ ISO-8859-1 sang UTF-8
+                            byte[] bytes = comment.getBytes("ISO-8859-1");
+                            comment = new String(bytes, "UTF-8");
+                            System.out.println("DEBUG: Fixed comment (ISO-8859-1): " + comment);
+                        } catch (Exception e2) {
+                            System.err.println("DEBUG: Error fixing encoding (ISO-8859-1): " + e2.getMessage());
+                            // Giữ nguyên text gốc nếu không fix được
+                            comment = review.getComment() != null ? review.getComment() : "";
+                        }
+                    }
                 }
                 
                 String reviewDate = review.getReviewDate() != null ? 
@@ -1544,18 +1560,10 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         }
     }
     
-    // Phương thức chuyển đổi số sao thành ký tự sao
+    // Phương thức chuyển đổi số sao thành số đơn giản
     private String getStarRating(Byte rating) {
-        if (rating == null) return "☆☆☆☆☆";
-        StringBuilder stars = new StringBuilder();
-        for (int i = 0; i < rating; i++) {
-            stars.append("★"); // Sử dụng ký tự Unicode sao đặc
-        }
-        // Thêm sao rỗng cho đủ 5 sao
-        for (int i = rating; i < 5; i++) {
-            stars.append("☆"); // Sử dụng ký tự Unicode sao rỗng
-        }
-        return stars.toString();
+        if (rating == null) return "0";
+        return String.valueOf(rating);
     }
     
     // Phương thức hỏi AI về thông tin sản phẩm
@@ -1670,24 +1678,14 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         javax.swing.JLabel ratingLabel = new javax.swing.JLabel("Số sao:");
         ratingLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
         
-        // Tạo label hiển thị số sao bằng ký tự Unicode
-        String starRating = "";
-        if (selectedReview.getRating() != null) {
-            int rating = selectedReview.getRating();
-            for (int i = 0; i < rating; i++) {
-                starRating += "★"; // Sử dụng ký tự Unicode sao đặc
-            }
-            // Thêm sao rỗng cho đủ 5 sao
-            for (int i = rating; i < 5; i++) {
-                starRating += "☆"; // Sử dụng ký tự Unicode sao rỗng
-            }
-        } else {
-            starRating = "☆☆☆☆☆"; // 5 sao rỗng nếu không có đánh giá
-        }
+        // Sử dụng method getStarRating đã có sẵn
+        String starRating = getStarRating(selectedReview.getRating());
+        System.out.println("DEBUG: Rating value: " + selectedReview.getRating());
+        System.out.println("DEBUG: Star rating string: " + starRating);
         
-        javax.swing.JLabel starLabel = new javax.swing.JLabel(starRating);
-        starLabel.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        starLabel.setForeground(new java.awt.Color(255, 193, 7)); // Màu vàng cho sao
+        javax.swing.JLabel starLabel = new javax.swing.JLabel(starRating + "/5");
+        starLabel.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        starLabel.setForeground(new java.awt.Color(255, 193, 7)); // Màu vàng cho số sao
         ratingPanel.add(ratingLabel);
         ratingPanel.add(starLabel);
         
@@ -1711,14 +1709,29 @@ public class DuyetspJDialog_nghia1 extends javax.swing.JDialog implements Produc
         javax.swing.JTextArea commentArea = new javax.swing.JTextArea();
         String commentText = selectedReview.getComment() != null ? selectedReview.getComment() : "Không có nội dung đánh giá";
         
-        // Sửa lỗi font bằng cách chuyển đổi encoding
-        try {
-            // Thử chuyển đổi từ UTF-8 nếu có vấn đề encoding
-            byte[] bytes = commentText.getBytes("ISO-8859-1");
-            commentText = new String(bytes, "UTF-8");
-        } catch (Exception e) {
-            // Nếu lỗi, giữ nguyên text gốc
-            commentText = selectedReview.getComment() != null ? selectedReview.getComment() : "Không có nội dung đánh giá";
+        System.out.println("DEBUG: Original comment in dialog: " + commentText);
+        
+        // Sửa lỗi font bằng cách chuyển đổi encoding - Sử dụng logic tương tự như trong loadProductReviews
+        if (commentText.contains("?") && commentText.length() > 0) {
+            try {
+                // Thử chuyển đổi từ Windows-1252 sang UTF-8
+                byte[] bytes = commentText.getBytes("Windows-1252");
+                commentText = new String(bytes, "UTF-8");
+                System.out.println("DEBUG: Fixed comment in dialog: " + commentText);
+            } catch (Exception e) {
+                System.err.println("DEBUG: Error fixing encoding in dialog: " + e.getMessage());
+                // Nếu lỗi, thử cách khác
+                try {
+                    // Thử chuyển đổi từ ISO-8859-1 sang UTF-8
+                    byte[] bytes = commentText.getBytes("ISO-8859-1");
+                    commentText = new String(bytes, "UTF-8");
+                    System.out.println("DEBUG: Fixed comment in dialog (ISO-8859-1): " + commentText);
+                } catch (Exception e2) {
+                    System.err.println("DEBUG: Error fixing encoding in dialog (ISO-8859-1): " + e2.getMessage());
+                    // Giữ nguyên text gốc nếu không fix được
+                    commentText = selectedReview.getComment() != null ? selectedReview.getComment() : "Không có nội dung đánh giá";
+                }
+            }
         }
         
         commentArea.setText(commentText);

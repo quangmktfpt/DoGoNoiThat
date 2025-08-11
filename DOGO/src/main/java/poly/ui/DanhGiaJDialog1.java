@@ -17,16 +17,34 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
     private boolean daMua;
     private String productId;
     private int userId;
+    private Integer orderId; // Thêm field orderId
     private int selectedRating = 0;
     private Runnable onReviewSubmitted; // Callback khi đánh giá được gửi
 
     public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua) {
+        this(parent, productId, userId, tenSanPham, hinhAnh, daMua, null, null);
+    }
+    
+    // Constructor với callback
+    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua, Runnable onReviewSubmitted) {
+        this(parent, productId, userId, tenSanPham, hinhAnh, daMua, null, onReviewSubmitted);
+    }
+    
+    // Constructor với orderId
+    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua, Integer orderId) {
+        this(parent, productId, userId, tenSanPham, hinhAnh, daMua, orderId, null);
+    }
+    
+    // Constructor chính với tất cả tham số
+    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua, Integer orderId, Runnable onReviewSubmitted) {
         super(parent, "Đánh giá sản phẩm", true);
         this.daMua = daMua;
         this.productId = productId;
         this.userId = userId;
+        this.orderId = orderId; // Set orderId
+        this.onReviewSubmitted = onReviewSubmitted;
         initComponents();
-        setupComponents(tenSanPham, hinhAnh);
+        setupComponents(tenSanPham, hinhAnh, orderId);
         setupStarEffects();
         setLocationRelativeTo(parent);
         pack(); // Tự động điều chỉnh theo content
@@ -34,12 +52,6 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         // Đảm bảo dialog có kích thước phù hợp với layout mới
         if (getWidth() < 700) setSize(700, getHeight());
         if (getHeight() < 500) setSize(getWidth(), 500);
-    }
-    
-    // Constructor với callback
-    public DanhGiaJDialog1(Frame parent, String productId, int userId, String tenSanPham, ImageIcon hinhAnh, boolean daMua, Runnable onReviewSubmitted) {
-        this(parent, productId, userId, tenSanPham, hinhAnh, daMua);
-        this.onReviewSubmitted = onReviewSubmitted;
     }
 
     /**
@@ -63,7 +75,6 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
 
         lblHinhAnh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/trump-small.png"))); // NOI18N
 
@@ -122,18 +133,19 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setText("jLabel1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(241, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTenSanPham, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblHinhAnh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -152,10 +164,6 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnGuiDanhGia)
                         .addGap(387, 387, 387))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(450, 450, 450)
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,9 +182,7 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                         .addGap(37, 37, 37)
                         .addComponent(btnGuiDanhGia))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1)
-                        .addGap(34, 34, 34)
+                        .addGap(73, 73, 73)
                         .addComponent(lblHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTenSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -187,25 +193,45 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void setupComponents(String tenSanPham, ImageIcon hinhAnh) {
-        // Thiết lập tên sản phẩm
-        lblTenSanPham.setText(tenSanPham);
-        lblTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        setupComponents(tenSanPham, hinhAnh, null);
+    }
+    
+    private void setupComponents(String tenSanPham, ImageIcon hinhAnh, Integer orderId) {
+        // Thiết lập tên sản phẩm với thông tin đơn hàng
+        String displayText = tenSanPham;
+        if (orderId != null) {
+            displayText = "Bạn đang đánh giá sản phẩm " + tenSanPham + " (Đơn hàng #" + orderId + ")";
+        }
+        lblTenSanPham.setText(displayText);
+        lblTenSanPham.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTenSanPham.setForeground(new Color(51, 153, 255));
         lblTenSanPham.setHorizontalAlignment(JLabel.CENTER);
         
         // Đảm bảo tên sản phẩm có kích thước phù hợp với layout mới
-        lblTenSanPham.setPreferredSize(new Dimension(263, 30));
+        lblTenSanPham.setPreferredSize(new Dimension(400, 40));
         
         // Thiết lập hình ảnh với border đẹp
-        if (hinhAnh != null) {
+        System.out.println("DEBUG: Setting up image in DanhGiaJDialog1");
+        System.out.println("DEBUG: hinhAnh parameter: " + (hinhAnh != null ? "Not NULL" : "NULL"));
+        
+        if (hinhAnh != null && hinhAnh.getImage() != null) {
+            System.out.println("DEBUG: Setting product image to lblHinhAnh");
+            System.out.println("DEBUG: Image size: " + hinhAnh.getIconWidth() + "x" + hinhAnh.getIconHeight());
             lblHinhAnh.setIcon(hinhAnh);
         } else {
+            System.out.println("DEBUG: No product image, using default");
             // Nếu không có hình, hiển thị placeholder hoặc ảnh mặc định
             try {
                 // Thử lấy ảnh mặc định từ thư mục icon
                 ImageIcon defaultIcon = new ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
-                lblHinhAnh.setIcon(defaultIcon);
+                if (defaultIcon.getImage() != null) {
+                    System.out.println("DEBUG: Loading default image from resources");
+                    lblHinhAnh.setIcon(defaultIcon);
+                } else {
+                    throw new Exception("Default image not found");
+                }
             } catch (Exception e) {
+                System.err.println("DEBUG: Error loading default image: " + e.getMessage());
                 // Nếu không có ảnh mặc định, hiển thị text
                 lblHinhAnh.setText("Không có hình");
                 lblHinhAnh.setFont(new Font("Segoe UI", Font.ITALIC, 12));
@@ -421,8 +447,28 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         
         // Lưu đánh giá vào database
         try {
-            String sql = "INSERT INTO ProductReviews (ProductID, UserID, Rating, Comment, ReviewDate) VALUES (?, ?, ?, ?, GETDATE())";
-            poly.util.XJdbc.executeUpdate(sql, productId, userId, Integer.parseInt(soSao), binhLuan);
+            System.out.println("DEBUG: Saving review to database:");
+            System.out.println("DEBUG: - ProductID: " + productId);
+            System.out.println("DEBUG: - UserID: " + userId);
+            System.out.println("DEBUG: - OrderID: " + orderId);
+            System.out.println("DEBUG: - Rating: " + soSao);
+            System.out.println("DEBUG: - Comment: " + binhLuan);
+            
+            String sql;
+            if (orderId != null) {
+                // Luôn sử dụng OrderID nếu có
+                sql = "INSERT INTO ProductReviews (ProductID, UserID, Rating, Comment, ReviewDate, OrderID) VALUES (?, ?, ?, ?, GETDATE(), ?)";
+                System.out.println("DEBUG: Using SQL with OrderID: " + sql);
+                poly.util.XJdbc.executeUpdate(sql, productId, userId, Integer.parseInt(soSao), binhLuan, orderId);
+                System.out.println("DEBUG: Review saved successfully with OrderID");
+            } else {
+                // Fallback cho trường hợp không có OrderID (không nên xảy ra)
+                System.out.println("WARNING: OrderID is null, using fallback SQL");
+                sql = "INSERT INTO ProductReviews (ProductID, UserID, Rating, Comment, ReviewDate) VALUES (?, ?, ?, ?, GETDATE())";
+                System.out.println("DEBUG: Using fallback SQL: " + sql);
+                poly.util.XJdbc.executeUpdate(sql, productId, userId, Integer.parseInt(soSao), binhLuan);
+                System.out.println("DEBUG: Review saved successfully without OrderID");
+            }
             
             JOptionPane.showMessageDialog(this, 
                 "Cảm ơn bạn đã đánh giá sản phẩm!\nĐánh giá của bạn đã được lưu thành công.", 
@@ -445,7 +491,6 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuiDanhGia;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;

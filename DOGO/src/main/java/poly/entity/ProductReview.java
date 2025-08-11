@@ -17,6 +17,7 @@ public class ProductReview {
     private Byte rating;
     private String comment;
     private LocalDateTime reviewDate;
+    private Integer orderId; // Thêm field orderId
     private String userName; // Tên người dùng đánh giá
 
     public ProductReview() {
@@ -70,6 +71,14 @@ public class ProductReview {
         this.reviewDate = reviewDate;
     }
     
+    public Integer getOrderId() {
+        return orderId;
+    }
+    
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+    
     public String getUserName() {
         return userName;
     }
@@ -85,5 +94,15 @@ public class ProductReview {
         this.rating = rating;
         this.comment = comment;
         this.reviewDate = reviewDate;
+    }
+    
+    public ProductReview(Integer reviewId, String productId, Integer userId, Byte rating, String comment, LocalDateTime reviewDate, Integer orderId) {
+        this.reviewId = reviewId;
+        this.productId = productId;
+        this.userId = userId;
+        this.rating = rating;
+        this.comment = comment;
+        this.reviewDate = reviewDate;
+        this.orderId = orderId;
     }
 }

@@ -11,14 +11,20 @@ import poly.entity.User;
 import poly.dao.impl.OrderDAOImpl;
 import poly.dao.impl.UserDAOImpl;
 import poly.dao.impl.ProductDAOImpl;
+import poly.dao.impl.OrderDetailDAOImpl;
+import poly.dao.impl.ProductReviewDAOImpl;
 import poly.util.XDialog;
 import poly.util.XDate;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.util.List;
 import poly.controller.OrderController_Nghia;
 import poly.util.CurrentUserUtil;
 import java.time.format.DateTimeFormatter;
 import poly.ui.manager.HoaDonChiTiet;
+import poly.ui.DanhGiaJDialog1;
 
 /**
  *
@@ -64,6 +70,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         txtTuNgay = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txtDenNgay = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblHienTai = new javax.swing.JTable();
@@ -115,9 +122,6 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
         jScrollPane1.setViewportView(tblLichSu);
-        
-        // Thêm tooltip cho bảng lịch sử
-        tblLichSu.setToolTipText("Double-click để xem chi tiết hóa đơn");
 
         btnYeuCauDoiTraLichSu.setText("Yêu Cầu Đổi Trả");
         btnYeuCauDoiTraLichSu.addActionListener(new java.awt.event.ActionListener() {
@@ -165,6 +169,13 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
 
         jLabel5.setText("Đến");
 
+        jButton1.setText("Đánh giá");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -172,6 +183,8 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(91, 91, 91)
                 .addComponent(btnYeuCauDoiTraLichSu)
+                .addGap(140, 140, 140)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnXemChiTietLichSu)
                 .addGap(162, 162, 162))
@@ -192,7 +205,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 .addComponent(cboTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnTimTrangThai)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 30, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
@@ -216,7 +229,8 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnYeuCauDoiTraLichSu)
-                    .addComponent(btnXemChiTietLichSu))
+                    .addComponent(btnXemChiTietLichSu)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -244,9 +258,6 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
         jScrollPane2.setViewportView(tblHienTai);
-        
-        // Thêm tooltip cho bảng hiện tại
-        tblHienTai.setToolTipText("Double-click để xem chi tiết hóa đơn");
 
         btnYeuCauDoiTraHienTai.setText("Yêu Cầu Đổi Trả");
         btnYeuCauDoiTraHienTai.addActionListener(new java.awt.event.ActionListener() {
@@ -531,6 +542,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private javax.swing.JComboBox cboThoiGian1;
     private javax.swing.JComboBox cboTrangThai;
     private javax.swing.JComboBox cboTrangThai1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -553,6 +565,8 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private OrderDAOImpl orderDAO = new OrderDAOImpl();
     private UserDAOImpl userDAO = new UserDAOImpl();
     private ProductDAOImpl productDAO = new ProductDAOImpl();
+    private OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
+    private ProductReviewDAOImpl productReviewDAO = new ProductReviewDAOImpl();
     
     // Method để lấy thông tin người nhận từ bảng Addresses
     private String getRecipientName(Integer orderId) {
@@ -1265,6 +1279,184 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             System.err.println("DEBUG: Error opening dialog: " + e.getMessage());
             e.printStackTrace();
             XDialog.alert("Lỗi khi mở chi tiết hóa đơn: " + e.getMessage());
+        }
+    }
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        openRatingDialog();
+    }
+    
+    /**
+     * Mở dialog đánh giá sản phẩm
+     */
+    private void openRatingDialog() {
+        // Kiểm tra xem có đơn hàng nào được chọn không
+        if (currentOrder == null) {
+            XDialog.alert("Vui lòng chọn đơn hàng để đánh giá!");
+            return;
+        }
+        
+        // Kiểm tra trạng thái đơn hàng
+        if (!"Completed".equals(currentOrder.getOrderStatus())) {
+            XDialog.alert("Chỉ có thể đánh giá đơn hàng đã hoàn thành (Completed)!");
+            return;
+        }
+        
+        try {
+            // Lấy danh sách sản phẩm trong đơn hàng
+            List<OrderDetail> orderDetails = orderDetailDAO.selectByOrderId(currentOrder.getOrderId());
+            
+            if (orderDetails == null || orderDetails.isEmpty()) {
+                XDialog.alert("Không tìm thấy sản phẩm nào trong đơn hàng này!");
+                return;
+            }
+            
+            // Tạo combobox chọn sản phẩm (chỉ những sản phẩm chưa được đánh giá)
+            int currentUserId = CurrentUserUtil.getCurrentUserId();
+            java.util.List<String> availableProducts = new java.util.ArrayList<>();
+            
+            for (OrderDetail detail : orderDetails) {
+                String productId = detail.getProductId().trim();
+                System.out.println("DEBUG: Checking product " + productId + " for user " + currentUserId);
+                
+                // Kiểm tra xem user đã đánh giá sản phẩm này trong đơn hàng này chưa
+                boolean hasReviewed = productReviewDAO.hasUserReviewedInOrder(productId, currentUserId, currentOrder.getOrderId());
+                System.out.println("DEBUG: User has reviewed " + productId + " in order " + currentOrder.getOrderId() + ": " + hasReviewed);
+                
+                if (!hasReviewed) {
+                    poly.entity.Product product = productDAO.selectById(productId);
+                    String productName = product != null ? product.getProductName() : productId;
+                    String option = productName + " (ID: " + productId + ")";
+                    availableProducts.add(option);
+                    System.out.println("DEBUG: Added to available products: " + option);
+                } else {
+                    System.out.println("DEBUG: Skipped already reviewed product: " + productId);
+                }
+            }
+            
+            if (availableProducts.isEmpty()) {
+                XDialog.alert("Bạn đã đánh giá tất cả sản phẩm trong đơn hàng này rồi!");
+                return;
+            }
+            
+            String[] productOptions = availableProducts.toArray(new String[0]);
+            
+            // Hiển thị dialog chọn sản phẩm
+            String selectedProduct = (String) JOptionPane.showInputDialog(
+                this,
+                "Chọn sản phẩm để đánh giá:",
+                "Chọn Sản Phẩm",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                productOptions,
+                productOptions[0]
+            );
+            
+            if (selectedProduct != null) {
+                // Lấy productId từ chuỗi được chọn
+                int startIndex = selectedProduct.lastIndexOf("(ID: ") + 4;
+                int endIndex = selectedProduct.lastIndexOf(")");
+                String productId = selectedProduct.substring(startIndex, endIndex).trim(); // Thêm trim() để loại bỏ khoảng trắng
+                
+                System.out.println("DEBUG: Selected product string: " + selectedProduct);
+                System.out.println("DEBUG: Extracted productId: '" + productId + "'"); // Thêm dấu ngoặc để thấy khoảng trắng
+                
+                // Lấy thông tin sản phẩm
+                poly.entity.Product product = productDAO.selectById(productId);
+                System.out.println("DEBUG: Product from database: " + (product != null ? product.getProductName() : "NULL"));
+                
+                if (product == null) {
+                    System.err.println("DEBUG: Product not found for ID: " + productId);
+                    XDialog.alert("Không tìm thấy thông tin sản phẩm! ProductID: " + productId);
+                    return;
+                }
+                
+                // Kiểm tra xem user đã đánh giá sản phẩm này trong đơn hàng này chưa
+                boolean hasReviewed = productReviewDAO.hasUserReviewedInOrder(productId, currentUserId, currentOrder.getOrderId());
+                System.out.println("DEBUG: User " + currentUserId + " has reviewed product " + productId + " in order " + currentOrder.getOrderId() + ": " + hasReviewed);
+                
+                if (hasReviewed) {
+                    XDialog.alert("Bạn đã đánh giá sản phẩm này trong đơn hàng này rồi! Mỗi sản phẩm trong mỗi đơn hàng chỉ có thể đánh giá một lần.");
+                    return;
+                }
+                
+                // Lấy hình ảnh sản phẩm
+                ImageIcon productImage = null;
+                System.out.println("DEBUG: Product ImagePath: '" + product.getImagePath() + "'");
+                
+                if (product.getImagePath() != null && !product.getImagePath().trim().isEmpty()) {
+                    try {
+                        // Đường dẫn trong database đã có product_images\ rồi, chỉ cần sử dụng trực tiếp
+                        String imagePath = product.getImagePath().trim();
+                        java.io.File imageFile = new java.io.File(imagePath);
+                        System.out.println("DEBUG: Image file path: " + imageFile.getAbsolutePath());
+                        System.out.println("DEBUG: Image file exists: " + imageFile.exists());
+                        
+                        if (imageFile.exists()) {
+                            productImage = new ImageIcon(imagePath);
+                            System.out.println("DEBUG: Original image size: " + productImage.getIconWidth() + "x" + productImage.getIconHeight());
+                            
+                            // Resize image để phù hợp với lblHinhAnh (256x256)
+                            Image img = productImage.getImage();
+                            Image resizedImg = img.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+                            productImage = new ImageIcon(resizedImg);
+                            System.out.println("DEBUG: Resized image size: " + productImage.getIconWidth() + "x" + productImage.getIconHeight());
+                        } else {
+                            System.err.println("DEBUG: Image file not found: " + imagePath);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("DEBUG: Error loading image: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("DEBUG: Product has no image path");
+                }
+                
+                // Nếu không có hình ảnh, sử dụng hình mặc định
+                if (productImage == null) {
+                    System.out.println("DEBUG: Using default image");
+                    try {
+                        productImage = new ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"));
+                        if (productImage.getImage() != null) {
+                            Image img = productImage.getImage();
+                            Image resizedImg = img.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+                            productImage = new ImageIcon(resizedImg);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("DEBUG: Error loading default image: " + e.getMessage());
+                        // Tạo một ImageIcon trống với kích thước 256x256
+                        productImage = new ImageIcon();
+                    }
+                }
+                
+                System.out.println("DEBUG: Final productImage: " + (productImage != null ? "Loaded" : "NULL"));
+                
+                // Tạo tiêu đề cho dialog
+                String dialogTitle = "Đánh giá sản phẩm " + product.getProductName() + " (Đơn hàng #" + currentOrder.getOrderId() + ")";
+                
+                // Mở dialog đánh giá
+                DanhGiaJDialog1 ratingDialog = new DanhGiaJDialog1(
+                    (java.awt.Frame) this.getParent(),
+                    productId,
+                    CurrentUserUtil.getCurrentUserId(),
+                    product.getProductName(),
+                    productImage,
+                    true, // daMua = true vì đã mua sản phẩm
+                    currentOrder.getOrderId() // Truyền orderId
+                );
+                
+                ratingDialog.setTitle(dialogTitle);
+                ratingDialog.setLocationRelativeTo(this);
+                ratingDialog.setVisible(true);
+                
+                XDialog.alert("Cảm ơn bạn đã đánh giá sản phẩm!");
+                
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Lỗi khi mở dialog đánh giá: " + e.getMessage());
+            e.printStackTrace();
+            XDialog.alert("Lỗi khi mở dialog đánh giá: " + e.getMessage());
         }
     }
 

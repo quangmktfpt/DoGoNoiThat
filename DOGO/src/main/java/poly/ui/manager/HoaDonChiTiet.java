@@ -7,8 +7,10 @@ package poly.ui.manager;
 import java.util.List;
 import poly.controller.OrderDetailController;
 import poly.entity.OrderDetail;
+import poly.entity.Product;
 import poly.dao.OrderDetailDAO;
 import poly.dao.impl.OrderDetailDAOImpl;
+import poly.dao.impl.ProductDAOImpl;
 
 /**
  *
@@ -184,6 +186,7 @@ public class HoaDonChiTiet extends javax.swing.JDialog implements OrderDetailCon
     // End of variables declaration//GEN-END:variables
 
     private OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
+    private ProductDAOImpl productDAO = new ProductDAOImpl();
     private List<OrderDetail> detailList;
     private int currentOrderId = -1;
 
@@ -232,9 +235,12 @@ public class HoaDonChiTiet extends javax.swing.JDialog implements OrderDetailCon
         double total = 0;
         for (OrderDetail od : detailList) {
             double thanhTien = od.getUnitPrice().doubleValue() * od.getQuantity();
-            // Nếu có ProductDAO thì lấy tên sản phẩm, nếu không thì tạm thời để productId ở cả hai cột
-            String tenSanPham = od.getProductId();
+            
+            // Lấy thông tin sản phẩm từ database
+            Product product = productDAO.selectById(od.getProductId());
+            String tenSanPham = product != null ? product.getProductName() : od.getProductId();
             String idSanPham = od.getProductId();
+            
             model.addRow(new Object[] {
                 tenSanPham,
                 idSanPham,
