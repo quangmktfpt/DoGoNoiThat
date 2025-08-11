@@ -64,8 +64,6 @@ public class KhachJFrame extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
 
         jMenu1.setText("jMenu1");
 
@@ -198,13 +196,6 @@ public class KhachJFrame extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/icon/AnhNenGo.png"))); // NOI18N
         getContentPane().add(jLabel2, java.awt.BorderLayout.CENTER);
-
-        jMenu2.setText("Menu");
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Edit");
-        jMenuBar1.add(jMenu3);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -413,6 +404,277 @@ public class KhachJFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    /**
+     * Khởi tạo dashboard với các panel
+     */
+    private void initializeDashboard() {
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
+        
+        // Panel chào mừng
+        javax.swing.JPanel welcomePanel = createWelcomePanel();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.3;
+        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel1.add(welcomePanel, gbc);
+        
+        // Panel thống kê
+        javax.swing.JPanel statsPanel = createStatsPanel();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.7;
+        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel1.add(statsPanel, gbc);
+        
+        // Panel tìm kiếm nhanh
+        javax.swing.JPanel searchPanel = createSearchPanel();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        jPanel1.add(searchPanel, gbc);
+    }
+    
+    /**
+     * Tạo panel chào mừng
+     */
+    private javax.swing.JPanel createWelcomePanel() {
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.BorderLayout());
+        javax.swing.border.TitledBorder titleBorder = javax.swing.BorderFactory.createTitledBorder("Chào mừng");
+        titleBorder.setTitleFont(new java.awt.Font("Segoe UI", 1, 16));
+        titleBorder.setTitleColor(new java.awt.Color(153, 51, 0));
+        titleBorder.setTitleJustification(javax.swing.SwingConstants.CENTER);
+        titleBorder.setTitlePosition(javax.swing.SwingConstants.CENTER);
+        
+        panel.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            titleBorder,
+            javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        panel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Lấy tên khách hàng
+        String customerName = "Khách hàng";
+        try {
+            customerName = poly.util.CurrentUserUtil.getCurrentUsername();
+            if (customerName == null || customerName.trim().isEmpty()) {
+                customerName = "Khách hàng";
+            }
+        } catch (Exception e) {
+            System.err.println("Không thể lấy tên khách hàng: " + e.getMessage());
+        }
+        
+        javax.swing.JLabel welcomeLabel = new javax.swing.JLabel("Xin chào, " + customerName);
+        welcomeLabel.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        welcomeLabel.setForeground(new java.awt.Color(153, 51, 0));
+        welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        
+        javax.swing.JLabel timeLabel = new javax.swing.JLabel("Chúc bạn một ngày tốt lành!");
+        timeLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        timeLabel.setForeground(new java.awt.Color(100, 100, 100));
+        timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        
+        javax.swing.JPanel contentPanel = new javax.swing.JPanel();
+        contentPanel.setLayout(new java.awt.GridLayout(2, 1, 0, 10));
+        contentPanel.setBackground(new java.awt.Color(255, 255, 255));
+        contentPanel.add(welcomeLabel);
+        contentPanel.add(timeLabel);
+        
+        panel.add(contentPanel, java.awt.BorderLayout.CENTER);
+        return panel;
+    }
+    
+    /**
+     * Tạo panel thống kê
+     */
+    private javax.swing.JPanel createStatsPanel() {
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.BorderLayout());
+        javax.swing.border.TitledBorder statsTitleBorder = javax.swing.BorderFactory.createTitledBorder("Thống kê mua hàng");
+        statsTitleBorder.setTitleFont(new java.awt.Font("Segoe UI", 1, 16));
+        statsTitleBorder.setTitleColor(new java.awt.Color(153, 51, 0));
+        statsTitleBorder.setTitleJustification(javax.swing.SwingConstants.CENTER);
+        statsTitleBorder.setTitlePosition(javax.swing.SwingConstants.CENTER);
+        
+        panel.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            statsTitleBorder,
+            javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        panel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Lấy thống kê từ database
+        int recentOrders = getRecentOrdersCount();
+        double totalSpent = getTotalSpent();
+        
+        javax.swing.JPanel contentPanel = new javax.swing.JPanel();
+        contentPanel.setLayout(new java.awt.GridLayout(2, 1, 10, 10));
+        contentPanel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Đơn hàng gần đây
+        javax.swing.JPanel ordersPanel = new javax.swing.JPanel();
+        ordersPanel.setLayout(new java.awt.BorderLayout());
+        ordersPanel.setBackground(new java.awt.Color(240, 248, 255));
+        ordersPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        javax.swing.JLabel ordersLabel = new javax.swing.JLabel("Đơn hàng gần đây");
+        ordersLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        ordersLabel.setForeground(new java.awt.Color(70, 130, 180));
+        
+        javax.swing.JLabel ordersValue = new javax.swing.JLabel(String.valueOf(recentOrders) + " đơn hàng");
+        ordersValue.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        ordersValue.setForeground(new java.awt.Color(70, 130, 180));
+        ordersValue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        
+        ordersPanel.add(ordersLabel, java.awt.BorderLayout.NORTH);
+        ordersPanel.add(ordersValue, java.awt.BorderLayout.CENTER);
+        
+        // Tổng chi tiêu
+        javax.swing.JPanel spentPanel = new javax.swing.JPanel();
+        spentPanel.setLayout(new java.awt.BorderLayout());
+        spentPanel.setBackground(new java.awt.Color(255, 248, 220));
+        spentPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        javax.swing.JLabel spentLabel = new javax.swing.JLabel("Tổng chi tiêu");
+        spentLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        spentLabel.setForeground(new java.awt.Color(218, 165, 32));
+        
+        javax.swing.JLabel spentValue = new javax.swing.JLabel(formatCurrency(totalSpent));
+        spentValue.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        spentValue.setForeground(new java.awt.Color(218, 165, 32));
+        spentValue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        
+        spentPanel.add(spentLabel, java.awt.BorderLayout.NORTH);
+        spentPanel.add(spentValue, java.awt.BorderLayout.CENTER);
+        
+        contentPanel.add(ordersPanel);
+        contentPanel.add(spentPanel);
+        
+        panel.add(contentPanel, java.awt.BorderLayout.CENTER);
+        return panel;
+    }
+    
+    /**
+     * Tạo panel tìm kiếm nhanh
+     */
+    private javax.swing.JPanel createSearchPanel() {
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.BorderLayout());
+        javax.swing.border.TitledBorder searchTitleBorder = javax.swing.BorderFactory.createTitledBorder("Tìm kiếm nhanh");
+        searchTitleBorder.setTitleFont(new java.awt.Font("Segoe UI", 1, 16));
+        searchTitleBorder.setTitleColor(new java.awt.Color(153, 51, 0));
+        searchTitleBorder.setTitleJustification(javax.swing.SwingConstants.CENTER);
+        searchTitleBorder.setTitlePosition(javax.swing.SwingConstants.CENTER);
+        
+        panel.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            searchTitleBorder,
+            javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        panel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Panel chứa nút xem sản phẩm
+        javax.swing.JPanel buttonPanel = new javax.swing.JPanel();
+        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER));
+        buttonPanel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Nút Xem sản phẩm
+        javax.swing.JButton viewProductsButton = new javax.swing.JButton("🛍️ Xem sản phẩm");
+        viewProductsButton.setFont(new java.awt.Font("Segoe UI", 1, 16));
+        viewProductsButton.setBackground(new java.awt.Color(70, 130, 180)); // Màu xanh dương
+        viewProductsButton.setForeground(new java.awt.Color(255, 255, 255));
+        viewProductsButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 25, 12, 25));
+        
+        // Thêm sự kiện mở màn hình duyệt sản phẩm
+        viewProductsButton.addActionListener(e -> {
+            openProductBrowse();
+        });
+        
+        buttonPanel.add(viewProductsButton);
+        
+        panel.add(buttonPanel, java.awt.BorderLayout.CENTER);
+        return panel;
+    }
+    
+    /**
+     * Lấy số đơn hàng gần đây
+     */
+    private int getRecentOrdersCount() {
+        try {
+            Integer userId = poly.util.CurrentUserUtil.getCurrentUserId();
+            System.out.println("DEBUG: UserID = " + userId);
+            if (userId != null) {
+                String sql = "SELECT COUNT(*) FROM Orders WHERE UserID = ? AND OrderDate >= DATEADD(day, -30, GETDATE())";
+                System.out.println("DEBUG: SQL = " + sql);
+                java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, userId);
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    System.out.println("DEBUG: Số đơn hàng gần đây = " + count);
+                    return count;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy số đơn hàng: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    /**
+     * Lấy tổng chi tiêu
+     */
+    private double getTotalSpent() {
+        try {
+            Integer userId = poly.util.CurrentUserUtil.getCurrentUserId();
+            System.out.println("DEBUG: UserID cho tổng chi tiêu = " + userId);
+            if (userId != null) {
+                String sql = "SELECT ISNULL(SUM(TotalAmount), 0) FROM Orders WHERE UserID = ? AND OrderStatus = 'Completed'";
+                System.out.println("DEBUG: SQL tổng chi tiêu = " + sql);
+                java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, userId);
+                if (rs.next()) {
+                    double total = rs.getDouble(1);
+                    System.out.println("DEBUG: Tổng chi tiêu = " + total);
+                    return total;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi khi lấy tổng chi tiêu: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+    
+    /**
+     * Format tiền tệ
+     */
+    private String formatCurrency(double amount) {
+        java.text.DecimalFormat formatter = new java.text.DecimalFormat("#,##0 VNĐ");
+        return formatter.format(amount);
+    }
+    
+    /**
+     * Mở tìm kiếm sản phẩm
+     */
+    private void openProductSearch(String searchText) {
+        // Mở màn hình duyệt sản phẩm với từ khóa tìm kiếm
+        poly.ui.DuyetspJDialog_nghia1 duyetsp = new poly.ui.DuyetspJDialog_nghia1(this, true);
+        duyetsp.setLocationRelativeTo(this);
+        duyetsp.setVisible(true);
+        // TODO: Thêm logic tìm kiếm sản phẩm
+    }
+    
+    /**
+     * Mở màn hình duyệt sản phẩm
+     */
+    private void openProductBrowse() {
+        // Mở màn hình duyệt sản phẩm
+        poly.ui.DuyetspJDialog_nghia1 duyetsp = new poly.ui.DuyetspJDialog_nghia1(this, true);
+        duyetsp.setLocationRelativeTo(this);
+        duyetsp.setVisible(true);
+    }
 
     /**
      * @param args the command line arguments
@@ -462,8 +724,6 @@ public class KhachJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel sidebarPanel;
     // End of variables declaration//GEN-END:variables
