@@ -13,6 +13,9 @@ import poly.dao.impl.UserDAOImpl;
 import poly.dao.impl.ProductDAOImpl;
 import poly.dao.impl.OrderDetailDAOImpl;
 import poly.dao.impl.ProductReviewDAOImpl;
+import poly.dao.impl.AddressDAOImpl;
+import poly.dao.impl.CouponDAOImpl;
+import poly.dao.impl.OrderRequestDAOImpl;
 import poly.util.XDialog;
 import poly.util.XDate;
 import javax.swing.table.DefaultTableModel;
@@ -1022,10 +1025,12 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         }
         
         try {
+            // Thử lấy thông tin từ OrderRequest trước (thông tin thực tế từ form đặt hàng)
+            poly.dao.OrderRequestDAO orderRequestDAO = new poly.dao.impl.OrderRequestDAOImpl();
+            poly.entity.OrderRequest orderRequest = orderRequestDAO.selectById(currentOrder.getOrderId());
+            
             List<OrderDetail> details = orderDAO.getOrderDetails(currentOrder.getOrderId());
             User user = userDAO.selectById(currentOrder.getUserId());
-            String recipientName = getRecipientName(currentOrder.getOrderId());
-            String recipientAddress = getRecipientAddress(currentOrder.getOrderId());
             
             StringBuilder sb = new StringBuilder();
             sb.append("=== CHI TIẾT ĐƠN HÀNG ===\n");
@@ -1034,66 +1039,161 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             sb.append("Người đặt: ").append(user != null ? user.getFullName() : "N/A").append("\n");
             sb.append("Tổng số tiền phải trả: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
             sb.append("Trạng thái: ").append(getStatusDisplayName(currentOrder.getOrderStatus())).append("\n");
+            sb.append("Phương thức thanh toán: ").append(getPaymentMethodDisplayName(currentOrder.getPaymentMethod())).append("\n");
             
-            // Hiển thị thông tin bổ sung cho trạng thái Cancelled
-            if ("Cancelled".equals(currentOrder.getOrderStatus()) && currentOrder.getReturnReason() != null) {
-                String reason = currentOrder.getReturnReason();
-                if (reason.startsWith("[ĐỔI TRẢ")) {
-                    sb.append("📋 Loại: Yêu cầu đổi trả\n");
-                } else if (reason.startsWith("[HUỶ]")) {
-                    sb.append("📋 Loại: Huỷ đơn hàng\n");
+            // Hiển thị thông tin địa chỉ giao hàng
+            sb.append("\n=== THÔNG TIN GIAO HÀNG ===\n");
+            
+            // Ưu tiên lấy từ bảng Addresses theo OrderID (thông tin thực tế từ form đặt hàng)
+            try {
+                poly.dao.AddressDAO addressDAO = new poly.dao.impl.AddressDAOImpl();
+                poly.entity.Address address = null;
+                
+                // Thử lấy theo OrderID trước (cách mới)
+                if (currentOrder.getOrderId() != null) {
+                    System.out.println("🔍 DEBUG - Tìm địa chỉ theo OrderID: " + currentOrder.getOrderId());
+                    address = addressDAO.selectByOrderId(currentOrder.getOrderId());
+                    System.out.println("🔍 DEBUG - Kết quả tìm theo OrderID: " + (address != null ? "FOUND" : "NOT FOUND"));
+                    if (address != null) {
+                        System.out.println("🔍 DEBUG - AddressID: " + address.getAddressId());
+                        System.out.println("🔍 DEBUG - AddressLine1: " + address.getAddressLine1());
+                        System.out.println("🔍 DEBUG - CustomerName: " + address.getCustomerName());
+                    }
+                } else {
+                    System.out.println("🔍 DEBUG - OrderID is NULL");
                 }
+                
+                // Nếu không tìm thấy theo OrderID, thử theo DeliveryAddressID (cách cũ)
+                if (address == null && currentOrder.getDeliveryAddressId() != null) {
+                    System.out.println("🔍 DEBUG - Tìm địa chỉ theo DeliveryAddressID: " + currentOrder.getDeliveryAddressId());
+                    address = addressDAO.selectById(currentOrder.getDeliveryAddressId());
+                    System.out.println("🔍 DEBUG - Kết quả tìm theo DeliveryAddressID: " + (address != null ? "FOUND" : "NOT FOUND"));
+                    if (address != null) {
+                        System.out.println("🔍 DEBUG - AddressID: " + address.getAddressId());
+                        System.out.println("🔍 DEBUG - AddressLine1: " + address.getAddressLine1());
+                        System.out.println("🔍 DEBUG - CustomerName: " + address.getCustomerName());
+                    }
+                } else if (address == null) {
+                    System.out.println("🔍 DEBUG - DeliveryAddressID is NULL");
+                }
+                
+                if (address != null) {
+                    sb.append("Họ tên người nhận: ").append(address.getCustomerName() != null ? address.getCustomerName() : "N/A").append("\n");
+                    sb.append("Số điện thoại: ").append(address.getPhone() != null ? address.getPhone() : "N/A").append("\n");
+                    sb.append("Địa chỉ: ").append(address.getAddressLine1() != null ? address.getAddressLine1() : "N/A").append("\n");
+                    sb.append("Thành phố: ").append(address.getCity() != null ? address.getCity() : "N/A").append("\n");
+                    sb.append("Quốc gia: ").append(address.getCountry() != null ? address.getCountry() : "N/A").append("\n");
+                    
+                    // Debug: hiển thị thông tin để kiểm tra
+                    System.out.println("DEBUG - OrderID: " + currentOrder.getOrderId());
+                    System.out.println("DEBUG - DeliveryAddressID: " + currentOrder.getDeliveryAddressId());
+                    System.out.println("DEBUG - Address found: " + (address != null));
+                    System.out.println("DEBUG - AddressLine1: " + address.getAddressLine1());
+                    System.out.println("DEBUG - CustomerName: " + address.getCustomerName());
+                } else {
+                    sb.append("Không tìm thấy thông tin địa chỉ giao hàng\n");
+                    System.out.println("DEBUG - Không tìm thấy địa chỉ cho OrderID: " + currentOrder.getOrderId());
+                    
+                    // Fallback: thử lấy từ OrderRequest
+                    if (orderRequest != null) {
+                        sb.append("Họ tên người nhận: ").append(orderRequest.getCustomerName() != null ? orderRequest.getCustomerName() : "N/A").append("\n");
+                        sb.append("Số điện thoại: ").append(orderRequest.getPhone() != null ? orderRequest.getPhone() : "N/A").append("\n");
+                        sb.append("Địa chỉ: ").append(orderRequest.getAddress() != null ? orderRequest.getAddress() : "N/A").append("\n");
+                        sb.append("Thành phố: ").append(orderRequest.getCity() != null ? orderRequest.getCity() : "N/A").append("\n");
+                        sb.append("Quốc gia: ").append(orderRequest.getCountry() != null ? orderRequest.getCountry() : "N/A").append("\n");
+                    } else {
+                        // Fallback: lấy từ thông tin user
+                        if (user != null) {
+                            sb.append("Họ tên người nhận: ").append(user.getFullName() != null ? user.getFullName() : "N/A").append("\n");
+                            sb.append("Số điện thoại: ").append(user.getPhone() != null ? user.getPhone() : "N/A").append("\n");
+                            sb.append("Địa chỉ: ").append(user.getAddress() != null ? user.getAddress() : "N/A").append("\n");
+                            sb.append("Thành phố: N/A\n");
+                            sb.append("Quốc gia: N/A\n");
+                        } else {
+                            sb.append("Không tìm thấy thông tin địa chỉ giao hàng\n");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                sb.append("Lỗi khi lấy thông tin địa chỉ: ").append(e.getMessage()).append("\n");
+                e.printStackTrace(); // In stack trace để debug
             }
-            sb.append("Phương thức thanh toán: ").append(currentOrder.getPaymentMethod() != null ? currentOrder.getPaymentMethod() : "N/A").append("\n");
+            
+            // Hiển thị thông tin mã giảm giá
+            sb.append("\n=== THÔNG TIN MÃ GIẢM GIÁ ===\n");
+            String couponId = orderRequest != null ? orderRequest.getCouponId() : currentOrder.getCouponId();
+            if (couponId != null && !couponId.trim().isEmpty()) {
+                try {
+                    poly.dao.CouponDAO couponDAO = new poly.dao.impl.CouponDAOImpl();
+                    poly.entity.Coupon coupon = couponDAO.selectById(couponId);
+                    if (coupon != null) {
+                        sb.append("Mã giảm giá: ").append(coupon.getCouponId()).append("\n");
+                        sb.append("Mô tả: ").append(coupon.getDescription() != null ? coupon.getDescription() : "N/A").append("\n");
+                        sb.append("Loại giảm giá: ").append(coupon.getDiscountType() != null ? coupon.getDiscountType() : "N/A").append("\n");
+                        sb.append("Giá trị giảm: ").append(coupon.getDiscountValue() != null ? String.format("$%,.2f", coupon.getDiscountValue()) : "N/A").append("\n");
+                        sb.append("Ngày hiệu lực: ").append(coupon.getStartDate() != null ? coupon.getStartDate().toString() : "N/A").append("\n");
+                        sb.append("Ngày hết hạn: ").append(coupon.getEndDate() != null ? coupon.getEndDate().toString() : "N/A").append("\n");
+                    } else {
+                        sb.append("Mã giảm giá: ").append(couponId).append(" (Không tìm thấy thông tin chi tiết)\n");
+                    }
+                } catch (Exception e) {
+                    sb.append("Mã giảm giá: ").append(couponId).append(" (Lỗi khi lấy thông tin: ").append(e.getMessage()).append(")\n");
+                }
+            } else {
+                sb.append("Không sử dụng mã giảm giá\n");
+            }
             
             // Hiển thị lý do đổi trả hoặc lý do huỷ đơn hàng nếu có
             if (currentOrder.getReturnReason() != null && !currentOrder.getReturnReason().trim().isEmpty()) {
+                sb.append("\n=== THÔNG TIN XỬ LÝ ===\n");
                 String reason = currentOrder.getReturnReason();
                 
                 // Phân biệt rõ ràng loại lý do
                 if (reason.startsWith("[ĐỔI TRẢ - ĐÃ THANH TOÁN]")) {
                     sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Đã thanh toán):\n");
                     sb.append("   → Lý do: ").append(reason.substring(25)).append("\n");
-                    sb.append("   → Xử lý: Hoàn tiền + Trả hàng\n\n");
+                    sb.append("   → Xử lý: Hoàn tiền + Trả hàng\n");
                 } else if (reason.startsWith("[ĐỔI TRẢ - CHƯA THANH TOÁN]")) {
                     sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Chưa thanh toán):\n");
                     sb.append("   → Lý do: ").append(reason.substring(28)).append("\n");
-                    sb.append("   → Xử lý: Chỉ trả hàng\n\n");
+                    sb.append("   → Xử lý: Chỉ trả hàng\n");
                 } else if (reason.startsWith("[ĐỔI TRẢ]")) {
                     sb.append("🔄 YÊU CẦU ĐỔI TRẢ:\n");
-                    sb.append("   → Lý do: ").append(reason.substring(10)).append("\n\n");
+                    sb.append("   → Lý do: ").append(reason.substring(10)).append("\n");
                 } else if (reason.startsWith("[HUỶ]")) {
                     sb.append("❌ LÝ DO HUỶ ĐƠN HÀNG:\n");
                     sb.append("   → Lý do: ").append(reason.substring(6)).append("\n");
-                    sb.append("   → Xử lý: Huỷ đơn hàng + Cập nhật tồn kho\n\n");
+                    sb.append("   → Xử lý: Huỷ đơn hàng + Cập nhật tồn kho\n");
                 } else {
                     // Fallback cho dữ liệu cũ
                     sb.append("📝 LÝ DO:\n");
-                    sb.append("   → ").append(reason).append("\n\n");
+                    sb.append("   → ").append(reason).append("\n");
                 }
             }
             
-            sb.append("\n");
-            
-            sb.append("=== DANH SÁCH SẢN PHẨM ===\n");
-            for (OrderDetail detail : details) {
-                // Lấy thông tin sản phẩm để hiển thị tên thay vì mã
-                String productName = "N/A";
-                try {
-                    poly.entity.Product product = productDAO.selectById(detail.getProductId());
-                    if (product != null) {
-                        productName = product.getProductName();
+            sb.append("\n=== DANH SÁCH SẢN PHẨM ===\n");
+            if (details != null && !details.isEmpty()) {
+                for (OrderDetail detail : details) {
+                    // Lấy thông tin sản phẩm để hiển thị tên thay vì mã
+                    String productName = "N/A";
+                    try {
+                        poly.entity.Product product = productDAO.selectById(detail.getProductId());
+                        if (product != null) {
+                            productName = product.getProductName();
+                        }
+                    } catch (Exception e) {
+                        // Nếu không lấy được tên sản phẩm thì dùng mã
+                        productName = detail.getProductId();
                     }
-                } catch (Exception e) {
-                    // Nếu không lấy được tên sản phẩm thì dùng mã
-                    productName = detail.getProductId();
+                    
+                    sb.append("• ").append(productName)
+                      .append("\n  Số lượng: ").append(detail.getQuantity())
+                      .append(" | Đơn giá: ").append(String.format("$%,.2f", detail.getUnitPrice()))
+                      .append(" | Thành tiền: ").append(String.format("$%,.2f", detail.getUnitPrice().multiply(new java.math.BigDecimal(detail.getQuantity()))))
+                      .append("\n");
                 }
-                
-                sb.append("• ").append(productName)
-                  .append(" - Số lượng: ").append(detail.getQuantity())
-                  .append(" - Đơn giá: ").append(String.format("$%,.2f", detail.getUnitPrice()))
-                  .append(" - Thành tiền: ").append(String.format("$%,.2f", detail.getUnitPrice().multiply(new java.math.BigDecimal(detail.getQuantity()))))
-                  .append("\n");
+            } else {
+                sb.append("Không có sản phẩm nào trong đơn hàng\n");
             }
             
             XDialog.alert(sb.toString());
@@ -1163,6 +1263,38 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             case "Completed": return "✅ Đã hoàn thành";
             case "Cancelled": return "❌ Đã huỷ/Đổi trả";
             default: return status;
+        }
+    }
+    
+    /**
+     * Lấy tên hiển thị cho phương thức thanh toán
+     */
+    private String getPaymentMethodDisplayName(String paymentMethod) {
+        if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+            return "N/A";
+        }
+        
+        switch (paymentMethod.trim()) {
+            case "Thanh toán khi nhận hàng":
+            case "Cash on Delivery":
+            case "COD":
+                return "💳 Thanh toán khi nhận hàng (COD)";
+            case "Credit Card":
+            case "Thẻ tín dụng":
+                return "💳 Thẻ tín dụng";
+            case "Bank Transfer":
+            case "Chuyển khoản ngân hàng":
+                return "🏦 Chuyển khoản ngân hàng";
+            case "PayPal":
+                return "💳 PayPal";
+            case "Momo":
+                return "📱 MoMo";
+            case "ZaloPay":
+                return "📱 ZaloPay";
+            case "VNPay":
+                return "💳 VNPay";
+            default:
+                return paymentMethod;
         }
     }
     

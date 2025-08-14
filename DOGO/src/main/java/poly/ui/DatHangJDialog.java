@@ -24,6 +24,9 @@ import poly.dao.CouponDAO;
 import poly.dao.impl.CouponDAOImpl;
 import poly.entity.Coupon;
 import poly.entity.CartItem;
+import poly.dao.AddressDAO;
+import poly.dao.impl.AddressDAOImpl;
+import poly.entity.Address;
 
 /**
  *
@@ -455,6 +458,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
     
     // Custom methods
     private void initializeForm() {
+        // Thêm dấu * cho các trường bắt buộc
+        addRequiredFieldIndicators();
+        
         // Lấy thông tin user hiện tại từ CurrentUserUtil
         Integer currentUserId = CurrentUserUtil.getCurrentUserId();
         String currentUsername = CurrentUserUtil.getCurrentUsername();
@@ -519,6 +525,25 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         // Đảm bảo các trường thông tin khách hàng trống
         clearCustomerInfoFields();
+    }
+    
+    /**
+     * Thêm dấu * cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        jLabel16.setText("Họ và tên: *");
+        jLabel15.setText("Số điện thoại: *");
+        jLabel12.setText("Số nhà: *");
+        
+        // Đặt màu đỏ cho dấu *
+        jLabel16.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel15.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel12.setForeground(new java.awt.Color(51, 51, 51));
+        
+        // Thêm tooltip cho các trường bắt buộc
+        jTextField3.setToolTipText("Nhập họ và tên đầy đủ");
+        jTextField2.setToolTipText("Nhập số điện thoại (VD: 0123456789)");
+        jTextField1.setToolTipText("Nhập địa chỉ chi tiết");
     }
     
     private void setupEventHandlers() {
@@ -1711,6 +1736,34 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 orderRequestDAO.insert(orderToSubmit);
                 int orderId = orderToSubmit.getOrderId();
                 
+                // Insert địa chỉ giao hàng vào bảng Addresses với OrderID
+                try {
+                    AddressDAO addressDAO = new AddressDAOImpl();
+                    Address deliveryAddress = new Address();
+                    deliveryAddress.setUserId(currentUser.getUserId());
+                    deliveryAddress.setAddressLine1(currentOrder.getAddress());
+                    deliveryAddress.setCity(currentOrder.getCity());
+                    deliveryAddress.setCountry(currentOrder.getCountry());
+                    deliveryAddress.setPhone(currentOrder.getPhone());
+                    deliveryAddress.setCustomerName(currentOrder.getCustomerName());
+                    deliveryAddress.setIsDefault(false);
+                    deliveryAddress.setCouponId(currentOrder.getCouponId());
+                    deliveryAddress.setOrderId(orderId); // Liên kết với đơn hàng vừa tạo
+                    deliveryAddress.setCreatedDate(java.time.LocalDateTime.now());
+                    
+                    // Insert địa chỉ
+                    addressDAO.insert(deliveryAddress);
+                    System.out.println("✓ Đã lưu địa chỉ giao hàng với OrderID: " + orderId);
+                    System.out.println("  - Địa chỉ: " + currentOrder.getAddress());
+                    System.out.println("  - Khách hàng: " + currentOrder.getCustomerName());
+                    System.out.println("  - Số điện thoại: " + currentOrder.getPhone());
+                    
+                } catch (Exception e) {
+                    System.err.println("⚠️ Lỗi khi lưu địa chỉ giao hàng: " + e.getMessage());
+                    e.printStackTrace();
+                    // Không throw exception vì đơn hàng đã tạo thành công
+                }
+                
                 // Trừ kho sau khi đặt hàng thành công
                 InventoryUpdateUtil.updateInventoryForOrderRequest(itemsToOrder);
                 
@@ -1729,6 +1782,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 successMessage.append("💰 Tổng tiền: ").append(formatCurrency(total)).append("\n");
                 successMessage.append("📦 Đã trừ kho thành công\n");
                 successMessage.append("🛒 Đã xóa sản phẩm đã đặt khỏi giỏ hàng\n");
+                successMessage.append("📍 Đã lưu địa chỉ giao hàng: ").append(currentOrder.getAddress()).append("\n");
                 
                 // Thêm thông tin về mã giảm giá nếu có
                 if (currentOrder.getCouponId() != null && !currentOrder.getCouponId().isEmpty()) {
@@ -1799,35 +1853,52 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private boolean validateForm() {
+        StringBuilder errorMessage = new StringBuilder();
+        boolean hasError = false;
+        
+        // Kiểm tra họ và tên
         if (jTextField3.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập họ và tên!");
-            return false;
+            errorMessage.append("❌ Họ và tên không được để trống!\n");
+            hasError = true;
+        } else if (jTextField3.getText().trim().length() < 2) {
+            errorMessage.append("❌ Họ và tên phải có ít nhất 2 ký tự!\n");
+            hasError = true;
         }
         
+        // Kiểm tra số điện thoại
         String phoneNumber = jTextField2.getText().trim();
         if (phoneNumber.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại!");
-            return false;
+            errorMessage.append("❌ Số điện thoại không được để trống!\n");
+            hasError = true;
+        } else if (!isValidVietnamesePhoneNumber(phoneNumber)) {
+            errorMessage.append("❌ Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam đúng định dạng (VD: 0123456789, 0987654321)\n");
+            hasError = true;
         }
         
-        // Validate Vietnamese phone number format
-        if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam đúng định dạng (VD: 0123456789, 0987654321)");
-            return false;
-        }
-        
+        // Kiểm tra địa chỉ
         if (jTextField1.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ!");
-            return false;
+            errorMessage.append("❌ Địa chỉ không được để trống!\n");
+            hasError = true;
+        } else if (jTextField1.getText().trim().length() < 5) {
+            errorMessage.append("❌ Địa chỉ phải có ít nhất 5 ký tự!\n");
+            hasError = true;
         }
         
+        // Kiểm tra thành phố
         if (City.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn thành phố!");
-            return false;
+            errorMessage.append("❌ Vui lòng chọn thành phố!\n");
+            hasError = true;
         }
         
+        // Kiểm tra quốc gia
         if (Country.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn quốc gia!");
+            errorMessage.append("❌ Vui lòng chọn quốc gia!\n");
+            hasError = true;
+        }
+        
+        if (hasError) {
+            errorMessage.insert(0, "📋 Vui lòng kiểm tra và sửa các lỗi sau:\n\n");
+            JOptionPane.showMessageDialog(this, errorMessage.toString(), "Lỗi thông tin", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         

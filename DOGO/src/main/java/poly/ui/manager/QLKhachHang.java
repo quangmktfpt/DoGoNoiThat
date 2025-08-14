@@ -766,42 +766,64 @@ clear();        // TODO add your handling code here:
 
     @Override
     public String validateCustomerInfo(User user) {
+        StringBuilder errorMessage = new StringBuilder();
+        boolean hasError = false;
+        
+        // Kiểm tra Username
         if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            return "Username không được để trống!";
+            errorMessage.append("❌ Tên đăng nhập không được để trống!\n");
+            hasError = true;
+        } else if (user.getUsername().length() < 3) {
+            errorMessage.append("❌ Tên đăng nhập phải có ít nhất 3 ký tự!\n");
+            hasError = true;
+        } else if (!user.getUsername().matches("^[a-zA-Z0-9_]+$")) {
+            errorMessage.append("❌ Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới!\n");
+            hasError = true;
         }
         
-        if (user.getUsername().length() < 3) {
-            return "Username phải có ít nhất 3 ký tự!";
-        }
-        
+        // Kiểm tra Email
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            return "Email không được để trống!";
+            errorMessage.append("❌ Email không được để trống!\n");
+            hasError = true;
+        } else {
+            // Validate email format
+            String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
+            if (!Pattern.matches(emailPattern, user.getEmail())) {
+                errorMessage.append("❌ Email không đúng định dạng!\n");
+                hasError = true;
+            }
         }
         
-        // Validate email format
-        String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
-        if (!Pattern.matches(emailPattern, user.getEmail())) {
-            return "Email không đúng định dạng!";
+        // Kiểm tra mật khẩu (chỉ khi tạo mới)
+        if (user.getPasswordHash() != null && !user.getPasswordHash().trim().isEmpty()) {
+            if (user.getPasswordHash().length() < 6) {
+                errorMessage.append("❌ Mật khẩu phải có ít nhất 6 ký tự!\n");
+                hasError = true;
+            }
         }
         
-        if (user.getPasswordHash() == null || user.getPasswordHash().trim().isEmpty()) {
-            return "Mật khẩu không được để trống!";
-        }
-        
-        if (user.getPasswordHash().length() < 6) {
-            return "Mật khẩu phải có ít nhất 6 ký tự!";
-        }
-        
+        // Kiểm tra họ tên
         if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
-            return "Họ tên không được để trống!";
+            errorMessage.append("❌ Họ tên không được để trống!\n");
+            hasError = true;
+        } else if (user.getFullName().trim().length() < 2) {
+            errorMessage.append("❌ Họ tên phải có ít nhất 2 ký tự!\n");
+            hasError = true;
         }
         
+        // Kiểm tra số điện thoại (nếu có nhập)
         if (user.getPhone() != null && !user.getPhone().trim().isEmpty()) {
             // Validate phone format (Vietnamese phone number)
             String phonePattern = "^(0|\\+84)(\\s|\\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\\d)(\\s|\\.)?(\\d{3})(\\s|\\.)?(\\d{3})$";
             if (!Pattern.matches(phonePattern, user.getPhone())) {
-                return "Số điện thoại không đúng định dạng!";
+                errorMessage.append("❌ Số điện thoại không đúng định dạng!\n");
+                hasError = true;
             }
+        }
+        
+        if (hasError) {
+            errorMessage.insert(0, "📋 Vui lòng kiểm tra và sửa các lỗi sau:\n\n");
+            return errorMessage.toString();
         }
         
         return null; // No validation errors
@@ -816,6 +838,61 @@ clear();        // TODO add your handling code here:
     public void open() {
         loadCustomers();
         fillToTable();
+        addRequiredFieldIndicators();
+    }
+    
+    /**
+     * Thêm dấu * cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        // Tìm các label và thêm dấu * cho trường bắt buộc
+        // Các trường bắt buộc: Username, Email, FullName
+        // Lưu ý: Cần tìm đúng tên label trong form
+        try {
+            // Tìm label cho Username
+            javax.swing.JLabel usernameLabel = findLabelByText("Tên Đăng Nhập");
+            if (usernameLabel != null) {
+                usernameLabel.setText("Tên Đăng Nhập: *");
+                usernameLabel.setForeground(new java.awt.Color(51, 51, 51));
+            }
+            
+            // Tìm label cho Email
+            javax.swing.JLabel emailLabel = findLabelByText("Email");
+            if (emailLabel != null) {
+                emailLabel.setText("Email: *");
+                emailLabel.setForeground(new java.awt.Color(51, 51, 51));
+            }
+            
+            // Tìm label cho FullName
+            javax.swing.JLabel fullNameLabel = findLabelByText("Họ Tên");
+            if (fullNameLabel != null) {
+                fullNameLabel.setText("Họ Tên: *");
+                fullNameLabel.setForeground(new java.awt.Color(51, 51, 51));
+            }
+            
+            // Thêm tooltip cho các trường bắt buộc
+            jTextField1.setToolTipText("Nhập tên đăng nhập (ít nhất 3 ký tự)");
+            jTextField3.setToolTipText("Nhập email hợp lệ");
+            jTextField4.setToolTipText("Nhập họ tên đầy đủ");
+            
+        } catch (Exception e) {
+            System.err.println("Lỗi khi thêm dấu * cho các trường bắt buộc: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Tìm label theo text
+     */
+    private javax.swing.JLabel findLabelByText(String text) {
+        for (java.awt.Component comp : this.getContentPane().getComponents()) {
+            if (comp instanceof javax.swing.JLabel) {
+                javax.swing.JLabel label = (javax.swing.JLabel) comp;
+                if (text.equals(label.getText())) {
+                    return label;
+                }
+            }
+        }
+        return null;
     }
     
 

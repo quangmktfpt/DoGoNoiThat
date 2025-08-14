@@ -85,6 +85,16 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
             
             orderRequest.setOrderId(orderId);
             
+            // Cập nhật OrderID cho địa chỉ giao hàng
+            try {
+                String updateAddressSQL = "UPDATE Addresses SET OrderID = ? WHERE AddressID = ?";
+                XJdbc.executeUpdate(updateAddressSQL, orderId, addressId);
+                System.out.println("✓ Đã cập nhật OrderID cho địa chỉ: " + addressId);
+            } catch (Exception e) {
+                System.err.println("⚠️ Lỗi khi cập nhật OrderID cho địa chỉ: " + e.getMessage());
+                // Không throw exception vì đây không phải lỗi nghiêm trọng
+            }
+            
             // Insert các item trong đơn hàng
             if (orderRequest.getItems() != null) {
                 for (OrderRequestItem item : orderRequest.getItems()) {
@@ -424,7 +434,11 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
             // Lấy AddressID vừa tạo
             List<Address> addresses = addressDAO.selectByUserId(orderRequest.getUserId());
             if (!addresses.isEmpty()) {
-                return addresses.get(0).getAddressId();
+                Integer addressId = addresses.get(0).getAddressId();
+                
+                // Cập nhật OrderID cho địa chỉ vừa tạo (sau khi có OrderID)
+                // Lưu ý: OrderID sẽ được cập nhật sau khi tạo đơn hàng
+                return addressId;
             }
             
         } catch (Exception e) {

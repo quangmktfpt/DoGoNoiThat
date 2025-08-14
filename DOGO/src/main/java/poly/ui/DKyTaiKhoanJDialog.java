@@ -265,7 +265,30 @@ this.dangki();        // TODO add your handling code here:
 
     @Override
     public void open() {
-  this.setLocationRelativeTo(null);    }
+        this.setLocationRelativeTo(null);
+        // Thêm dấu * cho các trường bắt buộc
+        addRequiredFieldIndicators();
+    }
+    
+    /**
+     * Thêm dấu * cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        poly.util.RequiredFieldUtil.addRequiredIndicator(jLabel1, "Họ Tên");
+        poly.util.RequiredFieldUtil.addRequiredIndicator(jLabel3, "Tên Đăng Nhập");
+        poly.util.RequiredFieldUtil.addRequiredIndicator(jLabel4, "Mật Khẩu");
+        poly.util.RequiredFieldUtil.addRequiredIndicator(jLabel5, "Xác nhận mật khẩu");
+        poly.util.RequiredFieldUtil.addRequiredIndicator(jLabel6, "Email");
+        
+        // Thêm tooltip cho các trường
+        poly.util.RequiredFieldUtil.addTooltip(jTextField1, "Nhập họ tên đầy đủ (ít nhất 2 ký tự)");
+        poly.util.RequiredFieldUtil.addTooltip(jTextField2, "Nhập tên đăng nhập (ít nhất 3 ký tự, chỉ chứa chữ cái, số và dấu gạch dưới)");
+        poly.util.RequiredFieldUtil.addTooltip(jPasswordField1, "Nhập mật khẩu (ít nhất 6 ký tự)");
+        poly.util.RequiredFieldUtil.addTooltip(jPasswordField2, "Nhập lại mật khẩu để xác nhận");
+        poly.util.RequiredFieldUtil.addTooltip(jTextField3, "Nhập email hợp lệ");
+        poly.util.RequiredFieldUtil.addTooltip(jTextField4, "Nhập số điện thoại (VD: 0123456789)");
+        poly.util.RequiredFieldUtil.addTooltip(jTextField5, "Nhập địa chỉ (không bắt buộc)");
+    }
 
     @Override
     public void dangki() {
@@ -277,22 +300,18 @@ this.dangki();        // TODO add your handling code here:
         String phone = jTextField4.getText().trim();
         String address = jTextField5.getText().trim();
 
-        // Validate
-        if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin bắt buộc!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+        // Validate chi tiết hơn
+        String validationError = validateRegistrationData(fullName, username, password, confirmPassword, email, phone);
+        if (validationError != null) {
+            javax.swing.JOptionPane.showMessageDialog(this, validationError, "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!password.equals(confirmPassword)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không khớp!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        // Có thể kiểm tra thêm: username/email đã tồn tại, định dạng email, độ dài password...
 
         // Tạo user entity
         poly.entity.User user = new poly.entity.User();
         user.setFullName(fullName);
         user.setUsername(username);
-        user.setPasswordHash(password); // Nếu có hash thì hash ở đây
+        user.setPasswordHash(poly.util.PasswordUtil.hashPassword(password)); // Hash password
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
@@ -303,18 +322,92 @@ this.dangki();        // TODO add your handling code here:
         // Thêm vào database
         try {
             poly.dao.impl.UserDAOImpl userDAO = new poly.dao.impl.UserDAOImpl();
-            // Kiểm tra username/email đã tồn tại (nếu muốn)
+            
+            // Kiểm tra username đã tồn tại
             if (userDAO.selectByUsername(username) != null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại! Vui lòng chọn tên khác.", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                jTextField2.requestFocus();
                 return;
             }
-            // Có thể kiểm tra email trùng nếu muốn
+            
+            // Kiểm tra email đã tồn tại
+            if (checkEmailExists(email)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Email đã được sử dụng! Vui lòng sử dụng email khác.", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                jTextField3.requestFocus();
+                return;
+            }
+            
             userDAO.insert(user);
-            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thành công! Vui lòng đăng nhập.", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             this.dispose(); // Đóng dialog sau khi đăng ký thành công
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Đăng ký thất bại: " + ex.getMessage(), "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    /**
+     * Validate dữ liệu đăng ký
+     */
+    private String validateRegistrationData(String fullName, String username, String password, 
+                                          String confirmPassword, String email, String phone) {
+        StringBuilder errorBuilder = poly.util.RequiredFieldUtil.createErrorMessageBuilder();
+        
+        // Kiểm tra họ tên
+        String fullNameError = poly.util.RequiredFieldUtil.validateRequiredField(fullName, "Họ tên", 2);
+        if (fullNameError != null) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, fullNameError);
+        }
+        
+        // Kiểm tra tên đăng nhập
+        String usernameError = poly.util.RequiredFieldUtil.validateRequiredField(username, "Tên đăng nhập", 3);
+        if (usernameError != null) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, usernameError);
+        } else if (!poly.util.RequiredFieldUtil.isValidUsername(username)) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới!");
+        }
+        
+        // Kiểm tra mật khẩu
+        String passwordError = poly.util.RequiredFieldUtil.validateRequiredField(password, "Mật khẩu", 6);
+        if (passwordError != null) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, passwordError);
+        }
+        
+        // Kiểm tra xác nhận mật khẩu
+        if (confirmPassword.isEmpty()) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Vui lòng xác nhận mật khẩu!");
+        } else if (!password.equals(confirmPassword)) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Mật khẩu xác nhận không khớp!");
+        }
+        
+        // Kiểm tra email
+        if (email.isEmpty()) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Email không được để trống!");
+        } else if (!poly.util.RequiredFieldUtil.isValidEmail(email)) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Email không đúng định dạng!");
+        }
+        
+        // Kiểm tra số điện thoại (nếu có nhập)
+        if (!phone.isEmpty() && !poly.util.RequiredFieldUtil.isValidVietnamesePhone(phone)) {
+            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Số điện thoại không đúng định dạng!");
+        }
+        
+        return errorBuilder.length() > 0 ? errorBuilder.toString() : null;
+    }
+    
+    /**
+     * Kiểm tra email đã tồn tại
+     */
+    private boolean checkEmailExists(String email) {
+        try {
+            String sql = "SELECT COUNT(*) FROM Users WHERE Email = ?";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, email);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi kiểm tra email: " + e.getMessage());
+        }
+        return false;
     }
     
 

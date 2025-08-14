@@ -57,6 +57,8 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         // Thêm các listener cho table
         addTableSelectionListener();
         addTableModelListener();
+        
+       
     }
 
     /**
@@ -92,6 +94,7 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         jComboBox4 = new javax.swing.JComboBox<>();
         jButton12 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -178,11 +181,6 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
         });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Hôm Nay", "Tuần Này", "Tháng Này", "Qúy Này", "Năm Nay" }));
-        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox2ItemStateChanged(evt);
-            }
-        });
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Pending", "Processing", "Shipped", "Completed", "Delivering", "Cancelled" }));
 
@@ -202,10 +200,33 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
 
         jLabel1.setText(".");
 
+        jButton2.setText("Xem chi tiết");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(126, 126, 126)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton12)
+                                .addGap(229, 229, 229)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton8)
+                        .addGap(216, 216, 216))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -245,25 +266,11 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                                 .addGap(47, 47, 47)
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton11)))
-                        .addGap(0, 43, Short.MAX_VALUE))
+                                .addComponent(jButton11))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton12)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton8)
-                        .addGap(216, 216, 216))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 776, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,16 +299,21 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                     .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton11)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButton12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jButton12))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
 
@@ -313,7 +325,7 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,15 +346,56 @@ this.open();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // Tìm kiếm theo tên khách hàng
+        // Tìm kiếm theo tên khách hàng từ bảng Addresses
         String keyword = jTextField1.getText().trim();
         List<Order> result = new ArrayList<>();
-        if (!keyword.isEmpty()) {
-            List<User> users = poly.util.XQuery.getBeanList(User.class, "SELECT * FROM Users WHERE FullName LIKE ?", "%" + keyword + "%");
-            for (User u : users) {
-                result.addAll(orderDAO.selectByUserId(u.getUserId()));
+        
+        if (keyword.isEmpty()) {
+            // Nếu không nhập gì, hiển thị tất cả đơn hàng
+            result = orderDAO.selectAll();
+        } else {
+            try {
+                // Tìm kiếm theo tên khách hàng trong bảng Addresses
+                String sql = "SELECT DISTINCT o.* FROM Orders o " +
+                           "INNER JOIN Addresses a ON o.OrderID = a.OrderID " +
+                           "WHERE a.CustomerName LIKE ? " +
+                           "ORDER BY o.OrderID DESC";
+                
+                result = poly.util.XQuery.getBeanList(Order.class, sql, "%" + keyword + "%");
+                
+                // Nếu không tìm thấy theo OrderID, thử tìm theo DeliveryAddressID
+                if (result.isEmpty()) {
+                    sql = "SELECT DISTINCT o.* FROM Orders o " +
+                         "INNER JOIN Addresses a ON o.DeliveryAddressID = a.AddressID " +
+                         "WHERE a.CustomerName LIKE ? " +
+                         "ORDER BY o.OrderID DESC";
+                    
+                    result = poly.util.XQuery.getBeanList(Order.class, sql, "%" + keyword + "%");
+                }
+                
+                // Hiển thị thông báo kết quả
+                if (result.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Không tìm thấy đơn hàng nào với tên khách hàng: '" + keyword + "'", 
+                        "Kết quả tìm kiếm", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Tìm thấy " + result.size() + " đơn hàng với tên khách hàng: '" + keyword + "'", 
+                        "Kết quả tìm kiếm", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+                
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tìm kiếm theo tên khách hàng: " + e.getMessage(), 
+                    "Lỗi", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                System.err.println("Lỗi tìm kiếm theo tên khách hàng: " + e.getMessage());
+                e.printStackTrace();
             }
         }
+        
         fillToTableWithList(result);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -368,6 +421,10 @@ this.open();        // TODO add your handling code here:
         timtheothoigian();
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        viewOrderDetails();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // === Sự kiện nút trên giao diện ===
 
@@ -609,6 +666,7 @@ this.open();        // TODO add your handling code here:
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox2;
@@ -940,8 +998,30 @@ this.open();        // TODO add your handling code here:
         for (Order o : list) {
             String tenKhachHang = "";
             String diaChiGiaoHang = "";
-            // Lấy tên khách hàng từ CustomerName trong Addresses
-            Address address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE AddressId=?", o.getDeliveryAddressId());
+            
+            // Ưu tiên lấy địa chỉ theo OrderID (cách mới)
+            Address address = null;
+            if (o.getOrderId() != null) {
+                System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo OrderID: " + o.getOrderId());
+                address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE OrderID=?", o.getOrderId());
+                if (address != null) {
+                    System.out.println("🔍 DEBUG QLDonHang - Tìm thấy địa chỉ theo OrderID: " + address.getAddressLine1());
+                } else {
+                    System.out.println("🔍 DEBUG QLDonHang - Không tìm thấy địa chỉ theo OrderID");
+                }
+            }
+            
+            // Nếu không tìm thấy theo OrderID, thử theo DeliveryAddressID (cách cũ)
+            if (address == null && o.getDeliveryAddressId() != null) {
+                System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo DeliveryAddressID: " + o.getDeliveryAddressId());
+                address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE AddressId=?", o.getDeliveryAddressId());
+                if (address != null) {
+                    System.out.println("🔍 DEBUG QLDonHang - Tìm thấy địa chỉ theo DeliveryAddressID: " + address.getAddressLine1());
+                } else {
+                    System.out.println("🔍 DEBUG QLDonHang - Không tìm thấy địa chỉ theo DeliveryAddressID");
+                }
+            }
+            
             if (address != null) {
                 // Ưu tiên sử dụng CustomerName, nếu không có thì dùng tên user
                 if (address.getCustomerName() != null && !address.getCustomerName().trim().isEmpty()) {
@@ -951,12 +1031,33 @@ this.open();        // TODO add your handling code here:
                     User user = userDAO.selectById(o.getUserId());
                     if (user != null) tenKhachHang = user.getFullName();
                 }
-                diaChiGiaoHang = address.getAddressLine1() + ", " + address.getCity() + ", " + address.getCountry();
+                
+                // Tạo địa chỉ giao hàng từ thông tin address
+                StringBuilder addressBuilder = new StringBuilder();
+                if (address.getAddressLine1() != null && !address.getAddressLine1().trim().isEmpty()) {
+                    addressBuilder.append(address.getAddressLine1());
+                }
+                if (address.getCity() != null && !address.getCity().trim().isEmpty()) {
+                    if (addressBuilder.length() > 0) addressBuilder.append(", ");
+                    addressBuilder.append(address.getCity());
+                }
+                if (address.getCountry() != null && !address.getCountry().trim().isEmpty()) {
+                    if (addressBuilder.length() > 0) addressBuilder.append(", ");
+                    addressBuilder.append(address.getCountry());
+                }
+                diaChiGiaoHang = addressBuilder.toString();
+                
+                // Nếu không có thông tin địa chỉ, hiển thị thông báo
+                if (diaChiGiaoHang.trim().isEmpty()) {
+                    diaChiGiaoHang = "Không có thông tin địa chỉ";
+                }
             } else {
                 // Fallback: lấy tên từ bảng Users nếu không có address
                 User user = userDAO.selectById(o.getUserId());
                 if (user != null) tenKhachHang = user.getFullName();
+                diaChiGiaoHang = "Không có thông tin địa chỉ";
             }
+            
             model.addRow(new Object[]{
                 o.getOrderId(),
                 o.getUserId(),
@@ -1173,6 +1274,265 @@ this.open();        // TODO add your handling code here:
         });
     }
     
+    /**
+     * Xem chi tiết đơn hàng được chọn
+     */
+    private void viewOrderDetails() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Vui lòng chọn một đơn hàng để xem chi tiết!", 
+                "Thông báo", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        try {
+            Integer orderId = (Integer) jTable1.getValueAt(selectedRow, 0);
+            if (orderId == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Không thể lấy thông tin đơn hàng!", 
+                    "Lỗi", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Lấy thông tin đơn hàng
+            poly.dao.OrderDAO orderDAO = new poly.dao.impl.OrderDAOImpl();
+            poly.entity.Order currentOrder = orderDAO.selectById(orderId);
+            
+            if (currentOrder == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy thông tin đơn hàng!", 
+                    "Lỗi", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Thử lấy thông tin từ OrderRequest trước (thông tin thực tế từ form đặt hàng)
+            poly.dao.OrderRequestDAO orderRequestDAO = new poly.dao.impl.OrderRequestDAOImpl();
+            poly.entity.OrderRequest orderRequest = orderRequestDAO.selectById(currentOrder.getOrderId());
+            
+            List<poly.entity.OrderDetail> details = orderDAO.getOrderDetails(currentOrder.getOrderId());
+            poly.dao.UserDAO userDAO = new poly.dao.impl.UserDAOImpl();
+            poly.entity.User user = userDAO.selectById(currentOrder.getUserId());
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("=== CHI TIẾT ĐƠN HÀNG ===\n");
+            sb.append("Mã đơn: ").append(currentOrder.getOrderId()).append("\n");
+            sb.append("Ngày đặt: ").append(currentOrder.getOrderDate() != null ? currentOrder.getOrderDate().toString() : "N/A").append("\n");
+            sb.append("Người đặt: ").append(user != null ? user.getFullName() : "N/A").append("\n");
+            sb.append("Tổng số tiền phải trả: ").append(String.format("$%,.2f", currentOrder.getTotalAmount())).append("\n");
+            sb.append("Trạng thái: ").append(getStatusDisplayName(currentOrder.getOrderStatus())).append("\n");
+            sb.append("Phương thức thanh toán: ").append(getPaymentMethodDisplayName(currentOrder.getPaymentMethod())).append("\n");
+            
+            // Hiển thị thông tin địa chỉ giao hàng
+            sb.append("\n=== THÔNG TIN GIAO HÀNG ===\n");
+            
+            // Ưu tiên lấy từ bảng Addresses theo OrderID (thông tin thực tế từ form đặt hàng)
+            try {
+                poly.dao.AddressDAO addressDAO = new poly.dao.impl.AddressDAOImpl();
+                poly.entity.Address address = null;
+                
+                // Thử lấy theo OrderID trước (cách mới)
+                if (currentOrder.getOrderId() != null) {
+                    System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo OrderID: " + currentOrder.getOrderId());
+                    address = addressDAO.selectByOrderId(currentOrder.getOrderId());
+                    System.out.println("🔍 DEBUG QLDonHang - Kết quả tìm theo OrderID: " + (address != null ? "FOUND" : "NOT FOUND"));
+                    if (address != null) {
+                        System.out.println("🔍 DEBUG QLDonHang - AddressID: " + address.getAddressId());
+                        System.out.println("🔍 DEBUG QLDonHang - AddressLine1: " + address.getAddressLine1());
+                        System.out.println("🔍 DEBUG QLDonHang - CustomerName: " + address.getCustomerName());
+                    }
+                } else {
+                    System.out.println("🔍 DEBUG QLDonHang - OrderID is NULL");
+                }
+                
+                // Nếu không tìm thấy theo OrderID, thử theo DeliveryAddressID (cách cũ)
+                if (address == null && currentOrder.getDeliveryAddressId() != null) {
+                    System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo DeliveryAddressID: " + currentOrder.getDeliveryAddressId());
+                    address = addressDAO.selectById(currentOrder.getDeliveryAddressId());
+                    System.out.println("🔍 DEBUG QLDonHang - Kết quả tìm theo DeliveryAddressID: " + (address != null ? "FOUND" : "NOT FOUND"));
+                    if (address != null) {
+                        System.out.println("🔍 DEBUG QLDonHang - AddressID: " + address.getAddressId());
+                        System.out.println("🔍 DEBUG QLDonHang - AddressLine1: " + address.getAddressLine1());
+                        System.out.println("🔍 DEBUG QLDonHang - CustomerName: " + address.getCustomerName());
+                    }
+                } else if (address == null) {
+                    System.out.println("🔍 DEBUG QLDonHang - DeliveryAddressID is NULL");
+                }
+                
+                if (address != null) {
+                    sb.append("Họ tên người nhận: ").append(address.getCustomerName() != null ? address.getCustomerName() : "N/A").append("\n");
+                    sb.append("Số điện thoại: ").append(address.getPhone() != null ? address.getPhone() : "N/A").append("\n");
+                    sb.append("Địa chỉ: ").append(address.getAddressLine1() != null ? address.getAddressLine1() : "N/A").append("\n");
+                    sb.append("Thành phố: ").append(address.getCity() != null ? address.getCity() : "N/A").append("\n");
+                    sb.append("Quốc gia: ").append(address.getCountry() != null ? address.getCountry() : "N/A").append("\n");
+                } else {
+                    sb.append("Không tìm thấy thông tin địa chỉ giao hàng\n");
+                    System.out.println("DEBUG QLDonHang - Không tìm thấy địa chỉ cho OrderID: " + currentOrder.getOrderId());
+                    
+                    // Fallback: thử lấy từ OrderRequest
+                    if (orderRequest != null) {
+                        sb.append("Họ tên người nhận: ").append(orderRequest.getCustomerName() != null ? orderRequest.getCustomerName() : "N/A").append("\n");
+                        sb.append("Số điện thoại: ").append(orderRequest.getPhone() != null ? orderRequest.getPhone() : "N/A").append("\n");
+                        sb.append("Địa chỉ: ").append(orderRequest.getAddress() != null ? orderRequest.getAddress() : "N/A").append("\n");
+                        sb.append("Thành phố: ").append(orderRequest.getCity() != null ? orderRequest.getCity() : "N/A").append("\n");
+                        sb.append("Quốc gia: ").append(orderRequest.getCountry() != null ? orderRequest.getCountry() : "N/A").append("\n");
+                    } else {
+                        // Fallback: lấy từ thông tin user
+                        if (user != null) {
+                            sb.append("Họ tên người nhận: ").append(user.getFullName() != null ? user.getFullName() : "N/A").append("\n");
+                            sb.append("Số điện thoại: ").append(user.getPhone() != null ? user.getPhone() : "N/A").append("\n");
+                            sb.append("Địa chỉ: ").append(user.getAddress() != null ? user.getAddress() : "N/A").append("\n");
+                            sb.append("Thành phố: N/A\n");
+                            sb.append("Quốc gia: N/A\n");
+                        } else {
+                            sb.append("Không tìm thấy thông tin địa chỉ giao hàng\n");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                sb.append("Lỗi khi lấy thông tin địa chỉ: ").append(e.getMessage()).append("\n");
+                e.printStackTrace();
+            }
+            
+            // Hiển thị thông tin mã giảm giá
+            sb.append("\n=== THÔNG TIN MÃ GIẢM GIÁ ===\n");
+            String couponId = orderRequest != null ? orderRequest.getCouponId() : currentOrder.getCouponId();
+            if (couponId != null && !couponId.trim().isEmpty()) {
+                try {
+                    poly.dao.CouponDAO couponDAO = new poly.dao.impl.CouponDAOImpl();
+                    poly.entity.Coupon coupon = couponDAO.selectById(couponId);
+                    if (coupon != null) {
+                        sb.append("Mã giảm giá: ").append(coupon.getCouponId()).append("\n");
+                        sb.append("Mô tả: ").append(coupon.getDescription() != null ? coupon.getDescription() : "N/A").append("\n");
+                        sb.append("Loại giảm giá: ").append(coupon.getDiscountType() != null ? coupon.getDiscountType() : "N/A").append("\n");
+                        sb.append("Giá trị giảm: ").append(coupon.getDiscountValue() != null ? String.format("$%,.2f", coupon.getDiscountValue()) : "N/A").append("\n");
+                        sb.append("Ngày hiệu lực: ").append(coupon.getStartDate() != null ? coupon.getStartDate().toString() : "N/A").append("\n");
+                        sb.append("Ngày hết hạn: ").append(coupon.getEndDate() != null ? coupon.getEndDate().toString() : "N/A").append("\n");
+                    } else {
+                        sb.append("Mã giảm giá: ").append(couponId).append(" (Không tìm thấy thông tin chi tiết)\n");
+                    }
+                } catch (Exception e) {
+                    sb.append("Mã giảm giá: ").append(couponId).append(" (Lỗi khi lấy thông tin: ").append(e.getMessage()).append(")\n");
+                }
+            } else {
+                sb.append("Không sử dụng mã giảm giá\n");
+            }
+            
+            // Hiển thị lý do đổi trả hoặc lý do huỷ đơn hàng nếu có
+            if (currentOrder.getReturnReason() != null && !currentOrder.getReturnReason().trim().isEmpty()) {
+                sb.append("\n=== THÔNG TIN XỬ LÝ ===\n");
+                String reason = currentOrder.getReturnReason();
+                
+                // Phân biệt rõ ràng loại lý do
+                if (reason.startsWith("[ĐỔI TRẢ - ĐÃ THANH TOÁN]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Đã thanh toán):\n");
+                    sb.append("   → Lý do: ").append(reason.substring(25)).append("\n");
+                    sb.append("   → Xử lý: Hoàn tiền + Trả hàng\n");
+                } else if (reason.startsWith("[ĐỔI TRẢ - CHƯA THANH TOÁN]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ (Chưa thanh toán):\n");
+                    sb.append("   → Lý do: ").append(reason.substring(28)).append("\n");
+                    sb.append("   → Xử lý: Chỉ trả hàng\n");
+                } else if (reason.startsWith("[ĐỔI TRẢ]")) {
+                    sb.append("🔄 YÊU CẦU ĐỔI TRẢ:\n");
+                    sb.append("   → Lý do: ").append(reason.substring(10)).append("\n");
+                } else if (reason.startsWith("[HUỶ]")) {
+                    sb.append("❌ LÝ DO HUỶ ĐƠN HÀNG:\n");
+                    sb.append("   → Lý do: ").append(reason.substring(6)).append("\n");
+                    sb.append("   → Xử lý: Huỷ đơn hàng + Cập nhật tồn kho\n");
+                } else {
+                    // Fallback cho dữ liệu cũ
+                    sb.append("📝 LÝ DO:\n");
+                    sb.append("   → ").append(reason).append("\n");
+                }
+            }
+            
+            sb.append("\n=== DANH SÁCH SẢN PHẨM ===\n");
+            if (details != null && !details.isEmpty()) {
+                poly.dao.ProductDAO productDAO = new poly.dao.impl.ProductDAOImpl();
+                for (poly.entity.OrderDetail detail : details) {
+                    // Lấy thông tin sản phẩm để hiển thị tên thay vì mã
+                    String productName = "N/A";
+                    try {
+                        poly.entity.Product product = productDAO.selectById(detail.getProductId());
+                        if (product != null) {
+                            productName = product.getProductName();
+                        }
+                    } catch (Exception e) {
+                        // Nếu không lấy được tên sản phẩm thì dùng mã
+                        productName = detail.getProductId();
+                    }
+                    
+                    sb.append("• ").append(productName)
+                      .append("\n  Số lượng: ").append(detail.getQuantity())
+                      .append(" | Đơn giá: ").append(String.format("$%,.2f", detail.getUnitPrice()))
+                      .append(" | Thành tiền: ").append(String.format("$%,.2f", detail.getUnitPrice().multiply(new java.math.BigDecimal(detail.getQuantity()))))
+                      .append("\n");
+                }
+            } else {
+                sb.append("Không có sản phẩm nào trong đơn hàng\n");
+            }
+            
+            javax.swing.JOptionPane.showMessageDialog(this, sb.toString(), "Chi tiết đơn hàng #" + orderId, javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Lỗi xem chi tiết: " + e.getMessage(), 
+                "Lỗi", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Lấy tên hiển thị cho trạng thái đơn hàng
+     */
+    private String getStatusDisplayName(String status) {
+        switch (status) {
+            case "Pending": return "⏳ Chờ xử lý";
+            case "Processing": return "⚙️ Đang xử lý";
+            case "Shipped": return "📦 Đã gửi hàng";
+            case "Delivering": return "🚚 Đang giao hàng";
+            case "Completed": return "✅ Đã hoàn thành";
+            case "Cancelled": return "❌ Đã huỷ/Đổi trả";
+            default: return status;
+        }
+    }
+    
+    /**
+     * Lấy tên hiển thị cho phương thức thanh toán
+     */
+    private String getPaymentMethodDisplayName(String paymentMethod) {
+        if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+            return "N/A";
+        }
+        
+        switch (paymentMethod.trim()) {
+            case "Thanh toán khi nhận hàng":
+            case "Cash on Delivery":
+            case "COD":
+                return "💳 Thanh toán khi nhận hàng (COD)";
+            case "Credit Card":
+            case "Thẻ tín dụng":
+                return "💳 Thẻ tín dụng";
+            case "Bank Transfer":
+            case "Chuyển khoản ngân hàng":
+                return "🏦 Chuyển khoản ngân hàng";
+            case "PayPal":
+                return "💳 PayPal";
+            case "Momo":
+                return "📱 MoMo";
+            case "ZaloPay":
+                return "📱 ZaloPay";
+            case "VNPay":
+                return "💳 VNPay";
+            default:
+                return paymentMethod;
+        }
+    }
+
     /**
      * Hiển thị thông tin chi tiết về các đơn hàng được chọn
      */

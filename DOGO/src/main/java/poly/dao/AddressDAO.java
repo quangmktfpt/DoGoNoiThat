@@ -32,4 +32,7 @@ public interface AddressDAO extends CrudDAO<Address, Integer> {
     
     // Tạo địa chỉ mặc định cho user mới
     void createDefaultAddress(Integer userId, String customerName);
+    
+    // Lấy địa chỉ theo OrderID
+    Address selectByOrderId(Integer orderId);
 } 

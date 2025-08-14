@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
  */
 public class AddressDAOImpl implements AddressDAO {
     
-    private final String INSERT_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault, CouponID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE Addresses SET UserID=?, AddressLine1=?, City=?, Country=?, Phone=?, CustomerName=?, IsDefault=?, CouponID=? WHERE AddressID=?";
+    private final String INSERT_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault, CouponID, OrderID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE Addresses SET UserID=?, AddressLine1=?, City=?, Country=?, Phone=?, CustomerName=?, IsDefault=?, CouponID=?, OrderID=? WHERE AddressID=?";
     private final String DELETE_SQL = "DELETE FROM Addresses WHERE AddressID=?";
     private final String SELECT_ALL_SQL = "SELECT * FROM Addresses ORDER BY CreatedDate DESC";
     private final String SELECT_BY_ID_SQL = "SELECT * FROM Addresses WHERE AddressID=?";
@@ -28,6 +28,7 @@ public class AddressDAOImpl implements AddressDAO {
     private final String SELECT_BY_COUNTRY_SQL = "SELECT * FROM Addresses WHERE Country=? ORDER BY CreatedDate DESC";
     private final String CHECK_HAS_ADDRESS_SQL = "SELECT COUNT(*) as count FROM Addresses WHERE UserID=?";
     private final String CREATE_DEFAULT_ADDRESS_SQL = "INSERT INTO Addresses (UserID, AddressLine1, City, Country, Phone, CustomerName, IsDefault) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final String SELECT_BY_ORDER_SQL = "SELECT * FROM Addresses WHERE OrderID = ?";
 
     @Override
     public void insert(Address address) {
@@ -39,7 +40,8 @@ public class AddressDAOImpl implements AddressDAO {
             address.getPhone(),
             address.getCustomerName(),
             address.getIsDefault(),
-            address.getCouponId() // Assuming Address entity has a couponId field
+            address.getCouponId(),
+            address.getOrderId()
         );
     }
 
@@ -53,7 +55,8 @@ public class AddressDAOImpl implements AddressDAO {
             address.getPhone(),
             address.getCustomerName(),
             address.getIsDefault(),
-            address.getCouponId(), // Assuming Address entity has a couponId field
+            address.getCouponId(),
+            address.getOrderId(),
             address.getAddressId()
         );
     }
@@ -150,6 +153,21 @@ public class AddressDAOImpl implements AddressDAO {
     }
 
     @Override
+    public Address selectByOrderId(Integer orderId) {
+        System.out.println("🔍 DEBUG - AddressDAO.selectByOrderId(" + orderId + ")");
+        System.out.println("🔍 DEBUG - SQL: " + SELECT_BY_ORDER_SQL);
+        List<Address> list = selectBySql(SELECT_BY_ORDER_SQL, orderId);
+        System.out.println("🔍 DEBUG - Kết quả: " + list.size() + " records found");
+        if (!list.isEmpty()) {
+            Address addr = list.get(0);
+            System.out.println("🔍 DEBUG - AddressID: " + addr.getAddressId());
+            System.out.println("🔍 DEBUG - AddressLine1: " + addr.getAddressLine1());
+            System.out.println("🔍 DEBUG - OrderID: " + addr.getOrderId());
+        }
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
     public List<Address> selectBySql(String sql, Object... args) {
         List<Address> list = new ArrayList<>();
         try {
@@ -164,7 +182,8 @@ public class AddressDAOImpl implements AddressDAO {
                 address.setPhone(rs.getString("Phone"));
                 address.setCustomerName(rs.getString("CustomerName"));
                 address.setIsDefault(rs.getBoolean("IsDefault"));
-                address.setCouponId(rs.getString("CouponID")); // Assuming Address entity has a couponId field
+                address.setCouponId(rs.getString("CouponID"));
+                address.setOrderId(rs.getObject("OrderID") != null ? rs.getInt("OrderID") : null);
                 address.setCreatedDate(rs.getTimestamp("CreatedDate").toLocalDateTime());
                 list.add(address);
             }
