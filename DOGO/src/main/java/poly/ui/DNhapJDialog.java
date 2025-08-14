@@ -118,10 +118,10 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jSeparator1)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
-                        .addComponent(txtUsername))
+                        .addComponent(txtUsername)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -236,6 +236,17 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     @Override
     public void open() {
         this.setLocationRelativeTo(null);
+        // Thêm tooltip cho các trường bắt buộc
+        addRequiredFieldIndicators();
+    }
+    
+    /**
+     * Thêm tooltip cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        // Thêm tooltip cho các trường
+        poly.util.RequiredFieldUtil.addTooltip(txtUsername, "Nhập tên đăng nhập của bạn");
+        poly.util.RequiredFieldUtil.addTooltip(txtPassword, "Nhập mật khẩu của bạn");
     }
 
     @Override

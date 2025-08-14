@@ -43,6 +43,18 @@ public class AddressDAOImpl implements AddressDAO {
             address.getCouponId(),
             address.getOrderId()
         );
+        
+        // Lấy AddressID vừa tạo và set vào object
+        try {
+            ResultSet rs = XJdbc.executeQuery("SELECT TOP 1 AddressID FROM Addresses WHERE UserID = ? ORDER BY AddressID DESC", address.getUserId());
+            if (rs.next()) {
+                Integer addressId = rs.getInt("AddressID");
+                address.setAddressId(addressId);
+                System.out.println("✓ Đã tạo địa chỉ với AddressID: " + addressId);
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ Lỗi khi lấy AddressID vừa tạo: " + e.getMessage());
+        }
     }
 
     @Override

@@ -995,6 +995,9 @@ this.open();        // TODO add your handling code here:
     private void fillToTableWithList(List<Order> list) {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
+        
+        // Khai báo AddressDAO để sử dụng
+        poly.dao.AddressDAO addressDAO = new poly.dao.impl.AddressDAOImpl();
         for (Order o : list) {
             String tenKhachHang = "";
             String diaChiGiaoHang = "";
@@ -1003,7 +1006,7 @@ this.open();        // TODO add your handling code here:
             Address address = null;
             if (o.getOrderId() != null) {
                 System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo OrderID: " + o.getOrderId());
-                address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE OrderID=?", o.getOrderId());
+                address = addressDAO.selectByOrderId(o.getOrderId());
                 if (address != null) {
                     System.out.println("🔍 DEBUG QLDonHang - Tìm thấy địa chỉ theo OrderID: " + address.getAddressLine1());
                 } else {
@@ -1014,7 +1017,7 @@ this.open();        // TODO add your handling code here:
             // Nếu không tìm thấy theo OrderID, thử theo DeliveryAddressID (cách cũ)
             if (address == null && o.getDeliveryAddressId() != null) {
                 System.out.println("🔍 DEBUG QLDonHang - Tìm địa chỉ theo DeliveryAddressID: " + o.getDeliveryAddressId());
-                address = XQuery.getSingleBean(Address.class, "SELECT * FROM Addresses WHERE AddressId=?", o.getDeliveryAddressId());
+                address = addressDAO.selectById(o.getDeliveryAddressId());
                 if (address != null) {
                     System.out.println("🔍 DEBUG QLDonHang - Tìm thấy địa chỉ theo DeliveryAddressID: " + address.getAddressLine1());
                 } else {

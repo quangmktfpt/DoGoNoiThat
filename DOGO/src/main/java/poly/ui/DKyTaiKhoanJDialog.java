@@ -18,6 +18,8 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicon
     public DKyTaiKhoanJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        // Thêm tooltip cho các trường bắt buộc
+        addRequiredFieldIndicators();
     }
 
     /**
@@ -59,25 +61,25 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicon
         jLabel2.setText("Dăng Ký Khách Hàng");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel1.setText("Họ Tên:");
+        jLabel1.setText("Họ Tên: *");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel3.setText("Tên Đăng Nhập");
+        jLabel3.setText("Tên Đăng Nhập: *");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel4.setText("Mật Khẩu:");
+        jLabel4.setText("Mật Khẩu: *");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel5.setText("Xác nhận mật khẩu");
+        jLabel5.setText("Xác nhận mật khẩu: *");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel6.setText("Email:");
+        jLabel6.setText("Email: *");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel7.setText("Số Điện Thoại:");
+        jLabel7.setText("Số Điện Thoại: *");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel8.setText("Địa Chỉ:");
+        jLabel8.setText("Địa Chỉ: *");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton2.setText("Đăng Ký");

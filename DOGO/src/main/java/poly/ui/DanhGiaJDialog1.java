@@ -46,6 +46,8 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
         initComponents();
         setupComponents(tenSanPham, hinhAnh, orderId);
         setupStarEffects();
+        // Thêm tooltip cho các trường bắt buộc
+        addRequiredFieldIndicators();
         setLocationRelativeTo(parent);
         pack(); // Tự động điều chỉnh theo content
         setResizable(false); // Không cho phép resize để giữ giao diện đẹp
@@ -110,7 +112,7 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bình luận", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bình luận: *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -487,6 +489,21 @@ public class DanhGiaJDialog1 extends javax.swing.JDialog {
                 "Lỗi", 
                 JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    /**
+     * Thêm tooltip cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        // Thêm tooltip cho text area bình luận
+        jTextArea1.setToolTipText("Hãy chia sẻ đánh giá của bạn về sản phẩm này");
+        
+        // Thêm tooltip cho các nút sao
+        starButtons1.setToolTipText("1 sao - Rất không hài lòng");
+        starButtons2.setToolTipText("2 sao - Không hài lòng");
+        starButtons3.setToolTipText("3 sao - Bình thường");
+        starButtons4.setToolTipText("4 sao - Hài lòng");
+        starButtons5.setToolTipText("5 sao - Rất hài lòng");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

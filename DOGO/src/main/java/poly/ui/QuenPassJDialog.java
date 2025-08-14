@@ -36,6 +36,8 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
         // Mặc định disable 2 ô mật khẩu mới và xác nhận
         txtMatKhauMoi.setEnabled(false);
         txtXacNhanMatKhau.setEnabled(false);
+        // Thêm tooltip cho các trường bắt buộc
+        addRequiredFieldIndicators();
     }
 
     /**
@@ -454,6 +456,18 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
                 dialog.setVisible(true);
             }
         });
+    }
+
+    /**
+     * Thêm tooltip cho các trường bắt buộc
+     */
+    private void addRequiredFieldIndicators() {
+        // Thêm tooltip cho các trường
+        poly.util.RequiredFieldUtil.addTooltip(txtUsername, "Nhập tên đăng nhập của bạn");
+        poly.util.RequiredFieldUtil.addTooltip(txtEmail, "Nhập email đã đăng ký tài khoản");
+        poly.util.RequiredFieldUtil.addTooltip(txtMaXacMinh, "Nhập mã xác minh đã gửi qua email");
+        poly.util.RequiredFieldUtil.addTooltip(txtMatKhauMoi, "Nhập mật khẩu mới (ít nhất 6 ký tự)");
+        poly.util.RequiredFieldUtil.addTooltip(txtXacNhanMatKhau, "Nhập lại mật khẩu mới để xác nhận");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
