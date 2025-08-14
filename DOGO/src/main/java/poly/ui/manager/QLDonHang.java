@@ -1509,27 +1509,38 @@ this.open();        // TODO add your handling code here:
             return "N/A";
         }
         
-        switch (paymentMethod.trim()) {
-            case "Thanh toán khi nhận hàng":
-            case "Cash on Delivery":
-            case "COD":
-                return "💳 Thanh toán khi nhận hàng (COD)";
-            case "Credit Card":
-            case "Thẻ tín dụng":
-                return "💳 Thẻ tín dụng";
-            case "Bank Transfer":
-            case "Chuyển khoản ngân hàng":
-                return "🏦 Chuyển khoản ngân hàng";
-            case "PayPal":
-                return "💳 PayPal";
-            case "Momo":
-                return "📱 MoMo";
-            case "ZaloPay":
-                return "📱 ZaloPay";
-            case "VNPay":
-                return "💳 VNPay";
-            default:
-                return paymentMethod;
+        // Debug: in ra giá trị để kiểm tra
+        System.out.println("🔍 DEBUG Payment Method - Raw value: '" + paymentMethod + "'");
+        System.out.println("🔍 DEBUG Payment Method - Trimmed: '" + paymentMethod.trim() + "'");
+        
+        String trimmedMethod = paymentMethod.trim();
+        
+        // Sử dụng contains() thay vì equals() để tránh encoding issues
+        if (trimmedMethod.contains("Thanh toán") || trimmedMethod.contains("COD") || 
+            trimmedMethod.contains("Cash on Delivery") || trimmedMethod.contains("Cash")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: COD (contains)");
+            return "💳 Thanh toán khi nhận hàng (COD)";
+        } else if (trimmedMethod.contains("Credit") || trimmedMethod.contains("Thẻ tín dụng")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: Credit Card (contains)");
+            return "💳 Thẻ tín dụng";
+        } else if (trimmedMethod.contains("Bank") || trimmedMethod.contains("Chuyển khoản")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: Bank Transfer (contains)");
+            return "🏦 Chuyển khoản ngân hàng";
+        } else if (trimmedMethod.contains("PayPal")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: PayPal (contains)");
+            return "💳 PayPal";
+        } else if (trimmedMethod.contains("Momo")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: MoMo (contains)");
+            return "📱 MoMo";
+        } else if (trimmedMethod.contains("ZaloPay")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: ZaloPay (contains)");
+            return "📱 ZaloPay";
+        } else if (trimmedMethod.contains("VNPay")) {
+            System.out.println("🔍 DEBUG Payment Method - Matched: VNPay (contains)");
+            return "💳 VNPay";
+        } else {
+            System.out.println("🔍 DEBUG Payment Method - No match, returning original: " + trimmedMethod);
+            return trimmedMethod;
         }
     }
 
