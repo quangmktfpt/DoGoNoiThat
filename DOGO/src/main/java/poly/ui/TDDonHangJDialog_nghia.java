@@ -571,38 +571,30 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
     private ProductReviewDAOImpl productReviewDAO = new ProductReviewDAOImpl();
     
-    // Method để lấy thông tin người nhận từ bảng Addresses
+    // Method để lấy tên user từ bảng Users
     private String getRecipientName(Integer orderId) {
         try {
             // Lấy thông tin đơn hàng
             Order order = orderDAO.selectById(orderId);
-            if (order == null || order.getDeliveryAddressId() == null) {
+            if (order == null || order.getUserId() == null) {
                 return "N/A";
             }
             
-            // Lấy thông tin địa chỉ giao hàng
-            String sql = "SELECT a.AddressLine1, a.City, a.Country, a.Phone, u.FullName " +
-                        "FROM Addresses a " +
-                        "LEFT JOIN Users u ON a.UserID = u.UserID " +
-                        "WHERE a.AddressID = ?";
+            // Lấy tên user từ bảng Users dựa trên UserID của đơn hàng
+            String sql = "SELECT FullName FROM Users WHERE UserID = ?";
             
-            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, order.getDeliveryAddressId());
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, order.getUserId());
             if (rs.next()) {
                 String fullName = rs.getString("FullName");
-                String phone = rs.getString("Phone");
                 
-                // Ưu tiên hiển thị tên người nhận từ địa chỉ giao hàng
-                // Thông tin này được lưu từ form "Xác nhận đơn hàng"
                 if (fullName != null && !fullName.trim().isEmpty()) {
                     return fullName;
-                } else if (phone != null && !phone.trim().isEmpty()) {
-                    return "Người nhận: " + phone;
                 } else {
-                    return "N/A";
+                    return "User ID: " + order.getUserId();
                 }
             }
         } catch (Exception e) {
-            System.err.println("Lỗi lấy thông tin người nhận: " + e.getMessage());
+            System.err.println("Lỗi lấy thông tin user: " + e.getMessage());
         }
         return "N/A";
     }
@@ -1173,24 +1165,24 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             
             sb.append("\n=== DANH SÁCH SẢN PHẨM ===\n");
             if (details != null && !details.isEmpty()) {
-                for (OrderDetail detail : details) {
-                    // Lấy thông tin sản phẩm để hiển thị tên thay vì mã
-                    String productName = "N/A";
-                    try {
-                        poly.entity.Product product = productDAO.selectById(detail.getProductId());
-                        if (product != null) {
-                            productName = product.getProductName();
-                        }
-                    } catch (Exception e) {
-                        // Nếu không lấy được tên sản phẩm thì dùng mã
-                        productName = detail.getProductId();
+            for (OrderDetail detail : details) {
+                // Lấy thông tin sản phẩm để hiển thị tên thay vì mã
+                String productName = "N/A";
+                try {
+                    poly.entity.Product product = productDAO.selectById(detail.getProductId());
+                    if (product != null) {
+                        productName = product.getProductName();
                     }
-                    
-                    sb.append("• ").append(productName)
+                } catch (Exception e) {
+                    // Nếu không lấy được tên sản phẩm thì dùng mã
+                    productName = detail.getProductId();
+                }
+                
+                sb.append("• ").append(productName)
                       .append("\n  Số lượng: ").append(detail.getQuantity())
                       .append(" | Đơn giá: ").append(String.format("$%,.2f", detail.getUnitPrice()))
                       .append(" | Thành tiền: ").append(String.format("$%,.2f", detail.getUnitPrice().multiply(new java.math.BigDecimal(detail.getQuantity()))))
-                      .append("\n");
+                  .append("\n");
                 }
             } else {
                 sb.append("Không có sản phẩm nào trong đơn hàng\n");

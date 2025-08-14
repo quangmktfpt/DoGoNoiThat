@@ -58,14 +58,7 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
             // Đảm bảo user có ít nhất một địa chỉ mặc định
             ensureUserHasDefaultAddress(orderRequest.getUserId());
             
-            // Tạo địa chỉ giao hàng trước
-            Integer addressId = createDeliveryAddress(orderRequest);
-            
-            if (addressId == null) {
-                throw new RuntimeException("Không thể tạo địa chỉ giao hàng");
-            }
-            
-            // Insert đơn hàng
+            // Insert đơn hàng (KHÔNG tạo địa chỉ ở đây)
             XJdbc.executeUpdate(INSERT_SQL, 
                 orderRequest.getUserId(), 
                 orderRequest.getOrderDate(), 
@@ -74,7 +67,7 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
                 orderRequest.getPaymentMethod(), 
                 orderRequest.getOrderStatus(), 
                 true, // IsActive
-                addressId
+                null // DeliveryAddressID = null (sẽ được cập nhật sau)
             );
             
             // Lấy OrderID vừa tạo
@@ -85,15 +78,8 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
             
             orderRequest.setOrderId(orderId);
             
-            // Cập nhật OrderID cho địa chỉ giao hàng
-            try {
-                String updateAddressSQL = "UPDATE Addresses SET OrderID = ? WHERE AddressID = ?";
-                XJdbc.executeUpdate(updateAddressSQL, orderId, addressId);
-                System.out.println("✓ Đã cập nhật OrderID cho địa chỉ: " + addressId);
-            } catch (Exception e) {
-                System.err.println("⚠️ Lỗi khi cập nhật OrderID cho địa chỉ: " + e.getMessage());
-                // Không throw exception vì đây không phải lỗi nghiêm trọng
-            }
+            System.out.println("✓ OrderRequestDAOImpl: Đã tạo đơn hàng với OrderID: " + orderId);
+            System.out.println("✓ OrderRequestDAOImpl: Để DatHangJDialog xử lý việc tạo địa chỉ giao hàng");
             
             // Insert các item trong đơn hàng
             if (orderRequest.getItems() != null) {
@@ -103,11 +89,11 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
                 }
             }
             
-            System.out.println("✓ Đã tạo đơn hàng thành công:");
+            System.out.println("✓ OrderRequestDAOImpl: Đã tạo đơn hàng thành công:");
             System.out.println("  - OrderID: " + orderId);
-            System.out.println("  - AddressID: " + addressId);
             System.out.println("  - UserID: " + orderRequest.getUserId());
             System.out.println("  - TotalAmount: " + orderRequest.getTotalAmount());
+            System.out.println("  - DeliveryAddressID: null (sẽ được cập nhật bởi DatHangJDialog)");
             
         } catch (Exception e) {
             System.err.println("✗ Lỗi khi tạo đơn hàng: " + e.getMessage());
@@ -414,40 +400,7 @@ public class OrderRequestDAOImpl implements OrderRequestDAO {
     }
 
     // Helper methods
-    private Integer createDeliveryAddress(OrderRequest orderRequest) {
-        try {
-            // Tạo địa chỉ mới từ thông tin đơn hàng
-            Address newAddress = new Address();
-            newAddress.setUserId(orderRequest.getUserId());
-            newAddress.setAddressLine1(orderRequest.getAddress());
-            newAddress.setCity(orderRequest.getCity());
-            newAddress.setCountry(orderRequest.getCountry());
-            newAddress.setPhone(orderRequest.getPhone());
-            newAddress.setCustomerName(orderRequest.getCustomerName());
-            newAddress.setIsDefault(false);
-            newAddress.setCouponId(orderRequest.getCouponId());
-            newAddress.setCreatedDate(LocalDateTime.now());
-            
-            // Lưu địa chỉ mới
-            addressDAO.insert(newAddress);
-            
-            // Lấy AddressID vừa tạo
-            List<Address> addresses = addressDAO.selectByUserId(orderRequest.getUserId());
-            if (!addresses.isEmpty()) {
-                Integer addressId = addresses.get(0).getAddressId();
-                
-                // Cập nhật OrderID cho địa chỉ vừa tạo (sau khi có OrderID)
-                // Lưu ý: OrderID sẽ được cập nhật sau khi tạo đơn hàng
-                return addressId;
-            }
-            
-        } catch (Exception e) {
-            System.err.println("Lỗi khi tạo địa chỉ giao hàng: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Không thể tạo địa chỉ giao hàng: " + e.getMessage());
-        }
-        return null;
-    }
+    // Đã xóa createDeliveryAddress() - để DatHangJDialog xử lý việc tạo địa chỉ
 
     private Integer getLastInsertedOrderId() {
         try {

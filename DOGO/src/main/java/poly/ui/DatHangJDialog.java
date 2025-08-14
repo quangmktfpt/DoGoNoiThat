@@ -1732,11 +1732,11 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 orderToSubmit.setOrderDate(java.time.LocalDateTime.now());
                 orderToSubmit.setOrderStatus("Pending");
                 
-                // Lưu đơn hàng
+                // Lưu đơn hàng (OrderRequestDAOImpl chỉ tạo đơn hàng, không tạo địa chỉ)
                 orderRequestDAO.insert(orderToSubmit);
                 int orderId = orderToSubmit.getOrderId();
                 
-                // Insert địa chỉ giao hàng vào bảng Addresses với OrderID
+                // Tạo địa chỉ giao hàng với OrderID
                 try {
                     AddressDAO addressDAO = new AddressDAOImpl();
                     Address deliveryAddress = new Address();
@@ -1753,13 +1753,21 @@ public class DatHangJDialog extends javax.swing.JDialog {
                     
                     // Insert địa chỉ
                     addressDAO.insert(deliveryAddress);
-                    System.out.println("✓ Đã lưu địa chỉ giao hàng với OrderID: " + orderId);
+                    int addressId = deliveryAddress.getAddressId();
+                    
+                    // Cập nhật DeliveryAddressID trong bảng Orders
+                    String updateOrderSQL = "UPDATE Orders SET DeliveryAddressID = ? WHERE OrderID = ?";
+                    poly.util.XJdbc.executeUpdate(updateOrderSQL, addressId, orderId);
+                    
+                    System.out.println("✓ DatHangJDialog: Đã tạo địa chỉ giao hàng thành công");
+                    System.out.println("  - OrderID: " + orderId);
+                    System.out.println("  - AddressID: " + addressId);
                     System.out.println("  - Địa chỉ: " + currentOrder.getAddress());
                     System.out.println("  - Khách hàng: " + currentOrder.getCustomerName());
                     System.out.println("  - Số điện thoại: " + currentOrder.getPhone());
                     
                 } catch (Exception e) {
-                    System.err.println("⚠️ Lỗi khi lưu địa chỉ giao hàng: " + e.getMessage());
+                    System.err.println("⚠️ Lỗi khi tạo địa chỉ giao hàng: " + e.getMessage());
                     e.printStackTrace();
                     // Không throw exception vì đơn hàng đã tạo thành công
                 }
