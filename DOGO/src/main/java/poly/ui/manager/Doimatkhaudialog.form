@@ -122,21 +122,21 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u c&#x169;"/>
+        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u c&#x169; *"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordField1">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u m&#x1edb;i"/>
+        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u m&#x1edb;i *"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordField2">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="X&#xe1;c Nh&#x1ead;n m&#x1ead;t kh&#x1ea9;u m&#x1edb;i"/>
+        <Property name="text" type="java.lang.String" value="X&#xe1;c Nh&#x1ead;n m&#x1ead;t kh&#x1ea9;u m&#x1edb;i *"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPasswordField3">

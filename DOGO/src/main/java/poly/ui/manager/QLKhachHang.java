@@ -280,7 +280,7 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
 
         jTabbedPane1.addTab("Thông tin", jPanel1);
 
-        jLabel10.setText("Địa chỉ");
+        jLabel10.setText("Địa chỉ *");
 
         jButton3.setText("Cập nhật");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -289,7 +289,7 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
             }
         });
 
-        jLabel6.setText("Mã khách:");
+        jLabel6.setText("Mã khách: *");
 
         jButton5.setText("Nhập mới");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -298,11 +298,11 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
             }
         });
 
-        jLabel11.setText("Số điện thoại:");
+        jLabel11.setText("Số điện thoại: *");
 
-        jLabel8.setText("Email:");
+        jLabel8.setText("Email: *");
 
-        jLabel9.setText("Tên khách");
+        jLabel9.setText("Tên khách *");
 
         jButton1.setText("Đặt Lại Mật Khẩu");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -315,7 +315,7 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt Động", "Không Hoạt Động" }));
 
-        jLabel24.setText("Username");
+        jLabel24.setText("Username *");
 
         jButton11.setText("Thêm");
         jButton11.addActionListener(new java.awt.event.ActionListener() {
@@ -347,7 +347,7 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                             .addComponent(jTextField2)
                             .addComponent(jTextField3))
                         .addGap(18, 18, 18)

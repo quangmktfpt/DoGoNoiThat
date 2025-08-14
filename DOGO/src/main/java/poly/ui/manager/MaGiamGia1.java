@@ -173,17 +173,17 @@ public class MaGiamGia1 extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Chi tiết", jPanel1);
 
-        jLabel2.setText("CouponID");
+        jLabel2.setText("CouponID *");
 
-        jLabel3.setText("Description");
+        jLabel3.setText("Description *");
 
-        jLabel4.setText("DiscountType");
+        jLabel4.setText("DiscountType *");
 
-        jLabel5.setText("DiscountValue");
+        jLabel5.setText("DiscountValue *");
 
-        jLabel6.setText("StartDate");
+        jLabel6.setText("StartDate *");
 
-        jLabel7.setText("EndDate");
+        jLabel7.setText("EndDate *");
 
         jComboDisCType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -262,7 +262,7 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                         .addComponent(btnDellete)
                         .addGap(18, 18, 18)
                         .addComponent(btnRefesh)))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

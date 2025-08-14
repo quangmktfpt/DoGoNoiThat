@@ -144,9 +144,9 @@ public class DanhMucSanPham extends javax.swing.JDialog implements CategoryContr
 
         tabs.addTab("Danh Sách", jPanel1);
 
-        jLabel1.setText("Mã Loại Danh Mục");
+        jLabel1.setText("Mã Loại Danh Mục *");
 
-        jLabel2.setText("Tên Loại Danh Mục");
+        jLabel2.setText("Tên Loại Danh Mục *");
 
         btnCreate.setText("Tạo Mới");
         btnCreate.addActionListener(new java.awt.event.ActionListener() {

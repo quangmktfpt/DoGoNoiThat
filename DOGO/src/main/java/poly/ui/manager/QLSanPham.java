@@ -238,7 +238,7 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
 
         jTabbedPane1.addTab("Danh mục", jPanel1);
 
-        jLabel6.setText("Mã sản phẩm:");
+        jLabel6.setText("Mã sản phẩm: *");
 
         jLabel7.setText("Danh Mục");
 
@@ -249,11 +249,11 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
             }
         });
 
-        jLabel8.setText("Tên sản phẩm:");
+        jLabel8.setText("Tên sản phẩm: *");
 
-        jLabel9.setText("Đơn giá:");
+        jLabel9.setText("Đơn giá: *");
 
-        jLabel10.setText("Giá Nhập");
+        jLabel10.setText("Giá Nhập *");
 
         jButton2.setText("Thêm");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -296,7 +296,7 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
             .addComponent(lblProductImage2, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
         );
 
-        jLabel12.setText("Tồn Kho");
+        jLabel12.setText("Tồn Kho *");
 
         jLabel13.setText("Mô Tả");
 
@@ -327,7 +327,7 @@ public class QLSanPham extends javax.swing.JDialog implements ProductController{
                             .addComponent(jTextField3)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 9, Short.MAX_VALUE)))
+                                .addGap(0, 1, Short.MAX_VALUE)))
                         .addGap(23, 23, 23))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

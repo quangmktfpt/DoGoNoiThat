@@ -70,14 +70,10 @@ private int currentRow = -1;
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Quản lí nhà cung cấp");
-        jLabel1.setForeground(new java.awt.Color(44, 62, 80));
 
         jLabel2.setText("Tìm kiếm:");
 
         Search.setText("Tìm");
-        Search.setBackground(new java.awt.Color(70, 130, 180));
-        Search.setForeground(java.awt.Color.WHITE);
-        Search.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -112,40 +108,28 @@ private int currentRow = -1;
         });
         jScrollPane1.setViewportView(jTable1);
 
-        btnSelectAll.setText("Chọn tất cả");
-        btnSelectAll.setBackground(new java.awt.Color(52, 152, 219));
-        btnSelectAll.setForeground(java.awt.Color.WHITE);
-        btnSelectAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        btnSelectAll.setText("Chọn tất cả mục");
         btnSelectAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelectAllActionPerformed(evt);
             }
         });
 
-        btnDelSelectedAll.setText("Xóa đã chọn");
-        btnDelSelectedAll.setBackground(new java.awt.Color(231, 76, 60));
-        btnDelSelectedAll.setForeground(java.awt.Color.WHITE);
-        btnDelSelectedAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        btnDelSelectedAll.setText("Xóa mục đã chọn");
         btnDelSelectedAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDelSelectedAllActionPerformed(evt);
             }
         });
 
-        btnRemoveSelectedAll.setText("Bỏ chọn");
-        btnRemoveSelectedAll.setBackground(new java.awt.Color(155, 89, 182));
-        btnRemoveSelectedAll.setForeground(java.awt.Color.WHITE);
-        btnRemoveSelectedAll.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        btnRemoveSelectedAll.setText("Bỏ chọn mục");
         btnRemoveSelectedAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveSelectedAllActionPerformed(evt);
             }
         });
 
-        btnLamMoi.setText("Làm mới");
-        btnLamMoi.setBackground(new java.awt.Color(46, 204, 113));
-        btnLamMoi.setForeground(java.awt.Color.WHITE);
-        btnLamMoi.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        btnLamMoi.setText("Refesh");
         btnLamMoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLamMoiActionPerformed(evt);
@@ -204,18 +188,15 @@ private int currentRow = -1;
 
         jTabbedPane1.addTab("Danh mục", jPanel1);
 
-        jLabel6.setText("Mã loại:");
+        jLabel6.setText("Mã loại: *");
 
-        jLabel8.setText("Email:");
+        jLabel8.setText("Email: *");
 
-        jLabel9.setText("Tên liên hệ:");
+        jLabel9.setText("Tên liên hệ: *");
 
-        jLabel10.setText("Tên nhà cung cấp");
+        jLabel10.setText("Tên nhà cung cấp *");
 
         Add.setText("Thêm");
-        Add.setBackground(new java.awt.Color(46, 204, 113));
-        Add.setForeground(java.awt.Color.WHITE);
-        Add.setFont(new java.awt.Font("Segoe UI", 1, 12));
         Add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddActionPerformed(evt);
@@ -223,23 +204,14 @@ private int currentRow = -1;
         });
 
         Update.setText("Cập nhật");
-        Update.setBackground(new java.awt.Color(52, 152, 219));
-        Update.setForeground(java.awt.Color.WHITE);
-        Update.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         Delete.setText("Xóa");
-        Delete.setBackground(new java.awt.Color(231, 76, 60));
-        Delete.setForeground(java.awt.Color.WHITE);
-        Delete.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
         Refesh.setText("Làm mới");
-        Refesh.setBackground(new java.awt.Color(155, 89, 182));
-        Refesh.setForeground(java.awt.Color.WHITE);
-        Refesh.setFont(new java.awt.Font("Segoe UI", 1, 12));
 
-        jLabel11.setText("Số điện thoại:");
+        jLabel11.setText("Số điện thoại: *");
 
-        jLabel4.setText("Địa chỉ:");
+        jLabel4.setText("Địa chỉ: *");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -285,7 +257,7 @@ private int currentRow = -1;
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(Address)))
-                        .addContainerGap(93, Short.MAX_VALUE))))
+                        .addContainerGap(80, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

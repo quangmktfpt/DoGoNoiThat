@@ -78,27 +78,27 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
             }
         });
 
-        jLabel3.setText("Tên:");
+        jLabel3.setText("Tên: *");
 
-        jLabel4.setText("Số điện thoại:");
+        jLabel4.setText("Số điện thoại: *");
 
-        jLabel5.setText("Địa chỉ:");
+        jLabel5.setText("Địa chỉ: *");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setText("Đổi mật khẩu");
 
-        jLabel7.setText("Mật khẩu hiện tại:");
+        jLabel7.setText("Mật khẩu hiện tại: *");
 
-        jLabel9.setText("Mật khẩu mới:");
+        jLabel9.setText("Mật khẩu mới: *");
 
         jButton1.setText("Cập nhật thông tin");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Hủy tài khoản");
 
-        jLabel10.setText("Mật khẩu:");
+        jLabel10.setText("Mật khẩu: *");
 
-        jLabel11.setText("Xác nhận mật khẩu");
+        jLabel11.setText("Xác nhận mật khẩu *");
 
         jButton2.setText("Hủy tài khoản");
 
@@ -153,7 +153,7 @@ public class HoSoJDialog1 extends javax.swing.JDialog {
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPasswordField1)))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

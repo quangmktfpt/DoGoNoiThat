@@ -322,9 +322,9 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
 
         jTabbedPane1.addTab("Lịch Sử Xuất Nhập", jPanel2);
 
-        jLabel9.setText("Mã Sản Phẩm");
+        jLabel9.setText("Mã Sản Phẩm *");
 
-        jLabel10.setText("Tên Sản Phẩm");
+        jLabel10.setText("Tên Sản Phẩm *");
 
         jTextField6.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -345,7 +345,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
 
         jTextField7.setEditable(false);
 
-        jLabel11.setText("Số Lượng");
+        jLabel11.setText("Số Lượng *");
 
         jButton5.setText("Nhập Kho");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -361,7 +361,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
             }
         });
 
-        jLabel12.setText("Ghi Chú");
+        jLabel12.setText("Ghi Chú *");
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -398,7 +398,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                                 .addComponent(jLabel9)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(33, 33, 33)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jTextField8)

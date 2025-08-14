@@ -226,14 +226,14 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="M&#xe3; Lo&#x1ea1;i Danh M&#x1ee5;c"/>
+                <Property name="text" type="java.lang.String" value="M&#xe3; Lo&#x1ea1;i Danh M&#x1ee5;c *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtId">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="T&#xea;n Lo&#x1ea1;i Danh M&#x1ee5;c"/>
+                <Property name="text" type="java.lang.String" value="T&#xea;n Lo&#x1ea1;i Danh M&#x1ee5;c *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtName">

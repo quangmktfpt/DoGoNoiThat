@@ -127,21 +127,16 @@ public class Doimatkhaudialog extends javax.swing.JDialog {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
 
         jLabel1.setText("Tên đăng nhập");
 
         jTextField1.setEditable(false);
 
-        jLabel2.setText("Mật khẩu cũ");
+        jLabel2.setText("Mật khẩu cũ *");
 
-        jLabel3.setText("Mật khẩu mới");
+        jLabel3.setText("Mật khẩu mới *");
 
-        jLabel4.setText("Xác Nhận mật khẩu mới");
+        jLabel4.setText("Xác Nhận mật khẩu mới *");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel5.setText("Đổi Mật Khẩu");

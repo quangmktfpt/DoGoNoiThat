@@ -295,7 +295,7 @@
                               <Component id="btnRefesh" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="156" max="32767" attributes="0"/>
+                      <EmptySpace pref="140" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -340,40 +340,40 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="CouponID"/>
+                <Property name="text" type="java.lang.String" value="CouponID *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtId">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Description"/>
+                <Property name="text" type="java.lang.String" value="Description *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtDesc">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="DiscountType"/>
+                <Property name="text" type="java.lang.String" value="DiscountType *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
-                <Property name="text" type="java.lang.String" value="DiscountValue"/>
+                <Property name="text" type="java.lang.String" value="DiscountValue *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtDiscVaule">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
-                <Property name="text" type="java.lang.String" value="StartDate"/>
+                <Property name="text" type="java.lang.String" value="StartDate *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtStartDate">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EndDate"/>
+                <Property name="text" type="java.lang.String" value="EndDate *"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtEndDate">
