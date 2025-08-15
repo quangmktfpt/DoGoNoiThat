@@ -276,8 +276,8 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
 
     // ================== Email Sending (JavaMail) =====================
     private boolean sendEmail(String to, String code, String usernameUser) {
-        final String username = "Nhập email của nghĩa , liên hệ để test"; // Email gửi đi (SMTP)
-        final String password = "Nhập password";    // App password , trước khi commit thì xoá email + password
+        final String username = "trannghia2006nd@gmail.com"; // Email gửi đi (SMTP)
+        final String password = "qcux lqmg samo cceh";    // App password , trước khi commit thì xoá email + password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

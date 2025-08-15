@@ -39,7 +39,7 @@ public class AdminJFrame extends javax.swing.JFrame {
         addHoverTextEffect(jButton9);
         addHoverTextEffect(jButton10);
         addHoverTextEffect(jButton3);
-        addHoverTextEffect(jButton11);
+
         addHoverTextEffect(jButton12);
         addHoverTextEffect(jButton13);
         addHoverTextEffect(chatSupportButton);
@@ -67,7 +67,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -186,20 +185,6 @@ public class AdminJFrame extends javax.swing.JFrame {
         });
         sidebarPanel.add(jButton3);
 
-        jButton11.setBackground(new java.awt.Color(204, 204, 255));
-        jButton11.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jButton11.setText("Cài đặt chung");
-        jButton11.setBorder(null);
-        jButton11.setBorderPainted(false);
-        jButton11.setContentAreaFilled(false);
-        jButton11.setFocusPainted(false);
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
-            }
-        });
-        sidebarPanel.add(jButton11);
-
         jButton13.setBackground(new java.awt.Color(204, 204, 255));
         jButton13.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jButton13.setText("QL Mã Giảm Giá");
@@ -311,11 +296,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // Mở màn hình cài đặt chung thông qua controller
-        controller.openCaiDatChung();
-    }//GEN-LAST:event_jButton11ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // Mở màn hình quản lý nhà cung cấp thông qua controller
         controller.openQLNhaCungCap();
@@ -425,7 +405,6 @@ public class AdminJFrame extends javax.swing.JFrame {
     private javax.swing.JButton chatSupportButton;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton2;

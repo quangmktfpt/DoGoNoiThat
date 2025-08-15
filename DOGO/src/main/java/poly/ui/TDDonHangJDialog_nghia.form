@@ -204,14 +204,15 @@
             <Component class="javax.swing.JComboBox" name="cboTrangThai">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="7">
+                  <StringArray count="8">
                     <StringItem index="0" value="T&#x1ea5;t c&#x1ea3; tr&#x1ea1;ng th&#xe1;i"/>
                     <StringItem index="1" value="Pending"/>
                     <StringItem index="2" value="Processing"/>
                     <StringItem index="3" value="Shipped"/>
-                    <StringItem index="4" value="Completed"/>
-                    <StringItem index="5" value="Cancelled"/>
-                    <StringItem index="6" value=""/>
+                    <StringItem index="4" value="Delivering"/>
+                    <StringItem index="5" value="Completed"/>
+                    <StringItem index="6" value="Cancelled"/>
+                    <StringItem index="7" value=""/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -269,6 +270,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x110;&#xe1;nh gi&#xe1;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

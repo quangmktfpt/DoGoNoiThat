@@ -116,12 +116,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         });
         tblLichSu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 1) {
-                    tblLichSuMouseClicked(evt);
-                } else if (evt.getClickCount() == 2) {
-                    System.out.println("DEBUG: tblLichSu double-click detected in mouseClicked");
-                    tblLichSuMouseDoubleClicked(evt);
-                }
+                tblLichSuMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblLichSu);
@@ -140,7 +135,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
             }
         });
 
-        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Completed", "Cancelled", "" }));
+        cboTrangThai.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả trạng thái", "Pending", "Processing", "Shipped", "Delivering", "Completed", "Cancelled", "" }));
         cboTrangThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTrangThaiActionPerformed(evt);
@@ -252,12 +247,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         ));
         tblHienTai.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 1) {
-                    tblHienTaiMouseClicked(evt);
-                } else if (evt.getClickCount() == 2) {
-                    System.out.println("DEBUG: tblHienTai double-click detected in mouseClicked");
-                    tblHienTaiMouseDoubleClicked(evt);
-                }
+                tblHienTaiMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(tblHienTai);
@@ -458,6 +448,10 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
     private void btnTimTrangThai1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimTrangThai1ActionPerformed
         searchByStatus();
     }//GEN-LAST:event_btnTimTrangThai1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+openRatingDialog();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cboTrangThaiActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -1204,7 +1198,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         
         // Cho phép yêu cầu đổi trả khi đã nhận hàng (Completed) hoặc đang giao hàng (Delivering)
         if (!"Completed".equals(currentOrder.getOrderStatus()) && !"Delivering".equals(currentOrder.getOrderStatus())) {
-            XDialog.alert("Chỉ có thể yêu cầu đổi trả đơn hàng đã hoàn thành hoặc đang giao hàng!");
+            XDialog.alert("Chỉ có thể yêu cầu đổi trả đơn hàng đã hoàn thành hoặc đang giao hàng!\n\nTrạng thái hiện tại: " + getStatusDisplayName(currentOrder.getOrderStatus()));
             return;
         }
         
@@ -1298,10 +1292,18 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         }
     }
     
+    /**
+     * Kiểm tra có thể huỷ đơn hàng không
+     * Cho phép huỷ khi: Pending, Processing, Shipped, Delivering
+     */
     private boolean canCancelOrder(String status) {
         return "Pending".equals(status) || "Processing".equals(status) || "Shipped".equals(status) || "Delivering".equals(status);
     }
     
+    /**
+     * Kiểm tra có thể yêu cầu đổi trả không
+     * Cho phép đổi trả khi: Completed, Delivering (đang giao hàng có thể yêu cầu đổi trả)
+     */
     private boolean canRequestReturn(String status) {
         return "Completed".equals(status) || "Delivering".equals(status);
     }
@@ -1319,7 +1321,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         
         // Cho phép huỷ khi chưa hoàn thành (Pending, Processing, Shipped, Delivering)
         if (!"Pending".equals(currentOrder.getOrderStatus()) && !"Processing".equals(currentOrder.getOrderStatus()) && !"Shipped".equals(currentOrder.getOrderStatus()) && !"Delivering".equals(currentOrder.getOrderStatus())) {
-            XDialog.alert("Chỉ có thể huỷ đơn hàng khi chưa hoàn thành (đang chờ xử lý, đang xử lý, đã gửi hàng hoặc đang giao hàng)!");
+            XDialog.alert("Chỉ có thể huỷ đơn hàng khi chưa hoàn thành!\n\nTrạng thái hiện tại: " + getStatusDisplayName(currentOrder.getOrderStatus()) + "\n\nCó thể huỷ khi: ⏳ Chờ xử lý, ⚙️ Đang xử lý, 📦 Đã gửi hàng, 🚚 Đang giao hàng");
             return;
         }
         
@@ -1414,9 +1416,7 @@ public class TDDonHangJDialog_nghia extends javax.swing.JDialog implements Order
         }
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        openRatingDialog();
-    }
+ 
     
     /**
      * Mở dialog đánh giá sản phẩm
