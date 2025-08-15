@@ -10,6 +10,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 import java.awt.BorderLayout;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -1161,9 +1162,14 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             dataset.addValue(data.get(key), "Doanh thu", key);
         }
         JFreeChart chart = ChartFactory.createBarChart(
-            "Biểu Đồ Doanh Thu", "Thời gian", "Doanh thu", dataset);
+            "Biểu Đồ Doanh Thu", "Thời gian", "Doanh thu (VNĐ)", dataset);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(new java.awt.Color(0xe3f2fd));
+        
+        // Cấu hình trục Y để hiển thị số tiền đúng định dạng
+        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+        
         org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot.getRenderer();
         java.awt.Color blue = new java.awt.Color(25, 118, 210);
         renderer.setSeriesPaint(0, blue);
@@ -1205,6 +1211,11 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             "Biểu Đồ Lợi Nhuận", "Thời gian", "Lợi nhuận (VNĐ)", dataset);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(new java.awt.Color(0xe8f5e8));
+        
+        // Cấu hình trục Y để hiển thị số tiền đúng định dạng
+        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+        
         org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = (org.jfree.chart.renderer.category.LineAndShapeRenderer) plot.getRenderer();
         java.awt.Color green = new java.awt.Color(76, 175, 80);
         renderer.setSeriesPaint(0, green);
@@ -1278,7 +1289,8 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     // Tổng hợp lợi nhuận theo ngày/tuần/tháng
     private java.util.Map<String, Number> tongHopLoiNhuan(java.time.LocalDateTime from, java.time.LocalDateTime to, boolean forceByDay) {
-        java.util.List<Object[]> data = thongKeLoiNhuan(from, to);
+        // Sử dụng phương thức mới với giá bán hiện tại thay vì giá trong OrderDetail
+        java.util.List<Object[]> data = thongKeLoiNhuanVoiGiaHienTai(from, to);
         java.util.Map<String, Number> result = new java.util.LinkedHashMap<>();
         long days = java.time.Duration.between(from, to).toDays() + 1;
         java.time.format.DateTimeFormatter fmtNgay = java.time.format.DateTimeFormatter.ofPattern("dd/MM");
@@ -1372,9 +1384,14 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             dataset.addValue(result.get(stt), "Tổng tiền", stt);
         }
         JFreeChart chart = ChartFactory.createBarChart(
-            "Biểu Đồ Tổng Tiền Đơn Hàng Theo Trạng Thái", "Trạng Thái", "Tổng tiền", dataset);
+            "Biểu Đồ Tổng Tiền Đơn Hàng Theo Trạng Thái", "Trạng Thái", "Tổng tiền (VNĐ)", dataset);
         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(new java.awt.Color(0xe3f2fd));
+        
+        // Cấu hình trục Y để hiển thị số tiền đúng định dạng
+        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+        
         org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot.getRenderer();
         java.awt.Color blue = new java.awt.Color(25, 118, 210);
         renderer.setSeriesPaint(0, blue);
@@ -1514,28 +1531,140 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             Object[] row = map.getOrDefault(date, new Object[]{date, 0, java.math.BigDecimal.ZERO, 0});
             int tongDon = (int) row[1] + 1;
             
-            // Sử dụng TotalAmount từ Order làm doanh thu
-            java.math.BigDecimal doanhThu = o.getTotalAmount();
-            java.math.BigDecimal chiPhiVon = java.math.BigDecimal.ZERO;
+            // Tính doanh thu thực tế (sau khi áp dụng mã giảm giá)
+            java.math.BigDecimal doanhThuThucTe = o.getTotalAmount();
             
-            // Tính chi phí vốn từ OrderDetail
+            // Tính chi phí vốn và doanh thu từ OrderDetail
+            java.math.BigDecimal chiPhiVon = java.math.BigDecimal.ZERO;
+            java.math.BigDecimal doanhThuTinhToan = java.math.BigDecimal.ZERO;
             java.util.List<poly.entity.OrderDetail> details = orderDetailDAO.selectByOrderId(o.getOrderId());
+            
             for (poly.entity.OrderDetail d : details) {
-                // Chi phí vốn = số lượng * giá nhập
                 poly.entity.Product product = productDAO.selectById(d.getProductId());
                 if (product != null && product.getGianhap() != null && product.getGianhap().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                    // Chi phí vốn = số lượng * giá nhập
                     java.math.BigDecimal chiPhiItem = product.getGianhap().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
                     chiPhiVon = chiPhiVon.add(chiPhiItem);
+                    
+                    // Doanh thu tính toán = số lượng * giá bán hiện tại
+                    java.math.BigDecimal doanhThuItem = product.getUnitPrice().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
+                    doanhThuTinhToan = doanhThuTinhToan.add(doanhThuItem);
                 } else {
-                    // Nếu không có giá nhập, giả sử chi phí vốn = 70% doanh thu (tỷ lệ lợi nhuận 30%)
-                    java.math.BigDecimal doanhThuItem = d.getUnitPrice().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
-                    java.math.BigDecimal chiPhiItem = doanhThuItem.multiply(new java.math.BigDecimal("0.7"));
-                    chiPhiVon = chiPhiVon.add(chiPhiItem);
+                    // Nếu không có giá nhập, bỏ qua sản phẩm này (không tính lợi nhuận)
+                    System.out.println("DEBUG: Sản phẩm " + product.getProductName() + " không có giá nhập, bỏ qua tính lợi nhuận");
+                    continue;
                 }
             }
             
-            // Lợi nhuận = doanh thu - chi phí vốn
-            java.math.BigDecimal loiNhuan = doanhThu.subtract(chiPhiVon);
+            // Lợi nhuận = doanh thu thực tế - chi phí vốn
+            java.math.BigDecimal loiNhuan = doanhThuThucTe.subtract(chiPhiVon);
+            
+            // Debug: In ra thông tin để kiểm tra
+            System.out.println("DEBUG - OrderID: " + o.getOrderId() + 
+                             ", Doanh thu thực tế: " + doanhThuThucTe + 
+                             ", Doanh thu tính toán: " + doanhThuTinhToan + 
+                             ", Chi phí vốn: " + chiPhiVon + 
+                             ", Lợi nhuận: " + loiNhuan);
+            
+            // Cảnh báo nếu lợi nhuận âm
+            if (loiNhuan.compareTo(java.math.BigDecimal.ZERO) < 0) {
+                System.out.println("⚠️ CẢNH BÁO: OrderID " + o.getOrderId() + " có lợi nhuận âm!");
+                System.out.println("   - Doanh thu thực tế: " + doanhThuThucTe);
+                System.out.println("   - Doanh thu tính toán: " + doanhThuTinhToan);
+                System.out.println("   - Chi phí vốn: " + chiPhiVon);
+                System.out.println("   - Lợi nhuận: " + loiNhuan);
+                
+                // In chi tiết từng sản phẩm
+                for (poly.entity.OrderDetail d : details) {
+                    poly.entity.Product product = productDAO.selectById(d.getProductId());
+                    if (product != null) {
+                        java.math.BigDecimal giaBanCu = d.getUnitPrice(); // Giá bán tại thời điểm đặt hàng
+                        java.math.BigDecimal giaBanHienTai = product.getUnitPrice(); // Giá bán hiện tại
+                        java.math.BigDecimal giaNhap = product.getGianhap();
+                        java.math.BigDecimal loiNhuanItem = giaBanCu.subtract(giaNhap != null ? giaNhap : java.math.BigDecimal.ZERO);
+                        System.out.println("   - Sản phẩm: " + product.getProductName() + 
+                                         ", Giá bán (cũ): " + giaBanCu + 
+                                         ", Giá bán (hiện tại): " + giaBanHienTai + 
+                                         ", Giá nhập: " + giaNhap + 
+                                         ", Lợi nhuận item: " + loiNhuanItem);
+                    }
+                }
+            }
+            
+            // Cộng dồn vào map
+            java.math.BigDecimal tongLoiNhuan = ((java.math.BigDecimal) row[2]).add(loiNhuan);
+            int soLuongBan = (int) row[3];
+            for (poly.entity.OrderDetail d : details) {
+                soLuongBan += d.getQuantity();
+            }
+            
+            map.put(date, new Object[]{date, tongDon, tongLoiNhuan, soLuongBan});
+        }
+        return new java.util.ArrayList<>(map.values());
+    }
+    
+    // Thống kê lợi nhuận sử dụng giá bán hiện tại (thay vì giá trong OrderDetail)
+    public java.util.List<Object[]> thongKeLoiNhuanVoiGiaHienTai(java.time.LocalDateTime from, java.time.LocalDateTime to) {
+        java.util.List<poly.entity.Order> orders = orderDAO.selectByDateRange(from, to);
+        java.util.Map<java.time.LocalDate, Object[]> map = new java.util.LinkedHashMap<>();
+        
+        for (poly.entity.Order o : orders) {
+            java.time.LocalDate date = o.getOrderDate().toLocalDate();
+            Object[] row = map.getOrDefault(date, new Object[]{date, 0, java.math.BigDecimal.ZERO, 0});
+            int tongDon = (int) row[1] + 1;
+            
+            // Tính doanh thu thực tế (sau khi áp dụng mã giảm giá)
+            java.math.BigDecimal doanhThuThucTe = o.getTotalAmount();
+            
+            // Tính chi phí vốn từ OrderDetail với giá hiện tại
+            java.math.BigDecimal chiPhiVon = java.math.BigDecimal.ZERO;
+            java.math.BigDecimal doanhThuTinhToan = java.math.BigDecimal.ZERO;
+            java.util.List<poly.entity.OrderDetail> details = orderDetailDAO.selectByOrderId(o.getOrderId());
+            
+            for (poly.entity.OrderDetail d : details) {
+                poly.entity.Product product = productDAO.selectById(d.getProductId());
+                if (product != null && product.getGianhap() != null && product.getGianhap().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                    // Chi phí vốn = số lượng * giá nhập
+                    java.math.BigDecimal chiPhiItem = product.getGianhap().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
+                    chiPhiVon = chiPhiVon.add(chiPhiItem);
+                    
+                    // Doanh thu tính toán = số lượng * giá bán hiện tại
+                    java.math.BigDecimal doanhThuItem = product.getUnitPrice().multiply(java.math.BigDecimal.valueOf(d.getQuantity()));
+                    doanhThuTinhToan = doanhThuTinhToan.add(doanhThuItem);
+                } else {
+                    // Nếu không có giá nhập, bỏ qua sản phẩm này
+                    continue;
+                }
+            }
+            
+            // TÍNH LỢI NHUẬN THEO CÔNG THỨC MỚI:
+            // Nếu doanh thu thực tế > 0, tính tỷ lệ giảm giá và áp dụng cho chi phí vốn
+            java.math.BigDecimal loiNhuan;
+            if (doanhThuThucTe.compareTo(java.math.BigDecimal.ZERO) > 0 && doanhThuTinhToan.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                // Tính tỷ lệ giảm giá: doanh thu thực tế / doanh thu tính toán
+                java.math.BigDecimal tyLeGiamGia = doanhThuThucTe.divide(doanhThuTinhToan, 4, java.math.RoundingMode.HALF_UP);
+                
+                // Chi phí vốn sau giảm giá = chi phí vốn * tỷ lệ giảm giá
+                java.math.BigDecimal chiPhiVonSauGiamGia = chiPhiVon.multiply(tyLeGiamGia);
+                
+                // Lợi nhuận = doanh thu thực tế - chi phí vốn sau giảm giá
+                loiNhuan = doanhThuThucTe.subtract(chiPhiVonSauGiamGia);
+                
+                System.out.println("DEBUG (Công thức mới) - OrderID: " + o.getOrderId() + 
+                                 ", Doanh thu thực tế: " + doanhThuThucTe + 
+                                 ", Doanh thu tính toán: " + doanhThuTinhToan + 
+                                 ", Tỷ lệ giảm giá: " + tyLeGiamGia + 
+                                 ", Chi phí vốn gốc: " + chiPhiVon + 
+                                 ", Chi phí vốn sau giảm giá: " + chiPhiVonSauGiamGia + 
+                                 ", Lợi nhuận: " + loiNhuan);
+            } else {
+                // Fallback: lợi nhuận = doanh thu thực tế - chi phí vốn
+                loiNhuan = doanhThuThucTe.subtract(chiPhiVon);
+                System.out.println("DEBUG (Fallback) - OrderID: " + o.getOrderId() + 
+                                 ", Doanh thu thực tế: " + doanhThuThucTe + 
+                                 ", Chi phí vốn: " + chiPhiVon + 
+                                 ", Lợi nhuận: " + loiNhuan);
+            }
             
             // Cộng dồn vào map
             java.math.BigDecimal tongLoiNhuan = ((java.math.BigDecimal) row[2]).add(loiNhuan);

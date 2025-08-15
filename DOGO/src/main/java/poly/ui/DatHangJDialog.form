@@ -378,7 +378,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="14" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="S&#x1ed1; nh&#xe0;:"/>
+        <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a Ch&#x1ec9;:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextField1">

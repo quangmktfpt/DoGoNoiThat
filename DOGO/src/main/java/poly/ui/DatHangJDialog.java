@@ -195,7 +195,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         });
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setText("Số nhà:");
+        jLabel12.setText("Địa Chỉ:");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel13.setText("Thông tin thanh toán:");
