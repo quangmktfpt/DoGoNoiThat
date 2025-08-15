@@ -79,7 +79,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicon
         jLabel7.setText("Số Điện Thoại: *");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel8.setText("Địa Chỉ: *");
+        jLabel8.setText("Địa Chỉ: ");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton2.setText("Đăng Ký");
