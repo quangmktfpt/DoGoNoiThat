@@ -58,7 +58,7 @@ public class DKyTaiKhoanJDialog extends javax.swing.JDialog implements Dangkicon
         jSeparator1.setAlignmentY(6.0F);
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
-        jLabel2.setText("Dăng Ký Khách Hàng");
+        jLabel2.setText("Đăng Ký Khách Hàng");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel1.setText("Họ Tên: *");

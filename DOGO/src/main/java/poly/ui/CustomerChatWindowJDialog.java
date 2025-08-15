@@ -220,6 +220,7 @@ public class CustomerChatWindowJDialog extends javax.swing.JDialog {
             Integer messageId = chatMessageDAO.insert(message);
             if (messageId != null) {
                 message.setMessageId(messageId);
+                // Đảm bảo thiết lập tên người gửi
                 message.setSenderName(currentUser.getFullName());
 
                 appendMessage(message);
@@ -295,14 +296,12 @@ public class CustomerChatWindowJDialog extends javax.swing.JDialog {
 
     private void closeChat() {
         if (currentSession != null) {
-            int choice = JOptionPane.showConfirmDialog(this,
-                    "Bạn có muốn đóng phiên chat này không?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (choice == JOptionPane.YES_OPTION) {
-                // Đánh giá phiên chat
-                showRatingDialog();
+            // Đóng phiên chat trực tiếp mà không cần xác nhận
+            try {
+                chatSessionDAO.updateStatus(currentSession.getSessionId(), "closed");
+                System.out.println("Phiên chat đã được đóng bởi khách hàng");
+            } catch (Exception e) {
+                System.err.println("Lỗi khi đóng phiên chat: " + e.getMessage());
             }
         }
         dispose();

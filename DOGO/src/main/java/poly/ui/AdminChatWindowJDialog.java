@@ -260,6 +260,9 @@ public class AdminChatWindowJDialog extends javax.swing.JDialog {
             welcomeMsg.setMessageType("text");
             welcomeMsg.setSentAt(LocalDateTime.now());
             
+            // Thiết lập tên người gửi cho tin nhắn chào mừng
+            welcomeMsg.setSenderName(currentAgent.getFullName());
+            
             chatMessageDAO.insert(welcomeMsg);
             
             // Reload messages to show welcome message
@@ -320,6 +323,9 @@ public class AdminChatWindowJDialog extends javax.swing.JDialog {
             message.setMessageType("text");
             message.setSentAt(LocalDateTime.now());
             
+            // Thiết lập tên người gửi để hiển thị đúng
+            message.setSenderName(currentAgent.getFullName());
+            
             chatMessageDAO.insert(message);
             
             // Add message to chat area
@@ -361,6 +367,9 @@ public class AdminChatWindowJDialog extends javax.swing.JDialog {
                 systemMsg.setMessageText("Phiên chat đã được đóng bởi nhân viên hỗ trợ.");
                 systemMsg.setMessageType("text");
                 systemMsg.setSentAt(LocalDateTime.now());
+                
+                // Thiết lập tên cho tin nhắn hệ thống
+                systemMsg.setSenderName("Hệ thống");
                 
                 chatMessageDAO.insert(systemMsg);
                 

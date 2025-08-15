@@ -148,7 +148,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Times New Roman" size="24" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="D&#x103;ng K&#xfd; Kh&#xe1;ch H&#xe0;ng"/>
+        <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng K&#xfd; Kh&#xe1;ch H&#xe0;ng"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">

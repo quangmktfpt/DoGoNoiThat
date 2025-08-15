@@ -171,7 +171,14 @@ public class ChatMessageDAOImpl implements ChatMessageDAO {
     @Override
     public List<ChatMessage> selectWithDetails(Integer sessionId) {
         String sql = """
-            SELECT cm.*, u.FullName AS SenderName
+            SELECT cm.*, 
+                   COALESCE(u.FullName, 
+                           CASE 
+                               WHEN cm.SenderType = 'agent' THEN 'Nhân viên hỗ trợ'
+                               WHEN cm.SenderType = 'customer' THEN 'Khách hàng'
+                               WHEN cm.SenderType = 'bot' THEN 'Hệ thống'
+                               ELSE 'Người dùng'
+                           END) AS SenderName
             FROM ChatMessages cm
             LEFT JOIN Users u ON cm.SenderID = u.UserID
             WHERE cm.SessionID = ?

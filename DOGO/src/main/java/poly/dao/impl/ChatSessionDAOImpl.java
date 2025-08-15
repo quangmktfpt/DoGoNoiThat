@@ -93,7 +93,16 @@ public class ChatSessionDAOImpl implements ChatSessionDAO {
     
     @Override
     public List<ChatSession> selectWaitingSessions() {
-        String sql = "SELECT * FROM ChatSessions WHERE Status = 'waiting' ORDER BY CreatedAt ASC";
+        String sql = """
+            SELECT cs.*, 
+                   u1.FullName AS CustomerName,
+                   u2.FullName AS AgentName
+            FROM ChatSessions cs
+            LEFT JOIN Users u1 ON cs.UserID = u1.UserID
+            LEFT JOIN Users u2 ON cs.AgentID = u2.UserID
+            WHERE cs.Status = 'waiting' 
+            ORDER BY cs.CreatedAt ASC
+        """;
         List<ChatSession> sessions = new ArrayList<>();
         
         try (Connection conn = XJdbc.openConnection();
@@ -101,7 +110,7 @@ public class ChatSessionDAOImpl implements ChatSessionDAO {
              ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                sessions.add(mapResultSetToChatSession(rs));
+                sessions.add(mapResultSetToChatSessionWithDetails(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,7 +120,16 @@ public class ChatSessionDAOImpl implements ChatSessionDAO {
     
     @Override
     public List<ChatSession> selectActiveSessionsByAgentId(Integer agentId) {
-        String sql = "SELECT * FROM ChatSessions WHERE AgentID = ? AND Status = 'active' ORDER BY StartedAt ASC";
+        String sql = """
+            SELECT cs.*, 
+                   u1.FullName AS CustomerName,
+                   u2.FullName AS AgentName
+            FROM ChatSessions cs
+            LEFT JOIN Users u1 ON cs.UserID = u1.UserID
+            LEFT JOIN Users u2 ON cs.AgentID = u2.UserID
+            WHERE cs.AgentID = ? AND cs.Status = 'active' 
+            ORDER BY cs.StartedAt ASC
+        """;
         List<ChatSession> sessions = new ArrayList<>();
         
         try (Connection conn = XJdbc.openConnection();
@@ -120,7 +138,7 @@ public class ChatSessionDAOImpl implements ChatSessionDAO {
             ps.setInt(1, agentId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    sessions.add(mapResultSetToChatSession(rs));
+                    sessions.add(mapResultSetToChatSessionWithDetails(rs));
                 }
             }
         } catch (SQLException e) {
