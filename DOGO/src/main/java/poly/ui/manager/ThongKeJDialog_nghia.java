@@ -106,7 +106,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
         });
 
-        cbxKhoangThoiGian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
+        cbxKhoangThoiGian.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay" }));
         cbxKhoangThoiGian.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxKhoangThoiGianActionPerformed(evt);
@@ -181,7 +181,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(txtDenNgay, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                         .addComponent(cbxKhoangThoiGian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -256,7 +256,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             }
         });
 
-        cbxKhoangThoiGianSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
+        cbxKhoangThoiGianSP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay" }));
         cbxKhoangThoiGianSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxKhoangThoiGianSPActionPerformed(evt);
@@ -307,7 +307,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnLocLoai))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
                                 .addComponent(jLabel8)
                                 .addGap(237, 237, 237)))
                         .addContainerGap())))
@@ -390,7 +390,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         ));
         jScrollPane5.setViewportView(tblDonHang);
 
-        cbxKhoangThoiGian1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay", "Tùy chọn" }));
+        cbxKhoangThoiGian1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hôm nay", "Tuần Này", "Tháng này", "Nửa Năm", "Năm Nay" }));
         cbxKhoangThoiGian1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxKhoangThoiGian1ActionPerformed(evt);
@@ -484,7 +484,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
         jLabel14.setText("Định dạng");
 
-        cbxDinhDang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF", "Word", "CSV" }));
+        cbxDinhDang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PDF", "Excel", "CSV" }));
         cbxDinhDang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxDinhDangActionPerformed(evt);
@@ -518,7 +518,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
                 .addComponent(jLabel14)
                 .addGap(28, 28, 28)
                 .addComponent(cbxDinhDang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
                 .addComponent(btnXemTruoc)
                 .addGap(62, 62, 62))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -554,7 +554,9 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
