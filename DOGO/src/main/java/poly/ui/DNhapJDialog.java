@@ -73,10 +73,10 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         jSeparator1.setAlignmentY(6.0F);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Tên đăng nhập:");
+        jLabel3.setText("Tên đăng nhập: *");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Mật khẩu:");
+        jLabel4.setText("Mật khẩu: *");
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
