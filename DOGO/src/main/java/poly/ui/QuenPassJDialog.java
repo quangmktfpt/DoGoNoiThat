@@ -135,7 +135,7 @@ public class QuenPassJDialog extends javax.swing.JDialog implements PasswordRese
         });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel6.setText("Username: *");
+        jLabel6.setText("Tài Khoản: *");
 
         btnQuayLai.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnQuayLai.setText("Quay lại");

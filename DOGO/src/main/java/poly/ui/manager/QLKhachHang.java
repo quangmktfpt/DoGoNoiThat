@@ -282,6 +282,8 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
 
         jLabel10.setText("Địa chỉ *");
 
+        jTextField5.setEditable(false);
+
         jButton3.setText("Cập nhật");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,11 +300,19 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
             }
         });
 
+        jTextField2.setEditable(false);
+
         jLabel11.setText("Số điện thoại: *");
 
         jLabel8.setText("Email: *");
 
+        jTextField6.setEditable(false);
+
+        jTextField3.setEditable(false);
+
         jLabel9.setText("Tên khách *");
+
+        jTextField4.setEditable(false);
 
         jButton1.setText("Đặt Lại Mật Khẩu");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -316,6 +326,8 @@ public class QLKhachHang extends javax.swing.JDialog implements KhachhangControl
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt Động", "Không Hoạt Động" }));
 
         jLabel24.setText("Username *");
+
+        jTextField1.setEditable(false);
 
         jButton11.setText("Thêm");
         jButton11.addActionListener(new java.awt.event.ActionListener() {
