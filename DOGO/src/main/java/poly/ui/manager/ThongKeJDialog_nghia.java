@@ -9,6 +9,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
+import java.awt.BorderLayout;
 
 /**
  *
@@ -732,6 +733,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         String loaiBaoCao = cbxLoaiBaoCao.getSelectedItem().toString();
         String dinhDang = cbxDinhDang.getSelectedItem().toString();
         java.time.LocalDateTime from, to;
+        
         if ("Đơn hàng".equalsIgnoreCase(loaiBaoCao)) {
             from = parseDate(txtTuNgayDH.getText());
             to = parseEndDate(txtDenNgayDH.getText());
@@ -743,8 +745,131 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             from = java.time.LocalDateTime.now();
             to = java.time.LocalDateTime.now();
         }
+        
         byte[] data = xuatBaoCao(loaiBaoCao, dinhDang, from, to);
-        javax.swing.JOptionPane.showMessageDialog(this, new String(data), "Xem trước báo cáo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        
+        // Tạo dialog riêng để hiển thị với bảng
+        javax.swing.JDialog previewDialog = new javax.swing.JDialog(this, "Xem trước báo cáo", true);
+        previewDialog.setSize(1000, 700);
+        previewDialog.setLocationRelativeTo(this);
+        
+        // Tạo bảng để hiển thị dữ liệu
+        javax.swing.JTable previewTable = new javax.swing.JTable();
+        previewTable.setFont(new java.awt.Font("Arial Unicode MS", java.awt.Font.PLAIN, 12));
+        previewTable.getTableHeader().setFont(new java.awt.Font("Arial Unicode MS", java.awt.Font.BOLD, 12));
+        
+        // Phân tích dữ liệu để tạo bảng
+        String content = new String(data, java.nio.charset.StandardCharsets.UTF_8);
+        String[] lines = content.split("\n");
+        
+        if (lines.length > 0) {
+            // Tìm dòng header (thường là dòng đầu tiên có dấu phẩy hoặc tab)
+            String headerLine = "";
+            int dataStartIndex = 0;
+            
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].contains(",") || lines[i].contains("\t")) {
+                    headerLine = lines[i];
+                    dataStartIndex = i + 1;
+                    break;
+                }
+            }
+            
+            if (!headerLine.isEmpty()) {
+                // Tách header
+                String[] headers = headerLine.split(",");
+                if (headers.length == 1) {
+                    headers = headerLine.split("\t");
+                }
+                
+                // Tạo model cho bảng
+                javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
+                
+                // Thêm cột
+                for (String header : headers) {
+                    model.addColumn(header.trim());
+                }
+                
+                // Thêm dữ liệu
+                for (int i = dataStartIndex; i < lines.length; i++) {
+                    if (!lines[i].trim().isEmpty()) {
+                        String[] rowData = lines[i].split(",");
+                        if (rowData.length == 1) {
+                            rowData = lines[i].split("\t");
+                        }
+                        
+                        // Đảm bảo số cột phù hợp
+                        Object[] row = new Object[headers.length];
+                        for (int j = 0; j < headers.length; j++) {
+                            if (j < rowData.length) {
+                                row[j] = rowData[j].trim();
+                            } else {
+                                row[j] = "";
+                            }
+                        }
+                        model.addRow(row);
+                    }
+                }
+                
+                previewTable.setModel(model);
+            } else {
+                // Nếu không tìm thấy header, hiển thị dưới dạng text
+                javax.swing.JTextArea textArea = new javax.swing.JTextArea();
+                textArea.setEditable(false);
+                textArea.setFont(new java.awt.Font("Arial Unicode MS", java.awt.Font.PLAIN, 12));
+                textArea.setText(content);
+                
+                javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(textArea);
+                scrollPane.setPreferredSize(new java.awt.Dimension(980, 600));
+                
+                javax.swing.JButton closeButton = new javax.swing.JButton("Đóng");
+                closeButton.addActionListener(e -> previewDialog.dispose());
+                
+                javax.swing.JPanel buttonPanel = new javax.swing.JPanel();
+                buttonPanel.add(closeButton);
+                
+                javax.swing.JPanel mainPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+                mainPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+                mainPanel.add(buttonPanel, java.awt.BorderLayout.SOUTH);
+                
+                previewDialog.add(mainPanel);
+                previewDialog.setVisible(true);
+                return;
+            }
+        }
+        
+        // Tạo scroll pane cho bảng
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(previewTable);
+        scrollPane.setPreferredSize(new java.awt.Dimension(980, 600));
+        
+        // Tự động điều chỉnh độ rộng cột
+        previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        for (int i = 0; i < previewTable.getColumnCount(); i++) {
+            int width = 150; // Độ rộng mặc định
+            javax.swing.table.TableColumn column = previewTable.getColumnModel().getColumn(i);
+            column.setPreferredWidth(width);
+        }
+        
+        javax.swing.JButton closeButton = new javax.swing.JButton("Đóng");
+        closeButton.addActionListener(e -> previewDialog.dispose());
+        
+        javax.swing.JButton exportButton = new javax.swing.JButton("Xuất báo cáo");
+        exportButton.addActionListener(e -> {
+            // Gọi lại phương thức xuất báo cáo
+            btnXuatBaoCaoActionPerformed(evt);
+            previewDialog.dispose();
+        });
+        
+        javax.swing.JPanel buttonPanel = new javax.swing.JPanel();
+        buttonPanel.add(exportButton);
+        buttonPanel.add(closeButton);
+        
+        javax.swing.JPanel mainPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        mainPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, java.awt.BorderLayout.SOUTH);
+        
+        previewDialog.add(mainPanel);
+        previewDialog.setVisible(true);
     }//GEN-LAST:event_btnXemTruocActionPerformed
 
     private void btnXuatBaoCaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXuatBaoCaoActionPerformed
