@@ -104,6 +104,7 @@ public class OrderDAOImpl implements OrderDAO {
         XJdbc.executeUpdate(UPDATE_STATUS_SQL, status, orderId);
     }
 
+    @Override
     public void updateOrderStatusWithReason(Integer orderId, String status, String returnReason) {
         XJdbc.executeUpdate(UPDATE_STATUS_WITH_REASON_SQL, status, returnReason, orderId);
     }

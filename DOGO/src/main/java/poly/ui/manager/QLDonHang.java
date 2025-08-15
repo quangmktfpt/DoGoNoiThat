@@ -120,7 +120,7 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "OrderID", "UserID", "Tên Khách Hàng", "Ngày Đặt Hàng", "Tổng Hóa Đơn", "CouponID", "Phương Thức thanh toán", "Trạng Thái Đơn Hàng", "Địa Chỉ giao hàng", ""
+                "OrderID", "UserName", "Tên Khách Hàng", "Ngày Đặt Hàng", "Tổng Hóa Đơn", "Coupon", "Phương Thức thanh toán", "Trạng Thái Đơn Hàng", "Địa Chỉ giao hàng", ""
             }
         ) {
             Class[] types = new Class [] {
@@ -151,7 +151,7 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
             }
         });
 
-        jLabel12.setText("Tìm kiếm Theo Mã Hóa Đơn:");
+        jLabel12.setText("Tìm kiếm Theo UserName:");
 
         jButton9.setText("Tìm");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -231,30 +231,7 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(150, 150, 150)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jLabel13))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(65, 65, 65)
-                                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jButton10))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(40, 40, 40)
-                                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton9))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -266,7 +243,31 @@ public class QLDonHang extends javax.swing.JDialog implements poly.controller.Or
                                 .addGap(47, 47, 47)
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton11))))
+                                .addComponent(jButton11))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton1))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel12)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(65, 65, 65)
+                                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(12, 12, 12)
+                                            .addComponent(jButton10))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                            .addGap(40, 40, 40)
+                                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jButton9)))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 776, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -373,6 +374,16 @@ this.open();        // TODO add your handling code here:
                     result = poly.util.XQuery.getBeanList(Order.class, sql, "%" + keyword + "%");
                 }
                 
+                // Nếu vẫn không tìm thấy, thử tìm theo tên user
+                if (result.isEmpty()) {
+                    sql = "SELECT DISTINCT o.* FROM Orders o " +
+                         "INNER JOIN Users u ON o.UserID = u.UserID " +
+                         "WHERE u.FullName LIKE ? " +
+                         "ORDER BY o.OrderID DESC";
+                    
+                    result = poly.util.XQuery.getBeanList(Order.class, sql, "%" + keyword + "%");
+                }
+                
                 // Hiển thị thông báo kết quả
                 if (result.isEmpty()) {
                     javax.swing.JOptionPane.showMessageDialog(this, 
@@ -414,7 +425,7 @@ this.open();        // TODO add your handling code here:
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
        
-        mahoadon();// TODO add your handling code here:
+        timusername();// Tìm theo username
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
@@ -428,21 +439,46 @@ this.open();        // TODO add your handling code here:
 
     // === Sự kiện nút trên giao diện ===
 
-    private void mahoadon() { // Tìm theo mã hóa đơn
+    private void timusername() { // Tìm theo username
         String keyword = jTextField9.getText().trim();
-        List<Order> result;
+        List<Order> result = new ArrayList<>();
+        
         if (keyword.isEmpty()) {
+            // Nếu không nhập gì, hiển thị tất cả đơn hàng
             result = orderDAO.selectAll();
         } else {
-            result = new ArrayList<>();
             try {
-                int orderId = Integer.parseInt(keyword);
-                Order o = orderDAO.selectById(orderId);
-                if (o != null) result.add(o);
-            } catch (NumberFormatException e) {
-                // Nếu nhập không phải số, không tìm thấy
+                // Tìm kiếm theo username với tìm kiếm gần đúng
+                String sql = "SELECT DISTINCT o.* FROM Orders o " +
+                           "INNER JOIN Users u ON o.UserID = u.UserID " +
+                           "WHERE u.Username LIKE ? " +
+                           "ORDER BY o.OrderID DESC";
+                
+                result = poly.util.XQuery.getBeanList(Order.class, sql, "%" + keyword + "%");
+                
+                // Hiển thị thông báo kết quả
+                if (result.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Không tìm thấy đơn hàng nào với username: '" + keyword + "'", 
+                        "Kết quả tìm kiếm", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Tìm thấy " + result.size() + " đơn hàng với username: '" + keyword + "'", 
+                        "Kết quả tìm kiếm", 
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+                
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tìm kiếm theo username: " + e.getMessage(), 
+                    "Lỗi", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                System.err.println("Lỗi tìm kiếm theo username: " + e.getMessage());
+                e.printStackTrace();
             }
         }
+        
         fillToTableWithList(result);
     }
     
@@ -1061,9 +1097,19 @@ this.open();        // TODO add your handling code here:
                 diaChiGiaoHang = "Không có thông tin địa chỉ";
             }
             
+            // Lấy username từ UserDAO
+            String username = "";
+            User user = userDAO.selectById(o.getUserId());
+            if (user != null) {
+                username = user.getUsername();
+            }
+            
+            // Debug: Kiểm tra OrderDate
+            System.out.println("DEBUG - OrderID: " + o.getOrderId() + ", OrderDate: " + o.getOrderDate());
+            
             model.addRow(new Object[]{
                 o.getOrderId(),
-                o.getUserId(),
+                username,
                 tenKhachHang,
                 o.getOrderDate(),
                 o.getTotalAmount(),
@@ -1091,6 +1137,7 @@ this.open();        // TODO add your handling code here:
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
         java.util.List<Integer> selectedOrderIds = new java.util.ArrayList<>();
         java.util.List<String> lockedOrders = new java.util.ArrayList<>();
+        java.util.List<String> invalidStatusOrders = new java.util.ArrayList<>();
         
         // Kiểm tra các đơn hàng được chọn
         for (int i = 0; i < model.getRowCount(); i++) {
@@ -1102,6 +1149,8 @@ this.open();        // TODO add your handling code here:
                 // Kiểm tra nếu đơn hàng đã ở trạng thái Completed hoặc Cancelled
                 if ("Completed".equals(currentStatus) || "Cancelled".equals(currentStatus)) {
                     lockedOrders.add("Đơn hàng #" + orderId + " (" + currentStatus + ")");
+                } else if (!isValidStatusTransition(currentStatus, newStatus)) {
+                    invalidStatusOrders.add("Đơn hàng #" + orderId + " (" + currentStatus + " → " + newStatus + ")");
                 } else {
                     selectedOrderIds.add(orderId);
                 }
@@ -1115,8 +1164,17 @@ this.open();        // TODO add your handling code here:
                 message.append("- ").append(order).append("\n");
             }
             javax.swing.JOptionPane.showMessageDialog(this, message.toString(), "Cảnh báo", javax.swing.JOptionPane.WARNING_MESSAGE);
-            
-            // Cập nhật thông báo trên jLabel1
+            updateComboBoxStatus();
+            return;
+        }
+        
+        // Hiển thị cảnh báo nếu có chuyển đổi trạng thái không hợp lệ
+        if (!invalidStatusOrders.isEmpty()) {
+            StringBuilder message = new StringBuilder("Không thể chuyển đổi trạng thái cho các đơn hàng sau (vi phạm quy tắc tuần tự):\n");
+            for (String order : invalidStatusOrders) {
+                message.append("- ").append(order).append("\n");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, message.toString(), "Cảnh báo", javax.swing.JOptionPane.WARNING_MESSAGE);
             updateComboBoxStatus();
             return;
         }
@@ -1125,6 +1183,27 @@ this.open();        // TODO add your handling code here:
         if (selectedOrderIds.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một đơn hàng để cập nhật!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             return;
+        }
+        
+        // Nếu chuyển sang trạng thái Cancelled, yêu cầu nhập lý do
+        String returnReason = null;
+        if ("Cancelled".equals(newStatus)) {
+            returnReason = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Vui lòng nhập lý do hủy đơn hàng:",
+                "Lý do hủy đơn hàng",
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (returnReason == null) {
+                // Người dùng hủy bỏ
+                return;
+            }
+            
+            if (returnReason.trim().isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập lý do hủy đơn hàng!", "Lỗi", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
         
         // Xác nhận cập nhật
@@ -1143,7 +1222,13 @@ this.open();        // TODO add your handling code here:
         int successCount = 0;
         for (Integer orderId : selectedOrderIds) {
             try {
-                orderDAO.updateOrderStatus(orderId, newStatus);
+                if ("Cancelled".equals(newStatus) && returnReason != null) {
+                    // Cập nhật với lý do hủy
+                    orderDAO.updateOrderStatusWithReason(orderId, newStatus, returnReason);
+                } else {
+                    // Cập nhật bình thường
+                    orderDAO.updateOrderStatus(orderId, newStatus);
+                }
                 successCount++;
             } catch (Exception e) {
                 javax.swing.JOptionPane.showMessageDialog(this, 
@@ -1172,16 +1257,28 @@ this.open();        // TODO add your handling code here:
     }
     
     /**
-     * Kiểm tra xem trạng thái có thể chuyển đổi được không
+     * Kiểm tra xem trạng thái có thể chuyển đổi được không theo quy tắc tuần tự
      */
-    private boolean canUpdateStatus(String currentStatus, String newStatus) {
-        // Nếu đơn hàng đã hoàn thành, không thể cập nhật
-        if ("Completed".equals(currentStatus)) {
+    private boolean isValidStatusTransition(String currentStatus, String newStatus) {
+        // Định nghĩa thứ tự trạng thái
+        java.util.Map<String, Integer> statusOrder = new java.util.HashMap<>();
+        statusOrder.put("Pending", 1);
+        statusOrder.put("Processing", 2);
+        statusOrder.put("Shipped", 3);
+        statusOrder.put("Delivering", 4);
+        statusOrder.put("Completed", 5);
+        statusOrder.put("Cancelled", 6);
+        
+        // Lấy thứ tự của trạng thái hiện tại và mới
+        Integer currentOrder = statusOrder.get(currentStatus);
+        Integer newOrder = statusOrder.get(newStatus);
+        
+        if (currentOrder == null || newOrder == null) {
             return false;
         }
         
-        // Các trạng thái khác có thể chuyển đổi tự do
-        return true;
+        // Cho phép chuyển từ trạng thái hiện tại sang trạng thái tiếp theo hoặc Cancelled
+        return newOrder == currentOrder + 1 || "Cancelled".equals(newStatus);
     }
     
     /**
@@ -1190,17 +1287,31 @@ this.open();        // TODO add your handling code here:
     private java.util.List<String> getAvailableStatuses(String currentStatus) {
         java.util.List<String> availableStatuses = new java.util.ArrayList<>();
         
-        if ("Completed".equals(currentStatus)) {
-            // Đơn hàng đã hoàn thành không thể thay đổi trạng thái
+        // Nếu đơn hàng đã hoàn thành hoặc hủy, không thể thay đổi trạng thái
+        if ("Completed".equals(currentStatus) || "Cancelled".equals(currentStatus)) {
             return availableStatuses;
         }
         
-        // Các trạng thái có thể chuyển đổi
-        availableStatuses.add("Pending");
-        availableStatuses.add("Processing");
-        availableStatuses.add("Shipped");
-        availableStatuses.add("Completed");
-        availableStatuses.add("Cancelled");
+        // Thêm trạng thái tiếp theo theo quy tắc tuần tự
+        switch (currentStatus) {
+            case "Pending":
+                availableStatuses.add("Processing");
+                break;
+            case "Processing":
+                availableStatuses.add("Shipped");
+                break;
+            case "Shipped":
+                availableStatuses.add("Delivering");
+                break;
+            case "Delivering":
+                availableStatuses.add("Completed");
+                break;
+        }
+        
+        // Luôn cho phép chuyển sang Cancelled (trừ khi đã Completed)
+        if (!"Completed".equals(currentStatus)) {
+            availableStatuses.add("Cancelled");
+        }
         
         return availableStatuses;
     }
@@ -1243,7 +1354,43 @@ this.open();        // TODO add your handling code here:
             jComboBox4.setEnabled(false);
             jButton12.setEnabled(false);
         } else {
+            // Cập nhật combobox với các trạng thái hợp lệ
+            updateComboBoxWithValidStatuses(selectedStatuses);
             jLabel1.setText("Đã chọn " + selectedCount + " đơn hàng - Có thể cập nhật trạng thái");
+            jComboBox4.setEnabled(true);
+            jButton12.setEnabled(true);
+        }
+    }
+    
+    /**
+     * Cập nhật combobox với các trạng thái hợp lệ dựa trên trạng thái hiện tại của đơn hàng được chọn
+     */
+    private void updateComboBoxWithValidStatuses(java.util.Set<String> selectedStatuses) {
+        // Lấy trạng thái chung có thể chuyển đổi
+        java.util.Set<String> commonValidStatuses = new java.util.HashSet<>();
+        boolean firstStatus = true;
+        
+        for (String currentStatus : selectedStatuses) {
+            java.util.List<String> validStatuses = getAvailableStatuses(currentStatus);
+            if (firstStatus) {
+                commonValidStatuses.addAll(validStatuses);
+                firstStatus = false;
+            } else {
+                // Chỉ giữ lại các trạng thái chung
+                commonValidStatuses.retainAll(validStatuses);
+            }
+        }
+        
+        // Cập nhật combobox
+        jComboBox4.removeAllItems();
+        if (commonValidStatuses.isEmpty()) {
+            jComboBox4.addItem("Không có trạng thái hợp lệ");
+            jComboBox4.setEnabled(false);
+            jButton12.setEnabled(false);
+        } else {
+            for (String status : commonValidStatuses) {
+                jComboBox4.addItem(status);
+            }
             jComboBox4.setEnabled(true);
             jButton12.setEnabled(true);
         }
