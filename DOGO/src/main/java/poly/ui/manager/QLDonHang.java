@@ -1409,11 +1409,8 @@ this.open();        // TODO add your handling code here:
                     poly.entity.Coupon coupon = couponDAO.selectById(couponId);
                     if (coupon != null) {
                         sb.append("Mã giảm giá: ").append(coupon.getCouponId()).append("\n");
-                        sb.append("Mô tả: ").append(coupon.getDescription() != null ? coupon.getDescription() : "N/A").append("\n");
                         sb.append("Loại giảm giá: ").append(coupon.getDiscountType() != null ? coupon.getDiscountType() : "N/A").append("\n");
                         sb.append("Giá trị giảm: ").append(coupon.getDiscountValue() != null ? String.format("$%,.2f", coupon.getDiscountValue()) : "N/A").append("\n");
-                        sb.append("Ngày hiệu lực: ").append(coupon.getStartDate() != null ? coupon.getStartDate().toString() : "N/A").append("\n");
-                        sb.append("Ngày hết hạn: ").append(coupon.getEndDate() != null ? coupon.getEndDate().toString() : "N/A").append("\n");
                     } else {
                         sb.append("Mã giảm giá: ").append(couponId).append(" (Không tìm thấy thông tin chi tiết)\n");
                     }
