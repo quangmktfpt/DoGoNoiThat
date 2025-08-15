@@ -533,7 +533,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
     private void addRequiredFieldIndicators() {
         jLabel16.setText("Họ và tên: *");
         jLabel15.setText("Số điện thoại: *");
-        jLabel12.setText("Số nhà: *");
+        jLabel12.setText("Địa Chỉ: *");
         
         // Đặt màu đỏ cho dấu *
         jLabel16.setForeground(new java.awt.Color(51, 51, 51));
@@ -1360,37 +1360,71 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     private void applyCouponFromTextField() {
-        // Tạo random mã giảm giá từ database thực tế
-        String couponCode = getRandomCouponFromDatabase();
+        // Lấy mã giảm giá từ TextField
+        String couponCode = jTextField4.getText().trim();
         
-        if (couponCode == null) {
-            JOptionPane.showMessageDialog(this, 
-                "❌ Bạn đã dùng hết mã hoặc không còn mã để áp dụng!", 
-                "Thông báo", 
-                JOptionPane.WARNING_MESSAGE);
+        // Nếu không nhập mã thì không làm gì cả
+        if (couponCode.isEmpty()) {
             return;
         }
         
         try {
-            // Không kiểm tra IsUsed và giới hạn sử dụng nữa
-            CouponDAO couponDAO = new CouponDAOImpl();
+            // Kiểm tra mã giảm giá có tồn tại và hoạt động không
+            String sql = "SELECT CouponID, DiscountType, DiscountValue, Description, StartDate, EndDate, Status " +
+                        "FROM Coupons " +
+                        "WHERE CouponID = ?";
             
-            // Lấy thông tin mã giảm giá từ database
-            String sql = "SELECT DiscountType, DiscountValue, Description FROM Coupons WHERE CouponID = ? AND GETDATE() BETWEEN StartDate AND EndDate";
             java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, couponCode);
             
             if (rs.next()) {
                 String discountType = rs.getString("DiscountType");
                 BigDecimal discountValue = rs.getBigDecimal("DiscountValue");
                 String description = rs.getString("Description");
+                String status = rs.getString("Status");
+                java.sql.Date startDate = rs.getDate("StartDate");
+                java.sql.Date endDate = rs.getDate("EndDate");
+                
+                // Kiểm tra trạng thái hoạt động
+                if (!"Hoạt động".equals(status)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "❌ Mã giảm giá không hoạt động!\n\n" +
+                        "🎫 Mã: " + couponCode + "\n" +
+                        "📊 Trạng thái: " + status + "\n" +
+                        "Vui lòng chọn mã giảm giá khác.", 
+                        "Mã giảm giá không hợp lệ", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // Kiểm tra thời gian hiệu lực
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+                if (currentDate.before(startDate) || currentDate.after(endDate)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "❌ Mã giảm giá đã hết hạn hoặc chưa có hiệu lực!\n\n" +
+                        "🎫 Mã: " + couponCode + "\n" +
+                        "📅 Ngày bắt đầu: " + startDate + "\n" +
+                        "📅 Ngày kết thúc: " + endDate + "\n" +
+                        "📅 Ngày hiện tại: " + currentDate + "\n" +
+                        "Vui lòng chọn mã giảm giá khác.", 
+                        "Mã giảm giá không hợp lệ", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 
                 // Tính toán giảm giá
                 BigDecimal discount = BigDecimal.ZERO;
-                if (currentOrder.getSubtotal() != null) {
+                if (currentOrder.getSubtotal() != null && currentOrder.getSubtotal().compareTo(BigDecimal.ZERO) > 0) {
                     if ("Percent".equals(discountType)) {
-                        discount = currentOrder.getSubtotal().multiply(discountValue).divide(new BigDecimal("100"));
+                        // Giảm theo phần trăm
+                        discount = currentOrder.getSubtotal().multiply(discountValue).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
                     } else {
+                        // Giảm theo số tiền cố định
                         discount = discountValue;
+                        
+                        // Kiểm tra giảm giá không được vượt quá tổng tiền
+                        if (discount.compareTo(currentOrder.getSubtotal()) > 0) {
+                            discount = currentOrder.getSubtotal();
+                        }
                     }
                 }
                 
@@ -1404,16 +1438,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 // Tính lại tổng tiền
                 updateTotalAmount();
                 
-                // Hiển thị thông báo thành công
-                String discountInfo = "Percent".equals(discountType) ? 
-                    discountValue + "%" : formatCurrency(discountValue);
+                // Đánh dấu mã giảm giá đã sử dụng
+                markCouponAsUsed(couponCode);
                 
+                // Hiển thị thông báo thành công
                 StringBuilder message = new StringBuilder();
                 message.append("🎉 Áp dụng mã giảm giá thành công!\n\n");
                 message.append("🎫 Mã: ").append(couponCode).append("\n");
                 message.append("📝 Mô tả: ").append(description).append("\n");
-                message.append("💰 Giảm giá: ").append(discountInfo).append("\n");
-                message.append("💸 Tiết kiệm: ").append(formatCurrency(discount)).append("\n");
+                message.append("💵 Số tiền được giảm: ").append(formatCurrency(discount)).append("\n");
                 message.append("📊 Tổng cộng mới: ").append(formatCurrency(currentOrder.getTotalAmount()));
                 
                 JOptionPane.showMessageDialog(this, 
@@ -1421,19 +1454,18 @@ public class DatHangJDialog extends javax.swing.JDialog {
                     "Thành công", 
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                // Cập nhật TextField để hiển thị mã đã áp dụng
-                jTextField4.setText(couponCode);
-                
             } else {
                 JOptionPane.showMessageDialog(this, 
-                    "❌ Mã giảm giá không hợp lệ hoặc đã hết hạn!\n\n" +
-                    "Vui lòng kiểm tra lại mã: " + couponCode, 
-                    "Lỗi", 
-                    JOptionPane.ERROR_MESSAGE);
+                    "❌ Mã giảm giá không tồn tại!\n\n" +
+                    "🎫 Mã: " + couponCode + "\n" +
+                    "Vui lòng kiểm tra lại và thử lại.", 
+                    "Mã giảm giá không hợp lệ", 
+                    JOptionPane.WARNING_MESSAGE);
             }
             
         } catch (Exception e) {
             System.err.println("✗ Lỗi khi áp dụng mã giảm giá: " + e.getMessage());
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, 
                 "❌ Lỗi khi áp dụng mã giảm giá!\n\n" +
                 "Chi tiết lỗi: " + e.getMessage() + "\n" +
@@ -1443,60 +1475,24 @@ public class DatHangJDialog extends javax.swing.JDialog {
         }
     }
     
-    /**
-     * Lấy random mã giảm giá từ database
-     */
-    private String getRandomCouponFromDatabase() {
-        try {
-            // Lấy tất cả mã giảm giá từ database (bao gồm cả hết hạn)
-            String sql = "SELECT c.CouponID, c.StartDate, c.EndDate FROM Coupons c ORDER BY c.CouponID";
-            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql);
-            
-            java.util.List<String> allCoupons = new java.util.ArrayList<>();
-            java.util.List<String> validCoupons = new java.util.ArrayList<>();
-            java.util.List<String> expiredCoupons = new java.util.ArrayList<>();
-            
-            while (rs.next()) {
-                String couponId = rs.getString("CouponID");
-                java.sql.Date startDate = rs.getDate("StartDate");
-                java.sql.Date endDate = rs.getDate("EndDate");
-                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
-                
-                allCoupons.add(couponId);
-                
-                if (currentDate.after(startDate) && currentDate.before(endDate)) {
-                    validCoupons.add(couponId);
-                } else {
-                    expiredCoupons.add(couponId);
-                }
-            }
-            rs.close();
-            
-            // Hiển thị thông tin về mã giảm giá
-            System.out.println("🎫 Tổng số mã giảm giá: " + allCoupons.size());
-            System.out.println("✅ Mã hợp lệ: " + validCoupons);
-            System.out.println("❌ Mã hết hạn: " + expiredCoupons);
-            
-            if (validCoupons.isEmpty()) {
-                System.out.println("⚠️ Không có mã giảm giá hợp lệ nào!");
-                return null;
-            }
-            
-            // Chọn random một mã từ danh sách hợp lệ
-            int randomIndex = (int)(Math.random() * validCoupons.size());
-            String selectedCoupon = validCoupons.get(randomIndex);
-            System.out.println("🎯 Đã chọn mã: " + selectedCoupon);
-            return selectedCoupon;
-            
-        } catch (Exception e) {
-            System.err.println("✗ Lỗi khi lấy mã giảm giá từ database: " + e.getMessage());
-            return null;
-        }
-    }
+
     
     private void applyCoupon() {
         // Gọi phương thức áp dụng từ TextField
         applyCouponFromTextField();
+    }
+    
+    /**
+     * Đánh dấu mã giảm giá đã sử dụng
+     * @param couponCode Mã giảm giá cần đánh dấu
+     */
+    private void markCouponAsUsed(String couponCode) {
+        try {
+            // Có thể thêm logic đánh dấu mã đã sử dụng ở đây nếu cần
+            System.out.println("✅ Đã áp dụng mã giảm giá " + couponCode);
+        } catch (Exception e) {
+            System.err.println("✗ Lỗi khi xử lý mã giảm giá: " + e.getMessage());
+        }
     }
     
     private void updateSelectedRowData() {

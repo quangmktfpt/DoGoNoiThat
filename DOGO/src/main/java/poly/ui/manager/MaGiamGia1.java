@@ -64,6 +64,8 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         btnRefesh = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jComboDisCType1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -72,20 +74,20 @@ public class MaGiamGia1 extends javax.swing.JDialog {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "CouponID", "Description", "DiscountType", "DiscountValue", "StartDate", "EndDate", ""
+                "CouponID", "Status", "Description", "DiscountType", "DiscountValue", "StartDate", "EndDate", ""
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -127,6 +129,11 @@ public class MaGiamGia1 extends javax.swing.JDialog {
         jLabel8.setText("Tìm kiếm:");
 
         btnSearch.setText("Tìm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -215,6 +222,15 @@ public class MaGiamGia1 extends javax.swing.JDialog {
             }
         });
 
+        jLabel10.setText("Status *");
+
+        jComboDisCType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hoạt động", "Không hoạt động" }));
+        jComboDisCType1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboDisCType1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -235,7 +251,11 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(5, 5, 5)
-                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboDisCType1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(64, 64, 64)
@@ -286,13 +306,17 @@ public class MaGiamGia1 extends javax.swing.JDialog {
                         .addComponent(jComboDisCType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel7)
                         .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(81, 81, 81)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboDisCType1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
                     .addComponent(btnUpdate)
                     .addComponent(btnDellete)
                     .addComponent(btnRefesh))
-                .addContainerGap(207, Short.MAX_VALUE))
+                .addContainerGap(219, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Chỉnh sửa", jPanel2);
@@ -353,55 +377,107 @@ public class MaGiamGia1 extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSelectActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-              try {
-                Coupon c = getForm();
-                if (couponDAO.selectById(c.getCouponId()) != null) {
-                    JOptionPane.showMessageDialog(this, "CouponID đã tồn tại!");
-                    return;
-                }
-                couponDAO.insert(c);
-                fillToTable();
-                clearForm();
-                JOptionPane.showMessageDialog(this, "Thêm thành công!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Lỗi thêm: " + ex.getMessage());
+        try {
+            Coupon c = getForm();
+            if (couponDAO.selectById(c.getCouponId()) != null) {
+                JOptionPane.showMessageDialog(this, 
+                    "❌ CouponID '" + c.getCouponId() + "' đã tồn tại!\nVui lòng chọn mã khác.", 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            couponDAO.insert(c);
+            fillToTable();
+            clearForm();
+            JOptionPane.showMessageDialog(this, 
+                "✅ Thêm mã giảm giá thành công!\n\n" +
+                "🎫 Mã: " + c.getCouponId() + "\n" +
+                "📝 Mô tả: " + c.getDescription() + "\n" +
+                "💰 Loại: " + c.getDiscountType() + "\n" +
+                "💸 Giá trị: " + c.getDiscountValue(), 
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Lỗi thêm mã giảm giá: " + ex.getMessage(), 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         try {
-                Coupon c = getForm();
-                if (couponDAO.selectById(c.getCouponId()) == null) {
-                    JOptionPane.showMessageDialog(this, "CouponID không tồn tại!");
-                    return;
-                }
-                 couponDAO.update(c);
-                fillToTable();
-                clearForm();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Lỗi cập nhật: " + ex.getMessage());
+            Coupon c = getForm();
+            if (couponDAO.selectById(c.getCouponId()) == null) {
+                JOptionPane.showMessageDialog(this, 
+                    "❌ CouponID '" + c.getCouponId() + "' không tồn tại!\nVui lòng kiểm tra lại.", 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            couponDAO.update(c);
+            fillToTable();
+            clearForm();
+            // Lấy trạng thái từ form
+            String newStatus = c.getStatus() != null ? c.getStatus() : "Hoạt động";
+            
+            JOptionPane.showMessageDialog(this, 
+                "✅ Cập nhật mã giảm giá thành công!\n\n" +
+                "🎫 Mã: " + c.getCouponId() + "\n" +
+                "📝 Mô tả: " + c.getDescription() + "\n" +
+                "💰 Loại: " + c.getDiscountType() + "\n" +
+                "💸 Giá trị: " + c.getDiscountValue() + "\n" +
+                "📅 Ngày bắt đầu: " + c.getStartDate() + "\n" +
+                "📅 Ngày kết thúc: " + c.getEndDate() + "\n" +
+                "📊 Trạng thái: " + newStatus, 
+                "Thành công", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Lỗi cập nhật mã giảm giá: " + ex.getMessage(), 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDelleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelleteActionPerformed
-      int row = jTable1.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(this, "Chọn dòng để xóa!");
-                return;
+        int row = jTable1.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Vui lòng chọn dòng để xóa!", 
+                "Thông báo", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String id = (String) jTable1.getValueAt(row, 0);
+        String desc = (String) jTable1.getValueAt(row, 2);
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "⚠️ Xác nhận xóa mã giảm giá?\n\n" +
+            "🎫 Mã: " + id + "\n" +
+            "📝 Mô tả: " + desc + "\n\n" +
+            "Hành động này không thể hoàn tác!", 
+            "Xác nhận xóa", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                couponDAO.delete(id);
+                fillToTable();
+                clearForm();
+                JOptionPane.showMessageDialog(this, 
+                    "✅ Xóa mã giảm giá thành công!\n\n" +
+                    "🎫 Mã: " + id + "\n" +
+                    "📝 Mô tả: " + desc, 
+                    "Thành công", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "❌ Lỗi xóa mã giảm giá: " + ex.getMessage(), 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
             }
-            String id = (String) jTable1.getValueAt(row, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận xóa CouponID: " + id + "?", "Xóa", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    couponDAO.delete(id);
-                    fillToTable();
-                    clearForm();
-                    JOptionPane.showMessageDialog(this, "Xóa thành công!");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi xóa: " + ex.getMessage());
-                }
-            }
+        }
     }//GEN-LAST:event_btnDelleteActionPerformed
 
     private void btnRefeshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefeshActionPerformed
@@ -416,6 +492,58 @@ public class MaGiamGia1 extends javax.swing.JDialog {
        deselectAllItems();
     }//GEN-LAST:event_btnRemoveSelectedActionPerformed
 
+    private void jComboDisCType1ActionPerformed(java.awt.event.ActionEvent evt) {
+        String selectedStatus = (String) jComboDisCType1.getSelectedItem();
+        System.out.println("🔄 Đã chọn trạng thái: " + selectedStatus);
+    }
+    
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {
+        String keyword = txtSearch.getText().trim().toLowerCase();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        if (keyword.isEmpty()) {
+            // Nếu từ khóa rỗng, hiển thị tất cả
+            fillToTable();
+            return;
+        }
+        
+        int foundCount = 0;
+        for (Coupon c : couponDAO.selectAll()) {
+            if (c.getCouponId().toLowerCase().contains(keyword) ||
+                (c.getDescription() != null && c.getDescription().toLowerCase().contains(keyword))) {
+                
+                // Lấy trạng thái từ database
+                String status = c.getStatus() != null ? c.getStatus() : "Hoạt động";
+                
+                model.addRow(new Object[] {
+                    c.getCouponId(),
+                    status,
+                    c.getDescription(),
+                    c.getDiscountType(),
+                    c.getDiscountValue(),
+                    c.getStartDate(),
+                    c.getEndDate(),
+                    false
+                });
+                foundCount++;
+            }
+        }
+        
+        // Hiển thị kết quả tìm kiếm
+        if (foundCount > 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Tìm thấy " + foundCount + " kết quả cho từ khóa: '" + keyword + "'", 
+                "Kết quả tìm kiếm", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Không tìm thấy kết quả nào cho từ khóa: '" + keyword + "'", 
+                "Kết quả tìm kiếm", 
+                JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String keyword = txtSearch.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -511,7 +639,9 @@ public class MaGiamGia1 extends javax.swing.JDialog {
     private javax.swing.JButton btnSelect;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> jComboDisCType;
+    private javax.swing.JComboBox<String> jComboDisCType1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -537,21 +667,38 @@ private void fillDiscountTypeComboBox() {
         jComboDisCType.addItem("Fixed");
     }
    private void fillToTable() {
-        couponList = couponDAO.selectAll();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-        for (Coupon c : couponList) {
-            model.addRow(new Object[] {
-                c.getCouponId(),
-                c.getDescription(),
-                c.getDiscountType(),
-                c.getDiscountValue(),
-                c.getStartDate(),
-                c.getEndDate(),
-                false
-            });
+        try {
+            couponList = couponDAO.selectAll();
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            
+            for (Coupon c : couponList) {
+                // Lấy trạng thái từ database
+                String status = c.getStatus() != null ? c.getStatus() : "Hoạt động";
+                
+                model.addRow(new Object[] {
+                    c.getCouponId(),
+                    status,
+                    c.getDescription(),
+                    c.getDiscountType(),
+                    c.getDiscountValue(),
+                    c.getStartDate(),
+                    c.getEndDate(),
+                    false
+                });
+            }
+            currentRow = -1;
+            
+            // Hiển thị thông tin tổng quan
+            System.out.println("✅ Đã tải " + couponList.size() + " mã giảm giá từ database");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi tải dữ liệu: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "Lỗi khi tải dữ liệu từ database: " + e.getMessage(), 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
         }
-        currentRow = -1;
     }
     private void clearForm() {
         txtId.setText("");
@@ -560,6 +707,7 @@ private void fillDiscountTypeComboBox() {
         txtDiscVaule.setText("");
         txtStartDate.setText("");
         txtEndDate.setText("");
+        jComboDisCType1.setSelectedIndex(0);
         currentRow = -1;
         jTable1.clearSelection();
     }
@@ -570,10 +718,27 @@ private void fillDiscountTypeComboBox() {
         String valueStr = txtDiscVaule.getText().trim();
         String startStr = txtStartDate.getText().trim();
         String endStr = txtEndDate.getText().trim();
-        BigDecimal value = valueStr.isEmpty() ? BigDecimal.ZERO : new BigDecimal(valueStr);
-        LocalDate start = startStr.isEmpty() ? null : LocalDate.parse(startStr);
-        LocalDate end = endStr.isEmpty() ? null : LocalDate.parse(endStr);
-        return new Coupon(id, desc, type, value, start, end);
+        String status = (String) jComboDisCType1.getSelectedItem();
+        
+        // Validate dữ liệu
+        if (id.isEmpty() || desc.isEmpty() || valueStr.isEmpty() || startStr.isEmpty() || endStr.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng điền đầy đủ thông tin!");
+        }
+        
+        BigDecimal value = new BigDecimal(valueStr);
+        LocalDate start = LocalDate.parse(startStr);
+        LocalDate end = LocalDate.parse(endStr);
+        
+        // Kiểm tra ngày
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày kết thúc!");
+        }
+        
+        // Tạo Coupon với Status
+        Coupon coupon = new Coupon(id, desc, type, value, start, end);
+        coupon.setStatus(status); // Thêm status vào coupon
+        
+        return coupon;
     }
           private void setForm(Coupon c) {
         txtId.setText(c.getCouponId());
@@ -582,6 +747,15 @@ private void fillDiscountTypeComboBox() {
         txtDiscVaule.setText(c.getDiscountValue() != null ? c.getDiscountValue().toString() : "");
         txtStartDate.setText(c.getStartDate() != null ? c.getStartDate().toString() : "");
         txtEndDate.setText(c.getEndDate() != null ? c.getEndDate().toString() : "");
+        
+        // Set trạng thái từ database
+        String status = c.getStatus() != null ? c.getStatus() : "Hoạt động";
+        jComboDisCType1.setSelectedItem(status);
+        
+        // Hiển thị thông tin trạng thái
+        System.out.println("📊 Trạng thái mã " + c.getCouponId() + ": " + status);
+        System.out.println("📅 Ngày bắt đầu: " + c.getStartDate());
+        System.out.println("📅 Ngày kết thúc: " + c.getEndDate());
     }
      
         

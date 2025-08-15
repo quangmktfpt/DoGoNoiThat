@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 public class CouponDAOImpl implements CouponDAO {
     
-    private final String INSERT_SQL = "INSERT INTO Coupons (CouponID, Description, DiscountType, DiscountValue, StartDate, EndDate) VALUES (?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE Coupons SET Description=?, DiscountType=?, DiscountValue=?, StartDate=?, EndDate=? WHERE CouponID=?";
+    private final String INSERT_SQL = "INSERT INTO Coupons (CouponID, Description, DiscountType, DiscountValue, StartDate, EndDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE Coupons SET Description=?, DiscountType=?, DiscountValue=?, StartDate=?, EndDate=?, Status=? WHERE CouponID=?";
     private final String DELETE_SQL = "DELETE FROM Coupons WHERE CouponID=?";
     private final String SELECT_ALL_SQL = "SELECT * FROM Coupons";
     private final String SELECT_BY_ID_SQL = "SELECT * FROM Coupons WHERE CouponID=?";
@@ -27,20 +27,37 @@ public class CouponDAOImpl implements CouponDAO {
             coupon.getDiscountType(), 
             coupon.getDiscountValue(), 
             coupon.getStartDate(), 
-            coupon.getEndDate()
+            coupon.getEndDate(),
+            coupon.getStatus() != null ? coupon.getStatus() : "Hoạt động"
         );
     }
 
     @Override
     public void update(Coupon coupon) {
-        XJdbc.executeUpdate(UPDATE_SQL, 
-            coupon.getDescription(), 
-            coupon.getDiscountType(), 
-            coupon.getDiscountValue(), 
-            coupon.getStartDate(), 
-            coupon.getEndDate(), 
-            coupon.getCouponId()
-        );
+        try {
+            System.out.println("🔄 Đang cập nhật mã giảm giá: " + coupon.getCouponId());
+            System.out.println("📝 Description: " + coupon.getDescription());
+            System.out.println("💰 DiscountType: " + coupon.getDiscountType());
+            System.out.println("💸 DiscountValue: " + coupon.getDiscountValue());
+            System.out.println("📅 StartDate: " + coupon.getStartDate());
+            System.out.println("📅 EndDate: " + coupon.getEndDate());
+            System.out.println("📊 Status: " + coupon.getStatus());
+            
+            XJdbc.executeUpdate(UPDATE_SQL, 
+                coupon.getDescription(), 
+                coupon.getDiscountType(), 
+                coupon.getDiscountValue(), 
+                coupon.getStartDate(), 
+                coupon.getEndDate(),
+                coupon.getStatus() != null ? coupon.getStatus() : "Hoạt động",
+                coupon.getCouponId()
+            );
+            
+            System.out.println("✅ Cập nhật thành công mã: " + coupon.getCouponId());
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi cập nhật mã " + coupon.getCouponId() + ": " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -50,7 +67,12 @@ public class CouponDAOImpl implements CouponDAO {
 
     @Override
     public List<Coupon> selectAll() {
-        return selectBySql(SELECT_ALL_SQL);
+        List<Coupon> list = selectBySql(SELECT_ALL_SQL);
+        System.out.println("📊 Đã tải " + list.size() + " mã giảm giá từ database:");
+        for (Coupon c : list) {
+            System.out.println("  - " + c.getCouponId() + ": " + c.getStatus());
+        }
+        return list;
     }
 
     @Override
@@ -125,8 +147,8 @@ public class CouponDAOImpl implements CouponDAO {
                 coupon.setDiscountValue(rs.getBigDecimal("DiscountValue"));
                 coupon.setStartDate(rs.getDate("StartDate") != null ? rs.getDate("StartDate").toLocalDate() : null);
                 coupon.setEndDate(rs.getDate("EndDate") != null ? rs.getDate("EndDate").toLocalDate() : null);
+                coupon.setStatus(rs.getString("Status"));
                 
-                // Không đọc các trường IsUsed và MaxDailyUsage nữa
                 list.add(coupon);
             }
             rs.getStatement().getConnection().close();

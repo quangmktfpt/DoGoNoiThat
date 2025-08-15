@@ -18,6 +18,7 @@ public class Coupon {
     private BigDecimal discountValue;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String status;  // Hoạt động or Không hoạt động
 
     public String getCouponId() {
         return couponId;
@@ -66,6 +67,14 @@ public class Coupon {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Coupon(String couponId, String description, String discountType, BigDecimal discountValue, LocalDate startDate, LocalDate endDate) {
         this.couponId = couponId;
@@ -74,6 +83,17 @@ public class Coupon {
         this.discountValue = discountValue;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = "Hoạt động"; // Mặc định là hoạt động
+    }
+    
+    public Coupon(String couponId, String description, String discountType, BigDecimal discountValue, LocalDate startDate, LocalDate endDate, String status) {
+        this.couponId = couponId;
+        this.description = description;
+        this.discountType = discountType;
+        this.discountValue = discountValue;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
     }
 
     public Coupon() {
