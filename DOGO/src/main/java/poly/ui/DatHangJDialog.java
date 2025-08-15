@@ -548,7 +548,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
     
     private void setupEventHandlers() {
         // Apply coupon button
-        jButton3.addActionListener(e -> applyCouponFromTextField());
+      
         
         // Confirm order button
       
