@@ -310,7 +310,7 @@ this.dangki();        // TODO add your handling code here:
         poly.entity.User user = new poly.entity.User();
         user.setFullName(fullName);
         user.setUsername(username);
-        user.setPasswordHash(poly.util.PasswordUtil.hashPassword(password)); // Hash password
+        user.setPasswordHash(password); // Lưu mật khẩu dạng text để dễ quản lý
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
@@ -349,48 +349,78 @@ this.dangki();        // TODO add your handling code here:
      */
     private String validateRegistrationData(String fullName, String username, String password, 
                                           String confirmPassword, String email, String phone) {
-        StringBuilder errorBuilder = poly.util.RequiredFieldUtil.createErrorMessageBuilder();
+        StringBuilder errorBuilder = new StringBuilder();
         
         // Kiểm tra họ tên
-        String fullNameError = poly.util.RequiredFieldUtil.validateRequiredField(fullName, "Họ tên", 2);
-        if (fullNameError != null) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, fullNameError);
+        if (fullName == null || fullName.trim().isEmpty()) {
+            errorBuilder.append("❌ Họ tên không được để trống!\n");
+        } else if (fullName.trim().length() < 2) {
+            errorBuilder.append("❌ Họ tên phải có ít nhất 2 ký tự!\n");
+        } else if (fullName.trim().length() > 50) {
+            errorBuilder.append("❌ Họ tên không được quá 50 ký tự!\n");
         }
         
         // Kiểm tra tên đăng nhập
-        String usernameError = poly.util.RequiredFieldUtil.validateRequiredField(username, "Tên đăng nhập", 3);
-        if (usernameError != null) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, usernameError);
-        } else if (!poly.util.RequiredFieldUtil.isValidUsername(username)) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới!");
+        if (username == null || username.trim().isEmpty()) {
+            errorBuilder.append("❌ Tên đăng nhập không được để trống!\n");
+        } else if (username.trim().length() < 3) {
+            errorBuilder.append("❌ Tên đăng nhập phải có ít nhất 3 ký tự!\n");
+        } else if (username.trim().length() > 20) {
+            errorBuilder.append("❌ Tên đăng nhập không được quá 20 ký tự!\n");
+        } else if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            errorBuilder.append("❌ Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới!\n");
         }
         
         // Kiểm tra mật khẩu
-        String passwordError = poly.util.RequiredFieldUtil.validateRequiredField(password, "Mật khẩu", 6);
-        if (passwordError != null) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, passwordError);
+        if (password == null || password.isEmpty()) {
+            errorBuilder.append("❌ Mật khẩu không được để trống!\n");
+        } else if (password.length() < 6) {
+            errorBuilder.append("❌ Mật khẩu phải có ít nhất 6 ký tự!\n");
+        } else if (password.length() > 50) {
+            errorBuilder.append("❌ Mật khẩu không được quá 50 ký tự!\n");
         }
         
         // Kiểm tra xác nhận mật khẩu
-        if (confirmPassword.isEmpty()) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Vui lòng xác nhận mật khẩu!");
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            errorBuilder.append("❌ Vui lòng xác nhận mật khẩu!\n");
         } else if (!password.equals(confirmPassword)) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Mật khẩu xác nhận không khớp!");
+            errorBuilder.append("❌ Mật khẩu xác nhận không khớp!\n");
         }
         
         // Kiểm tra email
-        if (email.isEmpty()) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Email không được để trống!");
-        } else if (!poly.util.RequiredFieldUtil.isValidEmail(email)) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Email không đúng định dạng!");
+        if (email == null || email.trim().isEmpty()) {
+            errorBuilder.append("❌ Email không được để trống!\n");
+        } else if (!isValidEmail(email.trim())) {
+            errorBuilder.append("❌ Email không đúng định dạng! (VD: example@gmail.com)\n");
         }
         
-        // Kiểm tra số điện thoại (nếu có nhập)
-        if (!phone.isEmpty() && !poly.util.RequiredFieldUtil.isValidVietnamesePhone(phone)) {
-            poly.util.RequiredFieldUtil.addError(errorBuilder, "❌ Số điện thoại không đúng định dạng!");
+        // Kiểm tra số điện thoại
+        if (phone == null || phone.trim().isEmpty()) {
+            errorBuilder.append("❌ Số điện thoại không được để trống!\n");
+        } else if (!isValidVietnamesePhone(phone.trim())) {
+            errorBuilder.append("❌ Số điện thoại phải có 10 số và bắt đầu bằng 0! (VD: 0123456789)\n");
         }
         
         return errorBuilder.length() > 0 ? errorBuilder.toString() : null;
+    }
+    
+    /**
+     * Kiểm tra email hợp lệ
+     */
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email.matches(emailRegex);
+    }
+    
+    /**
+     * Kiểm tra số điện thoại Việt Nam hợp lệ
+     */
+    private boolean isValidVietnamesePhone(String phone) {
+        // Loại bỏ tất cả ký tự không phải số
+        String cleanPhone = phone.replaceAll("[^0-9]", "");
+        
+        // Kiểm tra số điện thoại Việt Nam: 10 số, bắt đầu bằng 0
+        return cleanPhone.length() == 10 && cleanPhone.startsWith("0");
     }
     
     /**
