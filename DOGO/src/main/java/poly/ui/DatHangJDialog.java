@@ -1287,6 +1287,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
         String city = (String) City.getSelectedItem();
         String country = (String) Country.getSelectedItem();
         
+        // Kiểm tra phương thức thanh toán
+        if (!jRadioButton3.isSelected()) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Vui lòng chọn phương thức thanh toán trước khi áp dụng thông tin khách hàng!", 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         // Validate thông tin
         if (customerName.isEmpty() || phone.isEmpty() || address.isEmpty() || city == null || country == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin khách hàng!");
@@ -1498,6 +1507,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
         String city = (String) City.getSelectedItem();
         String country = (String) Country.getSelectedItem();
         String paymentMethod = jRadioButton3.isSelected() ? "Thanh toán khi nhận hàng" : "Chưa chọn";
+        
+        // Kiểm tra phương thức thanh toán
+        if (!jRadioButton3.isSelected()) {
+            JOptionPane.showMessageDialog(this, 
+                "❌ Vui lòng chọn phương thức thanh toán trước khi cập nhật thông tin!", 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
         // Validate thông tin
         if (customerName.isEmpty() || phone.isEmpty() || address.isEmpty() || city == null || country == null) {
@@ -1904,6 +1922,12 @@ public class DatHangJDialog extends javax.swing.JDialog {
             hasError = true;
         }
         
+        // Kiểm tra phương thức thanh toán
+        if (!jRadioButton3.isSelected()) {
+            errorMessage.append("❌ Vui lòng chọn phương thức thanh toán!\n");
+            hasError = true;
+        }
+        
         if (hasError) {
             errorMessage.insert(0, "📋 Vui lòng kiểm tra và sửa các lỗi sau:\n\n");
             JOptionPane.showMessageDialog(this, errorMessage.toString(), "Lỗi thông tin", JOptionPane.ERROR_MESSAGE);
@@ -1947,6 +1971,10 @@ public class DatHangJDialog extends javax.swing.JDialog {
         currentOrder.setCity((String) City.getSelectedItem());
         currentOrder.setCountry((String) Country.getSelectedItem());
         
+        // Cập nhật phương thức thanh toán
+        String paymentMethod = jRadioButton3.isSelected() ? "Thanh toán khi nhận hàng" : "Chưa chọn";
+        currentOrder.setPaymentMethod(paymentMethod);
+        
         // Cập nhật thông tin địa chỉ cho các item
         String selectedCity = (String) City.getSelectedItem();
         String selectedCountry = (String) Country.getSelectedItem();
@@ -1957,6 +1985,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
             item.setAddress(currentOrder.getAddress());
             if (selectedCity != null) item.setCity(selectedCity);
             if (selectedCountry != null) item.setCountry(selectedCountry);
+            item.setPaymentMethod(paymentMethod);
         }
         
         currentOrder.setItems(orderItems);

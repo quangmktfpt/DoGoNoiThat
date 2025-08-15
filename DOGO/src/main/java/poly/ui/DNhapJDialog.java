@@ -273,7 +273,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         
         // 2.2. Kiểm tra tài khoản có bị khóa không
         if (existingUser.getIsActive() == null || !existingUser.getIsActive()) {
-            JOptionPane.showMessageDialog(this, "🚫 Tài khoản đã bị khóa!\n\nTài khoản của bạn đã bị vô hiệu hóa do có hành vi xấu, liên hệ admin để được hỗ trợ.", 
+            JOptionPane.showMessageDialog(this, "🚫 Tài khoản đã bị khóa!\n\nTài khoản của bạn đã bị vô hiệu hóa.", 
                 "Tài khoản bị khóa", JOptionPane.WARNING_MESSAGE);
             return;
         }
