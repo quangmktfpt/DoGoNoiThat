@@ -1850,6 +1850,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 // Trừ kho sau khi đặt hàng thành công
                 InventoryUpdateUtil.updateInventoryForOrderRequest(itemsToOrder);
                 
+                // Ghi dữ liệu vào bảng InventoryTransactions
+                recordInventoryTransactions(orderId, itemsToOrder);
+                
                 // Mã giảm giá đã được áp dụng thành công (không vô hiệu hóa)
                 if (currentOrder.getCouponId() != null && !currentOrder.getCouponId().isEmpty()) {
                     System.out.println("🎫 Đã sử dụng mã giảm giá: " + currentOrder.getCouponId() + " (mã vẫn có thể sử dụng lại)");
@@ -1863,6 +1866,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 successMessage.append("📋 Mã đơn hàng: ").append(orderId).append("\n");
                 successMessage.append("💰 Tổng tiền: ").append(formatCurrency(total)).append("\n");
                 successMessage.append("📦 Đã trừ kho thành công\n");
+                successMessage.append("📊 Đã ghi lịch sử kho (").append(itemsToOrder.size()).append(" sản phẩm)\n");
                 successMessage.append("🛒 Đã xóa sản phẩm đã đặt khỏi giỏ hàng\n");
                 successMessage.append("📍 Đã lưu địa chỉ giao hàng: ").append(currentOrder.getAddress()).append("\n");
                 
@@ -2362,5 +2366,63 @@ public class DatHangJDialog extends javax.swing.JDialog {
         System.out.println("🧹 Đã xóa tất cả thông tin mặc định trong form");
     }
     
+    /**
+     * Ghi dữ liệu vào bảng InventoryTransactions khi đặt hàng
+     * @param orderId ID của đơn hàng
+     * @param itemsToOrder Danh sách sản phẩm đã đặt
+     */
+    private void recordInventoryTransactions(int orderId, List<OrderRequestItem> itemsToOrder) {
+        try {
+            // Lấy UserID hiện tại
+            Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+            if (currentUserId == null) {
+                System.err.println("⚠️ Không thể lấy UserID để ghi InventoryTransactions");
+                return;
+            }
+            
+            // Ghi từng sản phẩm vào bảng InventoryTransactions
+            for (OrderRequestItem item : itemsToOrder) {
+                String insertSql = "INSERT INTO InventoryTransactions " +
+                    "(ProductID, TransactionDate, TransactionType, QuantityChange, ReferenceID, Notes, UserID) " +
+                    "VALUES (?, GETDATE(), 'SaleOut', ?, ?, ?, ?)";
+                
+                // Tạo ghi chú cho từng sản phẩm
+                String notes = String.format("Xuất kho bán cho đơn hàng %d - Sản phẩm: %s (Số lượng: %d)", 
+                    orderId, item.getProductName(), item.getQuantity());
+                
+                // Thực hiện insert
+                int insertedRows = poly.util.XJdbc.executeUpdate(insertSql, 
+                    item.getProductId(),                    // ProductID
+                    -item.getQuantity(),                    // QuantityChange (số âm vì xuất kho)
+                    "ORDER-" + orderId,                     // ReferenceID
+                    notes,                                  // Notes
+                    currentUserId                           // UserID
+                );
+                
+                if (insertedRows > 0) {
+                    System.out.println("✅ Đã ghi InventoryTransaction cho sản phẩm: " + 
+                        item.getProductName() + " - Số lượng: " + item.getQuantity() + 
+                        " - OrderID: " + orderId);
+                } else {
+                    System.err.println("❌ Không thể ghi InventoryTransaction cho sản phẩm: " + 
+                        item.getProductName());
+                }
+            }
+            
+            System.out.println("📊 Đã ghi " + itemsToOrder.size() + " bản ghi vào InventoryTransactions cho OrderID: " + orderId);
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi ghi InventoryTransactions: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Hiển thị thông báo lỗi nhưng không dừng quá trình đặt hàng
+            JOptionPane.showMessageDialog(this,
+                "⚠️ Đặt hàng thành công nhưng có lỗi khi ghi lịch sử kho!\n" +
+                "Lỗi: " + e.getMessage() + "\n" +
+                "Vui lòng liên hệ admin để kiểm tra.",
+                "Cảnh báo",
+                JOptionPane.WARNING_MESSAGE);
+        }
+    }
 
 }

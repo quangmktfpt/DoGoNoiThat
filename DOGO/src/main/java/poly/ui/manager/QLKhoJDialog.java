@@ -126,6 +126,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
         jComboBox3 = new javax.swing.JComboBox<>();
         jTextField9 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -200,7 +201,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
                                 .addComponent(jButton2)))))
-                .addContainerGap(211, Short.MAX_VALUE))
+                .addContainerGap(381, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -218,7 +219,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                         .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Tồn Kho", jPanel1);
@@ -260,36 +261,49 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
 
         jButton4.setText("Tìm");
 
+        jButton3.setText("Xem chi tiết");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2)
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
-                .addGap(45, 45, 45)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(216, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7))
+                                .addGap(55, 55, 55)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel6)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(34, 34, 34)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton4))
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(45, 45, 45)
+                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(457, 457, 457)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,13 +325,15 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addGap(19, 19, 19))
         );
 
         jTabbedPane1.addTab("Lịch Sử Xuất Nhập", jPanel2);
@@ -405,7 +421,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                             .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE))))
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addContainerGap(434, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -435,7 +451,7 @@ public class QLKhoJDialog extends javax.swing.JDialog implements InventoryDAO{
                             .addComponent(jButton6)
                             .addComponent(jButton5)
                             .addComponent(jButton7))))
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Xuất Nhập Kho", jPanel3);
@@ -493,6 +509,10 @@ handleNhapKho();        // TODO add your handling code here:
 checkAndFillProductName();        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField6FocusLost
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        showTransactionDetail();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -539,6 +559,7 @@ checkAndFillProductName();        // TODO add your handling code here:
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -976,6 +997,177 @@ checkAndFillProductName();        // TODO add your handling code here:
                 filtered = all;
         }
         fillHistoryTable(filtered);
+    }
+    
+    /**
+     * Hiển thị popup chi tiết lịch sử xuất nhập kho
+     */
+    private void showTransactionDetail() {
+        // Kiểm tra xem có dòng nào được chọn không
+        int selectedRow = jTable2.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                "⚠️ Vui lòng chọn một dòng trong bảng để xem chi tiết!",
+                "Thông báo",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {
+            // Lấy TransactionID từ dòng được chọn
+            String transactionId = jTable2.getValueAt(selectedRow, 0).toString();
+            
+            // Lấy thông tin chi tiết từ database
+            InventoryTransaction transaction = getTransactionById(transactionId);
+            if (transaction == null) {
+                JOptionPane.showMessageDialog(this,
+                    "❌ Không tìm thấy thông tin giao dịch!",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Lấy thông tin sản phẩm
+            Product product = getProductById(transaction.getProductId());
+            
+            // Lấy thông tin user
+            String username = getUsernameById(transaction.getUserId());
+            
+            // Lấy số lượng hiện tại trong kho
+            int currentQuantity = getCurrentProductQuantity(transaction.getProductId());
+            
+            // Tạo popup hiển thị thông tin
+            showDetailPopup(transaction, product, username, currentQuantity);
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi hiển thị chi tiết: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "❌ Có lỗi xảy ra khi hiển thị chi tiết!\nLỗi: " + e.getMessage(),
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Lấy thông tin giao dịch theo ID
+     */
+    private InventoryTransaction getTransactionById(String transactionId) {
+        try {
+            String sql = "SELECT * FROM InventoryTransactions WHERE TransactionID = ?";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, transactionId);
+            
+            if (rs.next()) {
+                InventoryTransaction transaction = new InventoryTransaction();
+                transaction.setTransactionId(Integer.parseInt(transactionId));
+                transaction.setProductId(rs.getString("ProductID"));
+                transaction.setTransactionDate(rs.getTimestamp("TransactionDate").toLocalDateTime());
+                transaction.setTransactionType(rs.getString("TransactionType"));
+                transaction.setQuantityChange(rs.getInt("QuantityChange"));
+                transaction.setReferenceId(rs.getString("ReferenceID"));
+                transaction.setNotes(rs.getString("Notes"));
+                transaction.setUserId(rs.getInt("UserID"));
+                return transaction;
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi lấy thông tin giao dịch: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    /**
+     * Lấy tên user theo ID
+     */
+    private String getUsernameById(int userId) {
+        try {
+            String sql = "SELECT Username FROM Users WHERE UserID = ?";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, userId);
+            
+            if (rs.next()) {
+                return rs.getString("Username");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi lấy thông tin user: " + e.getMessage());
+        }
+        return "Không xác định";
+    }
+    
+    /**
+     * Lấy số lượng hiện tại của sản phẩm trong kho
+     */
+    private int getCurrentProductQuantity(String productId) {
+        try {
+            String sql = "SELECT Quantity FROM Products WHERE ProductID = ?";
+            java.sql.ResultSet rs = poly.util.XJdbc.executeQuery(sql, productId);
+            
+            if (rs.next()) {
+                return rs.getInt("Quantity");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi lấy số lượng hiện tại: " + e.getMessage());
+        }
+        return 0;
+    }
+    
+    /**
+     * Hiển thị popup chi tiết
+     */
+    private void showDetailPopup(InventoryTransaction transaction, Product product, String username, int currentQuantity) {
+        // Tạo nội dung chi tiết
+        StringBuilder content = new StringBuilder();
+        content.append("📋 CHI TIẾT GIAO DỊCH KHO\n");
+        content.append("═══════════════════════════\n\n");
+        
+        // Thông tin cơ bản
+        content.append("🆔 Mã giao dịch: ").append(transaction.getTransactionId()).append("\n");
+        content.append("📅 Ngày giờ: ").append(transaction.getTransactionDate()).append("\n");
+        content.append("📦 Loại giao dịch: ").append(getTransactionTypeVN(transaction.getTransactionType())).append("\n");
+        content.append("👤 Người thực hiện: ").append(username).append("\n\n");
+        
+        // Thông tin sản phẩm
+        if (product != null) {
+            content.append("🏷️ THÔNG TIN SẢN PHẨM\n");
+            content.append("─────────────────────\n");
+            content.append("• Mã sản phẩm: ").append(product.getProductId()).append("\n");
+            content.append("• Tên sản phẩm: ").append(product.getProductName()).append("\n");
+            content.append("• Giá bán: ").append(formatCurrency(product.getUnitPrice())).append("\n");
+            if (product.getGianhap() != null) {
+                content.append("• Giá nhập: ").append(formatCurrency(product.getGianhap())).append("\n");
+            }
+        }
+        
+        // Thông tin số lượng
+        content.append("\n📊 THÔNG TIN SỐ LƯỢNG\n");
+        content.append("─────────────────────\n");
+        content.append("• Số lượng giao dịch: ").append(transaction.getQuantityChange()).append("\n");
+        content.append("• Số lượng hiện tại trong kho: ").append(currentQuantity).append("\n\n");
+        
+        // Thông tin bổ sung
+        if (transaction.getReferenceId() != null && !transaction.getReferenceId().isEmpty()) {
+            content.append("🔗 Mã tham chiếu: ").append(transaction.getReferenceId()).append("\n");
+        }
+        
+        if (transaction.getNotes() != null && !transaction.getNotes().isEmpty()) {
+            content.append("📝 Ghi chú: ").append(transaction.getNotes()).append("\n");
+        }
+        
+        // Hiển thị popup
+        JOptionPane.showMessageDialog(this,
+            content.toString(),
+            "Chi tiết giao dịch kho - " + transaction.getTransactionId(),
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    /**
+     * Format tiền tệ
+     */
+    private String formatCurrency(java.math.BigDecimal amount) {
+        if (amount == null) return "0 ₫";
+        try {
+            return String.format("%,.0f ₫", amount);
+        } catch (Exception e) {
+            return "0 ₫";
+        }
     }
 }
 
