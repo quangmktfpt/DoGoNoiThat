@@ -726,6 +726,20 @@ private void fillDiscountTypeComboBox() {
         }
         
         BigDecimal value = new BigDecimal(valueStr);
+        
+        // Kiểm tra giá trị giảm giá theo loại
+        if ("Percent".equals(type)) {
+            // Nếu là Percent: kiểm tra từ 1% đến 50%
+            if (value.compareTo(BigDecimal.ONE) < 0 || value.compareTo(new BigDecimal("50")) > 0) {
+                throw new IllegalArgumentException("Giá trị giảm giá Percent phải từ 1% đến 50%!");
+            }
+        } else if ("Fixed".equals(type)) {
+            // Nếu là Fixed: chỉ cần lớn hơn 0
+            if (value.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Giá trị giảm giá Fixed phải lớn hơn 0!");
+            }
+        }
+        
         LocalDate start = LocalDate.parse(startStr);
         LocalDate end = LocalDate.parse(endStr);
         
