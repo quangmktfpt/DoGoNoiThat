@@ -9,6 +9,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
 
@@ -1190,7 +1191,7 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         panelDoanhThuChart.repaint();
     }
 
-    // Vẽ biểu đồ lợi nhuận (đường)
+    // Vẽ biểu đồ lợi nhuận (đường hoặc cột tùy theo khoảng thời gian)
     private void showLoiNhuanChart() {
         java.time.LocalDateTime from = parseDate(txtTuNgay.getText());
         java.time.LocalDateTime to = parseEndDate(txtDenNgay.getText());
@@ -1207,20 +1208,79 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
         for (String key : data.keySet()) {
             dataset.addValue(data.get(key), "Lợi nhuận", key);
         }
-        JFreeChart chart = ChartFactory.createLineChart(
-            "Biểu Đồ Lợi Nhuận", "Thời gian", "Lợi nhuận (VNĐ)", dataset);
-        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
-        plot.setBackgroundPaint(new java.awt.Color(0xe8f5e8));
         
-        // Cấu hình trục Y để hiển thị số tiền đúng định dạng
-        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
-        rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+        // Kiểm tra nếu chọn "Hôm nay" thì hiển thị biểu đồ cột, còn lại hiển thị biểu đồ đường
+        String selectedTimeRange = cbxKhoangThoiGian.getSelectedItem() != null ? cbxKhoangThoiGian.getSelectedItem().toString() : "";
+        JFreeChart chart;
         
-        org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = (org.jfree.chart.renderer.category.LineAndShapeRenderer) plot.getRenderer();
-        java.awt.Color green = new java.awt.Color(76, 175, 80);
-        renderer.setSeriesPaint(0, green);
-        renderer.setSeriesStroke(0, new java.awt.BasicStroke(3.0f));
-        renderer.setSeriesShapesVisible(0, true);
+        if ("Hôm nay".equals(selectedTimeRange)) {
+            // Biểu đồ cột cho "Hôm nay"
+            chart = ChartFactory.createBarChart(
+                "Biểu Đồ Lợi Nhuận", "Thời gian", "Lợi nhuận (VNĐ)", dataset);
+            org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+            plot.setBackgroundPaint(new java.awt.Color(0xe8f5e8));
+            
+            // Cấu hình trục Y để hiển thị số tiền đúng định dạng
+            org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+            rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+            
+            org.jfree.chart.renderer.category.BarRenderer renderer = (org.jfree.chart.renderer.category.BarRenderer) plot.getRenderer();
+            java.awt.Color green = new java.awt.Color(76, 175, 80);
+            renderer.setSeriesPaint(0, green);
+            
+            // Cấu hình cho biểu đồ cột đơn lẻ
+            if (dataset.getColumnCount() == 1) {
+                renderer.setMaximumBarWidth(0.2);
+                plot.getDomainAxis().setCategoryMargin(0.4);
+            }
+        } else {
+            // Biểu đồ đường cho các trường hợp khác
+            chart = ChartFactory.createLineChart(
+                "Biểu Đồ Lợi Nhuận", "Thời gian", "Lợi nhuận (VNĐ)", dataset);
+            org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+            plot.setBackgroundPaint(new java.awt.Color(0xe8f5e8));
+            
+            // Cấu hình trục Y để hiển thị số tiền đúng định dạng
+            org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+            rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+            
+            org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = (org.jfree.chart.renderer.category.LineAndShapeRenderer) plot.getRenderer();
+            java.awt.Color green = new java.awt.Color(76, 175, 80);
+            renderer.setSeriesPaint(0, green);
+            renderer.setSeriesStroke(0, new java.awt.BasicStroke(3.0f));
+            renderer.setSeriesShapesVisible(0, true);
+            
+            // Hiển thị số trên mỗi điểm của biểu đồ đường
+            try {
+                renderer.setSeriesItemLabelGenerator(0, new org.jfree.chart.labels.CategoryItemLabelGenerator() {
+                    @Override
+                    public String generateLabel(org.jfree.data.category.CategoryDataset dataset, int row, int column) {
+                        Number value = dataset.getValue(row, column);
+                        if (value != null) {
+                            return new java.text.DecimalFormat("#,##0").format(value);
+                        }
+                        return "";
+                    }
+                    
+                    @Override
+                    public String generateRowLabel(org.jfree.data.category.CategoryDataset dataset, int row) {
+                        return dataset.getRowKey(row).toString();
+                    }
+                    
+                    @Override
+                    public String generateColumnLabel(org.jfree.data.category.CategoryDataset dataset, int column) {
+                        return dataset.getColumnKey(column).toString();
+                    }
+                });
+                renderer.setSeriesItemLabelsVisible(0, true);
+                renderer.setSeriesItemLabelFont(0, new java.awt.Font("Arial", java.awt.Font.BOLD, 10));
+                renderer.setSeriesItemLabelPaint(0, java.awt.Color.BLACK);
+            } catch (Exception e) {
+                // Nếu không hỗ trợ, giữ nguyên tooltip
+                System.out.println("Không thể hiển thị số trên biểu đồ đường: " + e.getMessage());
+            }
+        }
+        
         ChartPanel chartPanel = new ChartPanel(chart);
         if (dataset.getColumnCount() == 1) {
             chartPanel.setPreferredSize(new java.awt.Dimension(300, panelLoiNhuanChart.getHeight()));
@@ -1446,10 +1506,10 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
 
     // Gọi fill dữ liệu khi mở form
     public void open() {
-        // Auto chọn "Hôm nay" cho các combo box trước khi load dữ liệu
-        cbxKhoangThoiGian.setSelectedIndex(0);
-        cbxKhoangThoiGian1.setSelectedIndex(0);
-        cbxKhoangThoiGianSP.setSelectedIndex(0);
+        // Auto chọn "Tuần Này" cho tab1 (Doanh Thu), "Hôm nay" cho các tab khác
+        cbxKhoangThoiGian.setSelectedIndex(1); // "Tuần Này" (index 1)
+        cbxKhoangThoiGian1.setSelectedIndex(0); // "Hôm nay" (index 0)
+        cbxKhoangThoiGianSP.setSelectedIndex(0); // "Hôm nay" (index 0)
         
         // Load dữ liệu
         showDoanhThuChart();
