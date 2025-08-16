@@ -8,6 +8,7 @@ import poly.controller.OrderController;
 import poly.entity.Order;
 import poly.entity.OrderDetail;
 import poly.entity.User;
+import poly.entity.Product;
 import poly.dao.impl.OrderDAOImpl;
 import poly.dao.impl.UserDAOImpl;
 import poly.dao.impl.ProductDAOImpl;
@@ -1211,28 +1212,46 @@ openRatingDialog();        // TODO add your handling code here:
             return;
         }
         
+        // Lấy danh sách sản phẩm từ đơn hàng
+        List<OrderDetail> orderDetails = getOrderDetails(currentOrder.getOrderId());
+        if (orderDetails == null || orderDetails.isEmpty()) {
+            XDialog.alert("Không tìm thấy sản phẩm trong đơn hàng này!");
+            return;
+        }
+        
+        // Hiển thị dialog chọn sản phẩm
+        String selectedProduct = showProductSelectionDialog(orderDetails);
+        if (selectedProduct == null) {
+            return; // Người dùng hủy
+        }
+        
         // Hiển thị dialog nhập lý do đổi trả
         String returnReason = javax.swing.JOptionPane.showInputDialog(
             this,
-            "Vui lòng nhập lý do đổi trả:",
+            "Vui lòng nhập lý do đổi trả cho sản phẩm: " + selectedProduct,
             "Yêu cầu đổi trả",
             javax.swing.JOptionPane.QUESTION_MESSAGE
         );
         
         if (returnReason != null && !returnReason.trim().isEmpty()) {
-            if (XDialog.confirm("Bạn có chắc muốn yêu cầu đổi trả đơn hàng này?")) {
+            if (XDialog.confirm("Bạn có chắc muốn yêu cầu đổi trả sản phẩm này?")) {
                 try {
                     isProcessingOrder = true; // Set flag
                     
                     // Phân biệt loại đổi trả dựa trên trạng thái
                     String reasonWithPrefix;
                     if ("Completed".equals(currentOrder.getOrderStatus())) {
-                        reasonWithPrefix = "[ĐỔI TRẢ - ĐÃ THANH TOÁN] " + returnReason.trim();
+                        reasonWithPrefix = "[ĐỔI TRẢ - ĐÃ THANH TOÁN] Sản phẩm: " + selectedProduct + " - Lý do: " + returnReason.trim();
                     } else {
-                        reasonWithPrefix = "[ĐỔI TRẢ - CHƯA THANH TOÁN] " + returnReason.trim();
+                        reasonWithPrefix = "[ĐỔI TRẢ - CHƯA THANH TOÁN] Sản phẩm: " + selectedProduct + " - Lý do: " + returnReason.trim();
                     }
                     
-                    orderDAO.updateOrderStatusWithReasonAndInventory(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
+                    // Chỉ cập nhật trạng thái đơn hàng (KHÔNG hoàn trả kho)
+                    orderDAO.updateOrderStatusWithReason(currentOrder.getOrderId(), "Cancelled", reasonWithPrefix);
+                    
+                    // Chỉ cộng kho lại cho sản phẩm được chọn
+                    updateInventoryForReturn(selectedProduct, orderDetails);
+                    
                     XDialog.alert("Đã gửi yêu cầu đổi trả thành công và cập nhật tồn kho!");
                     fillToTable();
                 } catch (Exception e) {
@@ -1642,5 +1661,134 @@ openRatingDialog();        // TODO add your handling code here:
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    /**
+     * Lấy danh sách chi tiết đơn hàng
+     */
+    private List<OrderDetail> getOrderDetails(Integer orderId) {
+        try {
+            OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
+            return orderDetailDAO.selectByOrderId(orderId);
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi lấy chi tiết đơn hàng: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Hiển thị dialog chọn sản phẩm từ đơn hàng
+     */
+    private String showProductSelectionDialog(List<OrderDetail> orderDetails) {
+        try {
+            // Tạo danh sách sản phẩm để hiển thị trong ComboBox
+            String[] productOptions = new String[orderDetails.size()];
+            for (int i = 0; i < orderDetails.size(); i++) {
+                OrderDetail detail = orderDetails.get(i);
+                Product product = new ProductDAOImpl().selectById(detail.getProductId());
+                String productName = product != null ? product.getProductName() : detail.getProductId();
+                productOptions[i] = productName + " (Số lượng: " + detail.getQuantity() + ")";
+            }
+            
+            // Hiển thị dialog chọn sản phẩm
+            String selectedProduct = (String) javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Chọn sản phẩm cần đổi trả:",
+                "Chọn sản phẩm",
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                productOptions,
+                productOptions[0] // Mặc định chọn sản phẩm đầu tiên
+            );
+            
+            return selectedProduct;
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi hiển thị dialog chọn sản phẩm: " + e.getMessage());
+            XDialog.alert("Lỗi khi hiển thị danh sách sản phẩm: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Cộng kho lại cho sản phẩm được đổi trả
+     */
+    private void updateInventoryForReturn(String selectedProduct, List<OrderDetail> orderDetails) {
+        try {
+            // Tìm sản phẩm được chọn trong danh sách
+            OrderDetail selectedDetail = null;
+            for (OrderDetail detail : orderDetails) {
+                Product product = new ProductDAOImpl().selectById(detail.getProductId());
+                String productName = product != null ? product.getProductName() : detail.getProductId();
+                String productOption = productName + " (Số lượng: " + detail.getQuantity() + ")";
+                
+                if (productOption.equals(selectedProduct)) {
+                    selectedDetail = detail;
+                    break;
+                }
+            }
+            
+            if (selectedDetail != null) {
+                // Cộng kho lại cho sản phẩm được đổi trả
+                String updateSql = "UPDATE Products SET Quantity = Quantity + ? WHERE ProductID = ?";
+                int updatedRows = poly.util.XJdbc.executeUpdate(updateSql, 
+                    selectedDetail.getQuantity(), 
+                    selectedDetail.getProductId()
+                );
+                
+                if (updatedRows > 0) {
+                    System.out.println("✅ Đã cộng kho lại " + selectedDetail.getQuantity() + 
+                        " sản phẩm " + selectedDetail.getProductId() + " cho đổi trả");
+                    
+                    // Ghi lịch sử kho
+                    recordInventoryTransaction(selectedDetail.getProductId(), selectedDetail.getQuantity(), 
+                        "ReturnIn", "ORDER-" + currentOrder.getOrderId(), 
+                        "Hoàn trả sản phẩm từ đơn hàng " + currentOrder.getOrderId() + " - " + selectedProduct);
+                } else {
+                    System.err.println("❌ Không thể cập nhật kho cho sản phẩm: " + selectedDetail.getProductId());
+                }
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi cập nhật kho cho đổi trả: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Ghi lịch sử giao dịch kho
+     */
+    private void recordInventoryTransaction(String productId, int quantity, String transactionType, 
+                                          String referenceId, String notes) {
+        try {
+            Integer currentUserId = CurrentUserUtil.getCurrentUserId();
+            if (currentUserId == null) {
+                System.err.println("⚠️ Không thể lấy UserID để ghi InventoryTransactions");
+                return;
+            }
+            
+            String insertSql = "INSERT INTO InventoryTransactions " +
+                "(ProductID, TransactionDate, TransactionType, QuantityChange, ReferenceID, Notes, UserID) " +
+                "VALUES (?, GETDATE(), ?, ?, ?, ?, ?)";
+            
+            int insertedRows = poly.util.XJdbc.executeUpdate(insertSql, 
+                productId,                    // ProductID
+                transactionType,              // TransactionType
+                quantity,                     // QuantityChange (số dương vì cộng kho)
+                referenceId,                  // ReferenceID
+                notes,                        // Notes
+                currentUserId                 // UserID
+            );
+            
+            if (insertedRows > 0) {
+                System.out.println("✅ Đã ghi InventoryTransaction cho đổi trả: " + productId);
+            } else {
+                System.err.println("❌ Không thể ghi InventoryTransaction cho sản phẩm: " + productId);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ Lỗi khi ghi InventoryTransaction: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
