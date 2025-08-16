@@ -41,6 +41,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         txtUsername = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         txtPassword = new javax.swing.JPasswordField();
+        btnHoTro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -91,27 +92,35 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
             }
         });
 
+        btnHoTro.setText("Bạn cần hỗ trợ?");
+        btnHoTro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHoTroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(149, 149, 149)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtPassword)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txtPassword)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(41, 41, 41)
+                        .addComponent(btnHoTro))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 19, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -129,14 +138,16 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 204, Short.MAX_VALUE)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(btnHoTro))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -150,7 +161,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(62, 62, 62)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(84, Short.MAX_VALUE)))
+                    .addContainerGap(108, Short.MAX_VALUE)))
         );
 
         pack();
@@ -177,6 +188,63 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
         dkDialog.setVisible(true);
         this.setVisible(true); // Hiện lại dialog đăng nhập sau khi đăng ký xong
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void btnHoTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoTroActionPerformed
+        // Tạo popup hiển thị thông tin hỗ trợ
+        javax.swing.JDialog hoTroDialog = new javax.swing.JDialog(this, "Thông tin hỗ trợ", true);
+        hoTroDialog.setLayout(new java.awt.BorderLayout());
+        
+        // Panel chính
+        javax.swing.JPanel mainPanel = new javax.swing.JPanel();
+        mainPanel.setLayout(new javax.swing.BoxLayout(mainPanel, javax.swing.BoxLayout.Y_AXIS));
+        mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        
+        // Tiêu đề
+        javax.swing.JLabel titleLabel = new javax.swing.JLabel("Liên hệ hỗ trợ");
+        titleLabel.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        titleLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        mainPanel.add(titleLabel);
+        
+        mainPanel.add(javax.swing.Box.createVerticalStrut(20));
+        
+        // Thông tin liên hệ
+        javax.swing.JLabel emailLabel = new javax.swing.JLabel("Email: dogonoithat@gmail.com");
+        emailLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        emailLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        mainPanel.add(emailLabel);
+        
+        mainPanel.add(javax.swing.Box.createVerticalStrut(10));
+        
+        javax.swing.JLabel phoneLabel = new javax.swing.JLabel("Điện thoại: 0123456789");
+        phoneLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        phoneLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        mainPanel.add(phoneLabel);
+        
+        mainPanel.add(javax.swing.Box.createVerticalStrut(10));
+        
+        javax.swing.JLabel addressLabel = new javax.swing.JLabel("Địa chỉ: Khu Công Nghiệp Tư Bản");
+        addressLabel.setFont(new java.awt.Font("Segoe UI", 0, 14));
+        addressLabel.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        mainPanel.add(addressLabel);
+        
+        mainPanel.add(javax.swing.Box.createVerticalStrut(20));
+        
+        // Button đóng
+        javax.swing.JButton closeButton = new javax.swing.JButton("Đóng");
+        closeButton.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hoTroDialog.dispose();
+            }
+        });
+        mainPanel.add(closeButton);
+        
+        hoTroDialog.add(mainPanel, java.awt.BorderLayout.CENTER);
+        hoTroDialog.pack();
+        hoTroDialog.setLocationRelativeTo(this);
+        hoTroDialog.setResizable(false);
+        hoTroDialog.setVisible(true);
+    }//GEN-LAST:event_btnHoTroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,6 +289,7 @@ public class DNhapJDialog extends javax.swing.JDialog implements LogginControlle
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHoTro;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

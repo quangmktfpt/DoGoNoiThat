@@ -1252,26 +1252,8 @@ public class ThongKeJDialog_nghia extends javax.swing.JDialog implements ThongKe
             
             // Hiển thị số trên mỗi điểm của biểu đồ đường
             try {
-                renderer.setSeriesItemLabelGenerator(0, new org.jfree.chart.labels.CategoryItemLabelGenerator() {
-                    @Override
-                    public String generateLabel(org.jfree.data.category.CategoryDataset dataset, int row, int column) {
-                        Number value = dataset.getValue(row, column);
-                        if (value != null) {
-                            return new java.text.DecimalFormat("#,##0").format(value);
-                        }
-                        return "";
-                    }
-                    
-                    @Override
-                    public String generateRowLabel(org.jfree.data.category.CategoryDataset dataset, int row) {
-                        return dataset.getRowKey(row).toString();
-                    }
-                    
-                    @Override
-                    public String generateColumnLabel(org.jfree.data.category.CategoryDataset dataset, int column) {
-                        return dataset.getColumnKey(column).toString();
-                    }
-                });
+                renderer.setSeriesItemLabelGenerator(0, new StandardCategoryItemLabelGenerator(
+                    "{2}", new java.text.DecimalFormat("#,##0")));
                 renderer.setSeriesItemLabelsVisible(0, true);
                 renderer.setSeriesItemLabelFont(0, new java.awt.Font("Arial", java.awt.Font.BOLD, 10));
                 renderer.setSeriesItemLabelPaint(0, java.awt.Color.BLACK);
