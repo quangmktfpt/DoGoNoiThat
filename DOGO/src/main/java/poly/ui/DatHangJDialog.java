@@ -29,7 +29,13 @@ import poly.dao.impl.AddressDAOImpl;
 import poly.entity.Address;
 
 /**
- *
+ * Dialog đặt hàng với các tính năng:
+ * - Mặc định chọn Việt Nam làm quốc gia giao hàng
+ * - Vô hiệu hóa ComboBox quốc gia để người dùng không thể thay đổi
+ * - Chỉ hỗ trợ giao hàng trong nước Việt Nam
+ * - Tự động load danh sách thành phố Việt Nam
+ * - Áp dụng mã giảm giá bình thường (không vô hiệu hóa sau khi sử dụng)
+ * 
  * @author Nghia
  */
 public class DatHangJDialog extends javax.swing.JDialog {
@@ -498,9 +504,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 "Thông báo", JOptionPane.WARNING_MESSAGE);
         }
         
-        // Load cities and countries
-        loadCities();
-        loadCountries();
+        // Load countries first, then cities
+        loadCountries(); // Mặc định chọn Việt Nam và vô hiệu hóa ComboBox
+        loadCities(); // Load thành phố Việt Nam sau khi quốc gia đã được thiết lập
+        
+        // Đảm bảo thành phố được load thành công
+        if (City.getItemCount() == 0) {
+            System.err.println("⚠️ Thành phố chưa được load, thử load lại...");
+            loadVietnamCities();
+        }
         
         // Initialize table
         initializeTable();
@@ -525,6 +537,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         // Đảm bảo các trường thông tin khách hàng trống
         clearCustomerInfoFields();
+        
+        // Kiểm tra và hiển thị trạng thái form
+        checkFormStatus();
     }
     
     /**
@@ -560,7 +575,20 @@ public class DatHangJDialog extends javax.swing.JDialog {
         City.addActionListener(e -> updateShippingFee());
         
         // Country selection - cập nhật thành phố theo quốc gia
-        Country.addActionListener(e -> updateCitiesByCountry());
+        Country.addActionListener(e -> {
+            // Kiểm tra nếu người dùng cố gắng thay đổi quốc gia (mặc dù đã bị vô hiệu hóa)
+            String selectedCountry = (String) Country.getSelectedItem();
+            if (!"Việt Nam".equals(selectedCountry)) {
+                // Đảm bảo luôn chọn Việt Nam
+                Country.setSelectedItem("Việt Nam");
+                JOptionPane.showMessageDialog(DatHangJDialog.this,
+                    "🇻🇳 Chỉ hỗ trợ giao hàng trong nước Việt Nam!\n" +
+                    "Quốc gia đã được tự động chọn là Việt Nam.",
+                    "Thông báo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+            updateCitiesByCountry();
+        });
         
         // JTextField4 - nhập mã giảm giá
       
@@ -632,15 +660,24 @@ public class DatHangJDialog extends javax.swing.JDialog {
         });
     }
     
+    /**
+     * Load danh sách thành phố theo quốc gia đã chọn
+     * Được gọi sau khi quốc gia đã được thiết lập
+     */
     private void loadCities() {
         // Gọi phương thức cập nhật thành phố theo quốc gia hiện tại
         updateCitiesByCountry();
+        System.out.println("✓ Đã load danh sách thành phố cho quốc gia: " + Country.getSelectedItem());
     }
     
+    /**
+     * Load danh sách quốc gia và mặc định chọn Việt Nam
+     * ComboBox quốc gia được vô hiệu hóa để người dùng không thể thay đổi
+     */
     private void loadCountries() {
         Country.removeAllItems();
         
-        // Chỉ giữ lại Việt Nam
+        // Chỉ giữ lại Việt Nam (chỉ hỗ trợ giao hàng trong nước)
         countries.clear();
         countries.add("Việt Nam");
         
@@ -651,6 +688,15 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         // Mặc định chọn Việt Nam
         Country.setSelectedItem("Việt Nam");
+        
+        // Vô hiệu hóa ComboBox quốc gia để người dùng không thể thay đổi
+        Country.setEnabled(false);
+        Country.setEditable(false);
+        
+        // Thêm tooltip để giải thích
+        Country.setToolTipText("🇻🇳 Chỉ hỗ trợ giao hàng trong nước Việt Nam");
+        
+        System.out.println("✓ Đã thiết lập mặc định quốc gia: Việt Nam");
     }
     
 
@@ -661,7 +707,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         City.removeAllItems();
         
-        // Chỉ load thành phố cho Việt Nam
+        // Chỉ load thành phố cho Việt Nam (vì chỉ hỗ trợ giao hàng trong nước)
         if ("Việt Nam".equals(selectedCountry)) {
             loadVietnamCities();
         }
@@ -673,7 +719,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
         showShippingFeeInfo();
         
         // Hiển thị thông tin trong console
-        // Đã cập nhật thành phố theo quốc gia
+        System.out.println("✓ Đã cập nhật thành phố theo quốc gia: " + selectedCountry);
     }
     
 
@@ -732,6 +778,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
         
         // Lưu vào cache
         citiesByCountry.put("Việt Nam", cities);
+        
+        System.out.println("✓ Đã load " + cities.size() + " thành phố/tỉnh Việt Nam");
+        System.out.println("✓ Thành phố mặc định: TP Hà Nội");
     }
     
 
@@ -744,11 +793,23 @@ public class DatHangJDialog extends javax.swing.JDialog {
         status.append("🔗 Nguồn: Dữ liệu local\n");
         status.append("🌍 Phạm vi: Việt Nam\n");
         
-        // Hiển thị tooltip cho Country ComboBox
-        Country.setToolTipText(status.toString());
-        
         // In thông tin ra console
         System.out.println("🇻🇳 Chế độ chỉ giao hàng trong nước");
+    }
+    
+    /**
+     * Kiểm tra và hiển thị trạng thái của form sau khi khởi tạo
+     */
+    private void checkFormStatus() {
+        System.out.println("\n=== TRẠNG THÁI FORM ĐẶT HÀNG ===");
+        System.out.println("🇻🇳 Quốc gia: " + Country.getSelectedItem() + " (Enabled: " + Country.isEnabled() + ")");
+        System.out.println("🏙️ Thành phố: " + City.getSelectedItem() + " (Số lượng: " + City.getItemCount() + ")");
+        System.out.println("👤 Họ tên: " + (jTextField3.getText().isEmpty() ? "Chưa nhập" : "Đã nhập"));
+        System.out.println("📱 Số điện thoại: " + (jTextField2.getText().isEmpty() ? "Chưa nhập" : "Đã nhập"));
+        System.out.println("📍 Địa chỉ: " + (jTextField1.getText().isEmpty() ? "Chưa nhập" : "Đã nhập"));
+        System.out.println("💳 Thanh toán: " + (jRadioButton3.isSelected() ? "Khi nhận hàng" : "Chưa chọn"));
+        System.out.println("📦 Sản phẩm: " + orderItems.size() + " sản phẩm");
+        System.out.println("================================\n");
     }
     
     private void loadCoupons() {
@@ -1483,13 +1544,13 @@ public class DatHangJDialog extends javax.swing.JDialog {
     }
     
     /**
-     * Đánh dấu mã giảm giá đã sử dụng
-     * @param couponCode Mã giảm giá cần đánh dấu
+     * Ghi log việc áp dụng mã giảm giá (không vô hiệu hóa)
+     * @param couponCode Mã giảm giá đã được áp dụng
      */
     private void markCouponAsUsed(String couponCode) {
         try {
-            // Có thể thêm logic đánh dấu mã đã sử dụng ở đây nếu cần
-            System.out.println("✅ Đã áp dụng mã giảm giá " + couponCode);
+            // Chỉ ghi log, không vô hiệu hóa mã giảm giá
+            System.out.println("✅ Đã áp dụng mã giảm giá " + couponCode + " (mã vẫn có thể sử dụng lại)");
         } catch (Exception e) {
             System.err.println("✗ Lỗi khi xử lý mã giảm giá: " + e.getMessage());
         }
@@ -1789,10 +1850,9 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 // Trừ kho sau khi đặt hàng thành công
                 InventoryUpdateUtil.updateInventoryForOrderRequest(itemsToOrder);
                 
-                // Vô hiệu hóa mã giảm giá sau khi đã sử dụng
+                // Mã giảm giá đã được áp dụng thành công (không vô hiệu hóa)
                 if (currentOrder.getCouponId() != null && !currentOrder.getCouponId().isEmpty()) {
-                    deleteCouponAfterUse(currentOrder.getCouponId());
-                    System.out.println("🎫 Đã sử dụng và vô hiệu hóa mã giảm giá: " + currentOrder.getCouponId());
+                    System.out.println("🎫 Đã sử dụng mã giảm giá: " + currentOrder.getCouponId() + " (mã vẫn có thể sử dụng lại)");
                 }
                 
                 // Xóa sản phẩm đã đặt khỏi giỏ hàng
@@ -1808,7 +1868,7 @@ public class DatHangJDialog extends javax.swing.JDialog {
                 
                 // Thêm thông tin về mã giảm giá nếu có
                 if (currentOrder.getCouponId() != null && !currentOrder.getCouponId().isEmpty()) {
-                    successMessage.append("🎫 Đã sử dụng và vô hiệu hóa mã giảm giá: ").append(currentOrder.getCouponId()).append("\n");
+                    successMessage.append("🎫 Đã áp dụng mã giảm giá: ").append(currentOrder.getCouponId()).append("\n");
                 }
                 
                 successMessage.append("\n🎉 Cảm ơn bạn đã mua hàng!");
@@ -2302,38 +2362,5 @@ public class DatHangJDialog extends javax.swing.JDialog {
         System.out.println("🧹 Đã xóa tất cả thông tin mặc định trong form");
     }
     
-    /**
-     * Vô hiệu hóa mã giảm giá sau khi đã sử dụng
-     * @param couponId ID của mã giảm giá cần vô hiệu hóa
-     */
-    private void deleteCouponAfterUse(String couponId) {
-        try {
-            // Thay vì xóa, chúng ta sẽ vô hiệu hóa mã giảm giá bằng cách đặt ngày kết thúc về quá khứ
-            String updateSql = "UPDATE Coupons SET EndDate = GETDATE() - 1 WHERE CouponID = ?";
-            int updatedRows = poly.util.XJdbc.executeUpdate(updateSql, couponId);
-            
-            if (updatedRows > 0) {
-                System.out.println("🚫 Đã vô hiệu hóa mã giảm giá: " + couponId);
-                
-                // Hiển thị thông báo xác nhận
-                JOptionPane.showMessageDialog(this,
-                    "🎫 Mã giảm giá '" + couponId + "' đã được sử dụng và vô hiệu hóa.\n" +
-                    "Mã này sẽ không thể sử dụng lại.",
-                    "Vô hiệu hóa mã giảm giá",
-                    JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                System.err.println("⚠️ Không tìm thấy mã giảm giá để vô hiệu hóa: " + couponId);
-            }
-            
-        } catch (Exception e) {
-            System.err.println("❌ Lỗi khi vô hiệu hóa mã giảm giá: " + e.getMessage());
-            e.printStackTrace();
-            
-            // Hiển thị thông báo lỗi
-            JOptionPane.showMessageDialog(this,
-                "❌ Lỗi khi vô hiệu hóa mã giảm giá!\nLỗi: " + e.getMessage(),
-                "Lỗi",
-                JOptionPane.ERROR_MESSAGE);
-        }
-    }
+
 }
